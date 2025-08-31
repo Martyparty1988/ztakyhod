@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Najdi smažák v17.3 - Herní Logika Vylepšena</title>
+    <title>Najdi smažák v17.4 - Vylepšená Detekce</title>
     
     <script>
         (function() {
             function drawIcon(size) {
                 const canvas = document.createElement('canvas'); canvas.width = size; canvas.height = size; const ctx = canvas.getContext('2d'); const scale = size / 512; ctx.fillStyle = '#0a192f'; ctx.fillRect(0, 0, size, size); ctx.save(); ctx.translate(size / 2, size / 2); const bagWidth = 280 * scale; const bagHeight = 320 * scale; ctx.beginPath(); ctx.moveTo(-bagWidth / 2, -bagHeight / 2 + 50 * scale); ctx.lineTo(-bagWidth / 2, bagHeight / 2); ctx.quadraticCurveTo(0, bagHeight / 2 + 40 * scale, bagWidth / 2, bagHeight / 2); ctx.lineTo(bagWidth / 2, -bagHeight / 2 + 50 * scale); ctx.closePath(); ctx.fillStyle = 'rgba(230, 240, 255, 0.15)'; ctx.strokeStyle = 'rgba(150, 180, 220, 0.4)'; ctx.lineWidth = 6 * scale; ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-bagWidth / 2 * 0.8, bagHeight / 2); ctx.quadraticCurveTo(-bagWidth / 2 * 0.5, bagHeight / 2 - 100 * scale, 0, bagHeight / 2 - 50 * scale); ctx.quadraticCurveTo(bagWidth / 2 * 0.5, bagHeight / 2 - 100 * scale, bagWidth / 2 * 0.8, bagHeight / 2); ctx.closePath(); ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'; ctx.shadowColor = 'rgba(255, 255, 255, 0.7)'; ctx.shadowBlur = 20 * scale; ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = 'rgba(20, 30, 50, 0.5)'; ctx.fillRect(-bagWidth/2 - 10*scale, -bagHeight/2 + 40*scale, bagWidth + 20*scale, 20*scale); ctx.strokeStyle = 'rgba(150, 180, 220, 0.6)'; ctx.strokeRect(-bagWidth/2 - 10*scale, -bagHeight/2 + 40*scale, bagWidth + 20*scale, 20*scale); ctx.beginPath(); ctx.moveTo(-40 * scale, -bagHeight / 2 + 40 * scale); ctx.quadraticCurveTo(0, -bagHeight/2 - 30 * scale, 40 * scale, -bagHeight/2 + 40 * scale); ctx.strokeStyle = '#facc15'; ctx.lineWidth = 10 * scale; ctx.stroke(); ctx.restore(); return canvas.toDataURL('image/png');
             }
-            const icon192 = drawIcon(192), icon512 = drawIcon(512), favicon = drawIcon(32), themeColor = '#0a192f'; const manifest = { name: "Najdi smažák v17.3", short_name: "Smažák", start_url: ".", display: "standalone", background_color: themeColor, theme_color: themeColor, icons: [{ src: icon192, type: "image/png", sizes: "192x192" }, { src: icon512, type: "image/png", sizes: "512x512" }] }; const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' }); const manifestURL = URL.createObjectURL(blob); document.head.insertAdjacentHTML('beforeend', `<link rel="icon" href="${favicon}"><link rel="apple-touch-icon" href="${icon192}"><link rel="manifest" href="${manifestURL}"><meta name="theme-color" content="${themeColor}"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">`);
+            const icon192 = drawIcon(192), icon512 = drawIcon(512), favicon = drawIcon(32), themeColor = '#0a192f'; const manifest = { name: "Najdi smažák v17.4", short_name: "Smažák", start_url: ".", display: "standalone", background_color: themeColor, theme_color: themeColor, icons: [{ src: icon192, type: "image/png", sizes: "192x192" }, { src: icon512, type: "image/png", sizes: "512x512" }] }; const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' }); const manifestURL = URL.createObjectURL(blob); document.head.insertAdjacentHTML('beforeend', `<link rel="icon" href="${favicon}"><link rel="apple-touch-icon" href="${icon192}"><link rel="manifest" href="${manifestURL}"><meta name="theme-color" content="${themeColor}"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">`);
         })();
     </script>
 
@@ -74,7 +74,7 @@
         .scanner-disk { width: 280px; height: 280px; background-color: rgba(10, 25, 47, 0.5); border: 2px solid rgba(7, 245, 245, 0.3); border-radius: 50%; box-shadow: 0 0 40px var(--glow-cyan) inset, 0 0 10px var(--glow-cyan); animation: pulse-disk 4s infinite ease-in-out; position: relative; overflow: hidden; }
         .scanner-disk::before { content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; background-image: radial-gradient(rgba(7, 245, 245, 0.1) 1px, transparent 1px), radial-gradient(rgba(7, 245, 245, 0.1) 1px, transparent 1px); background-size: 20px 20px; background-position: 0 0, 10px 10px; }
         .scanner-line { position: absolute; left: 5%; width: 90%; height: var(--scan-line-height, 3px); background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent); box-shadow: 0 0 15px 3px var(--glow-cyan); border-radius: 3px; animation: scan-line 4s ease-in-out infinite; top: 10%; transition: height 0.3s ease; }
-        .target-dot { position: absolute; border-radius: 50%; transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(var(--s, 1)); transition: transform 0.1s linear, box-shadow 0.3s ease, opacity 0.3s ease; cursor: pointer; background-color: var(--accent-green); box-shadow: 0 0 10px var(--glow-green); }
+        .target-dot { position: absolute; border-radius: 50%; transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(var(--s, 1)); transition: transform 0.1s linear, box-shadow 0.3s ease, opacity 0.3s ease; cursor: pointer; background-color: var(--accent-green); box-shadow: 0 0 10px var(--glow-green); opacity: 1; min-width: 12px; min-height: 12px; }
         .dot-decoy { background-color: var(--accent-red); box-shadow: 0 0 10px var(--glow-red); }
         .dot-epic { background-color: var(--accent-purple); box-shadow: 0 0 10px var(--glow-purple); }
         .dot-target { background-color: var(--accent-cyan); box-shadow: 0 0 10px var(--glow-cyan); }
@@ -87,6 +87,7 @@
         #varna-bar { position: absolute; top: 0; left: 0; width: 2%; height: 100%; background-color: var(--accent-cyan); animation: varna-move 3s ease-in-out infinite; }
         #varna-zone { position: absolute; top: 0; height: 100%; width: 15%; background-color: rgba(74, 222, 128, 0.5); border-left: 2px solid var(--accent-green); border-right: 2px solid var(--accent-green); }
         @keyframes varna-move { 0% { left: 0%; } 50% { left: 98%; } 100% { left: 0%; } }
+        .tutorial { position: absolute; bottom: 80px; text-align: center; font-size: 12px; color: var(--text-secondary); }
     </style>
 </head>
 <body>
@@ -96,7 +97,7 @@
             <div id="scene-menu" class="scene items-center justify-center">
                 <div class="panel">
                     <h1 class="font-orbitron text-4xl font-black text-cyan-300 mb-2" style="text-shadow: 0 0 15px var(--glow-cyan);">NAJDI SMAŽÁK</h1>
-                    <p class="text-slate-400 mb-6">v17.3 - Logika Vylepšena</p>
+                    <p class="text-slate-400 mb-6">v17.4 - Vylepšená Detekce</p>
                     <div class="flex flex-col gap-3">
                         <button data-action="play" class="btn w-full">NOVÁ HRA</button>
                         <button data-action="continue" class="btn w-full hidden" style="background: linear-gradient(45deg, #4ade80, #22c55e); box-shadow: 0 0 20px rgba(74, 222, 128, 0.45);">POKRAČOVAT</button>
@@ -142,6 +143,7 @@
                     </div>
                     <div class="scanner-line"></div>
                 </div>
+                <p class="tutorial">Klikni na cyanové/fialové tečky pro intel. Vyhněte se červeným návnadám!</p>
                  <button data-action="scan-back" class="btn absolute bottom-4 w-1/2 bg-gray-500/80" style="background: #4b5563; box-shadow: none;">ZPĚT</button>
             </div>
 
@@ -210,7 +212,7 @@
         import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
 
         document.addEventListener('DOMContentLoaded', () => {
-            const STATE_VERSION = 17.3;
+            const STATE_VERSION = 17.4;
             const MAX_HEAT = 10;
             const DATA = {
                 subjects: [ { id: 'slehac', color: 'var(--accent-red)', name: 'Šlehař Delta-Piko', logPhrases: ['Vařím dávku, drž se', 'Šlehám vrstvičku I', 'Dealer hlásí, že zboží jede', 'Piko čistota 78 %, dobrý', 'Připravuju stříkačku', 'Váha ukazuje přesně, dneska to bude jízda.', 'Filtruju přes cigaretu, klasika.'] }, { id: 'hulic', color: 'var(--accent-green)', name: 'Hulič Zubatá Žárovka', logPhrases: ['Přepaluju sklo', 'Už to bublá, kámo', 'Mám totální červený oči', 'Kde je zapalovač?', 'Tohle je silnej model', 'Tenhle model lepí prsty, to je dobře.', 'Sháním papírky, došly mi.'] }, { id: 'domingo', color: 'var(--accent-yellow)', name: 'Domingo ze Smíchova', logPhrases: ['Mám čerstvej matroš, chceš?', 'Dneska akce, dva za cenu jednoho.', 'Bacha, za rohem stojej fízlové.', 'Platba jen v hotovosti, kámo.', 'Tohle je čistý, přísahám.'] }, { id: 'pedro', color: 'var(--accent-cyan)', name: 'Pedro Perníček', logPhrases: ['Jsem na cestě, čekej.', 'Už jsem za rohem, připrav prachy.', 'Máš přesně? Nemám na vrácení.', 'Dneska mám zpoždění, kolony.', 'Nová várka, silnější než minule.'] }, { id: 'sypac', color: 'var(--accent-purple)', name: 'Sypač Kartelovej Kocour', logPhrases: ['Sypu čáru na CDčko.', 'Pytlíky zamotaný, trvá to.', 'Někdo klepe na dveře, stopka.', 'Šňůra rovná jak pravítko.', 'Prášek se sype sám.'] }, ],
@@ -223,6 +225,7 @@
                     scanWidth: { name: 'Širší Scanner', description: 'Zvětšuje detekční okno skenovací linky.', cost: 3, unlocked: false },
                     heatSink: { name: 'Tichý režim', description: 'Snižuje nárůst "heatu" při zasažení návnady.', cost: 5, unlocked: false },
                     intelBoost: { name: 'Zesilovač Signálu', description: 'Zvyšuje šanci na nalezení epického signálu (více intelu).', cost: 8, unlocked: false },
+                    dotVisibility: { name: 'Zlepšená Viditelnost', description: 'Tečky jsou viditelnější a větší.', cost: 4, unlocked: false },
                 },
                 achievements: { dealerHunter: { name: 'Certified Dealer Hunter', description: 'Dokonči 10 úspěšných misí.', unlocked: false, condition: (state) => state.jobsCompleted >= 10 }, masterCook: { name: 'Master Cook', description: 'Dokonči vaření s čistotou 100%.', unlocked: false, condition: (state, result) => result?.minigame === 'varna' && result?.purity === 100 }, },
                 randomEvents: [
@@ -239,7 +242,7 @@
                 constructor(radarElementId, config, callbacks) { this.radar = document.getElementById(radarElementId); if (!this.radar) return; this.callbacks = callbacks; this.config = config; this.scanLine = this.radar.querySelector('.scanner-line'); this.dotsContainer = this.radar.querySelector('.target-dots-container'); this.dots = []; this.isActive = false; this.animationFrameId = null; }
                 start() { this.isActive = true; this.dotsContainer.innerHTML = ''; this.dots = []; this.generateDots(); this.animationFrameId = requestAnimationFrame(() => this.scanLoop()); }
                 stop() { this.isActive = false; if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId); this.animationFrameId = null; }
-                generateDots() { const scannerRadius = this.dotsContainer.offsetWidth / 2; let targetCount = 0; for (let i = 0; i < this.config.dotCount; i++) { const dotEl = document.createElement('div'); const size = Math.floor(Math.random() * 5) + 8; let dotType = 'decoy'; if (targetCount < this.config.maxTargets && Math.random() < this.config.targetChance) { dotType = Math.random() < this.config.epicChance ? 'epic' : 'target'; targetCount++; } dotEl.className = `target-dot dot-${dotType}`; dotEl.style.width = `${size}px`; dotEl.style.height = `${size}px`; const angle = Math.random() * 2 * Math.PI; const radius = Math.sqrt(Math.random()) * (scannerRadius - size); const x = scannerRadius + radius * Math.cos(angle) - size / 2; const y = scannerRadius + radius * Math.sin(angle) - size / 2; dotEl.style.left = `${x}px`; dotEl.style.top = `${y}px`; const dot = { element: dotEl, type: dotType, wasInScanWindow: false }; dotEl.addEventListener('click', (e) => { e.stopPropagation(); if (!this.isActive) return; this.callbacks.hit(dot); }); this.dotsContainer.appendChild(dotEl); this.dots.push(dot); } }
+                generateDots() { const scannerRadius = this.dotsContainer.offsetWidth / 2; let targetCount = 0; for (let i = 0; i < this.config.dotCount; i++) { const dotEl = document.createElement('div'); const size = Math.floor(Math.random() * 5) + 12; let dotType = 'decoy'; if (targetCount < this.config.maxTargets && Math.random() < this.config.targetChance) { dotType = Math.random() < this.config.epicChance ? 'epic' : 'target'; targetCount++; } dotEl.className = `target-dot dot-${dotType}`; dotEl.style.width = `${size}px`; dotEl.style.height = `${size}px`; const angle = Math.random() * 2 * Math.PI; const radius = Math.sqrt(Math.random()) * (scannerRadius - size); const x = scannerRadius + radius * Math.cos(angle) - size / 2; const y = scannerRadius + radius * Math.sin(angle) - size / 2; dotEl.style.left = `${x}px`; dotEl.style.top = `${y}px`; const dot = { element: dotEl, type: dotType, wasInScanWindow: false }; dotEl.addEventListener('click', (e) => { e.stopPropagation(); if (!this.isActive) return; this.callbacks.hit(dot); }); this.dotsContainer.appendChild(dotEl); this.dots.push(dot); } }
                 scanLoop() { if (!this.isActive) return; const lineRect = this.scanLine.getBoundingClientRect(); this.dots.forEach(dot => { const dotRect = dot.element.getBoundingClientRect(); const isCurrentlyInScanWindow = (lineRect.bottom > dotRect.top && lineRect.top < dotRect.bottom); if (isCurrentlyInScanWindow && !dot.wasInScanWindow) { dot.element.classList.add('blink'); setTimeout(() => dot.element.classList.remove('blink'), 300); } dot.wasInScanWindow = isCurrentlyInScanWindow; }); this.animationFrameId = requestAnimationFrame(() => this.scanLoop()); }
             }
 
@@ -328,7 +331,7 @@
                     this.elements.stage.classList.add('is-shaking'); setTimeout(() => this.elements.stage.classList.remove('is-shaking'), 400); this.background.triggerGlitch(400); this.setGameState('scan');
                     const radarEl = document.getElementById('radar');
                     radarEl.style.setProperty('--scan-line-height', this.state.upgrades.scanWidth.unlocked ? '15px' : '3px');
-                    const radarConfig = { dotCount: 8, maxTargets: 3, targetChance: 0.4 - (this.state.heat * 0.01), epicChance: this.state.upgrades.intelBoost.unlocked ? 0.3 : 0.1 };
+                    const radarConfig = { dotCount: 12, maxTargets: 4, targetChance: 0.5 - (this.state.heat * 0.01), epicChance: this.state.upgrades.intelBoost.unlocked ? 0.3 : 0.1 };
                     this.radar = new RadarScanner('radar', radarConfig, { hit: (dot) => this.onRadarHit(dot) }); this.radar.start();
                 }
 
@@ -405,7 +408,7 @@
                     this.elements.hud.rep.textContent = this.state.reputation;
                 }
 
-                toast(message, type = 'info') {
+                toast(message, type, duration = 3000) {
                     const toast = document.createElement('div');
                     toast.className = `toast toast-entering ${type}`;
                     toast.textContent = message;
@@ -414,7 +417,7 @@
                     setTimeout(() => {
                         toast.classList.add('toast-exiting');
                         setTimeout(() => toast.remove(), 400);
-                    }, 3000);
+                    }, duration);
                 }
 
                 renderUpgrades() {
