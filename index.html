@@ -3,471 +3,839 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Najdi smažák v17.4 - Vylepšená Detekce</title>
-    
-    <script>
-        (function() {
-            function drawIcon(size) {
-                const canvas = document.createElement('canvas'); canvas.width = size; canvas.height = size; const ctx = canvas.getContext('2d'); const scale = size / 512; ctx.fillStyle = '#0a192f'; ctx.fillRect(0, 0, size, size); ctx.save(); ctx.translate(size / 2, size / 2); const bagWidth = 280 * scale; const bagHeight = 320 * scale; ctx.beginPath(); ctx.moveTo(-bagWidth / 2, -bagHeight / 2 + 50 * scale); ctx.lineTo(-bagWidth / 2, bagHeight / 2); ctx.quadraticCurveTo(0, bagHeight / 2 + 40 * scale, bagWidth / 2, bagHeight / 2); ctx.lineTo(bagWidth / 2, -bagHeight / 2 + 50 * scale); ctx.closePath(); ctx.fillStyle = 'rgba(230, 240, 255, 0.15)'; ctx.strokeStyle = 'rgba(150, 180, 220, 0.4)'; ctx.lineWidth = 6 * scale; ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-bagWidth / 2 * 0.8, bagHeight / 2); ctx.quadraticCurveTo(-bagWidth / 2 * 0.5, bagHeight / 2 - 100 * scale, 0, bagHeight / 2 - 50 * scale); ctx.quadraticCurveTo(bagWidth / 2 * 0.5, bagHeight / 2 - 100 * scale, bagWidth / 2 * 0.8, bagHeight / 2); ctx.closePath(); ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'; ctx.shadowColor = 'rgba(255, 255, 255, 0.7)'; ctx.shadowBlur = 20 * scale; ctx.fill(); ctx.shadowBlur = 0; ctx.fillStyle = 'rgba(20, 30, 50, 0.5)'; ctx.fillRect(-bagWidth/2 - 10*scale, -bagHeight/2 + 40*scale, bagWidth + 20*scale, 20*scale); ctx.strokeStyle = 'rgba(150, 180, 220, 0.6)'; ctx.strokeRect(-bagWidth/2 - 10*scale, -bagHeight/2 + 40*scale, bagWidth + 20*scale, 20*scale); ctx.beginPath(); ctx.moveTo(-40 * scale, -bagHeight / 2 + 40 * scale); ctx.quadraticCurveTo(0, -bagHeight/2 - 30 * scale, 40 * scale, -bagHeight/2 + 40 * scale); ctx.strokeStyle = '#facc15'; ctx.lineWidth = 10 * scale; ctx.stroke(); ctx.restore(); return canvas.toDataURL('image/png');
-            }
-            const icon192 = drawIcon(192), icon512 = drawIcon(512), favicon = drawIcon(32), themeColor = '#0a192f'; const manifest = { name: "Najdi smažák v17.4", short_name: "Smažák", start_url: ".", display: "standalone", background_color: themeColor, theme_color: themeColor, icons: [{ src: icon192, type: "image/png", sizes: "192x192" }, { src: icon512, type: "image/png", sizes: "512x512" }] }; const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' }); const manifestURL = URL.createObjectURL(blob); document.head.insertAdjacentHTML('beforeend', `<link rel="icon" href="${favicon}"><link rel="apple-touch-icon" href="${icon192}"><link rel="manifest" href="${manifestURL}"><meta name="theme-color" content="${themeColor}"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">`);
-        })();
-    </script>
+    <title>Piko Přepadení</title>
 
-    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/"
-        }
-    }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Piko Přepadení">
+    <meta name="theme-color" content="#0a192f">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <!-- Knihovna Tone.js pro generování zvuků -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.min.js"></script>
+
     <style>
+        /* --- Globální nastavení a proměnné --- */
         :root {
-            --bg-color: #0a192f; --accent-cyan: #07f5f5; --accent-purple: #c355f7; --accent-yellow: #fde047;
-            --accent-red: #f43f5e; --accent-white: #e2e8f0; --accent-green: #4ade80; --text-primary: #e2e8f0; --text-secondary: #94a3b8;
-            --glass-bg: rgba(15, 23, 42, 0.7); --glass-border: rgba(51, 65, 85, 0.5);
-            --glow-cyan: rgba(7, 245, 245, 0.5); --glow-red: rgba(244, 63, 94, 0.5); --glow-white: rgba(226, 232, 240, 0.5); --glow-yellow: rgba(253, 224, 71, 0.5); --glow-purple: rgba(195, 85, 247, 0.5);
-            --safe-area-top: env(safe-area-inset-top, 0px); --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-            --safe-area-left: env(safe-area-inset-left, 0px); --safe-area-right: env(safe-area-inset-right, 0px);
-        }
-        .night-mode { --bg-color: #020617; --glass-bg: rgba(2, 6, 23, 0.6); --glass-border: rgba(71, 85, 105, 0.5); }
-        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; touch-action: none; -webkit-tap-highlight-color: transparent; background-color: var(--bg-color); color: var(--text-primary); font-family: 'Share Tech Mono', monospace; transition: background-color 0.5s; }
-        #webgl-canvas { position: fixed; top: 0; left: 0; z-index: 0; }
-        #root { position: fixed; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; }
-        #stage { position: relative; width: 360px; height: 640px; transform-origin: center center; overflow: hidden; display: flex; flex-direction: column; padding: var(--safe-area-top) var(--safe-area-right) var(--safe-area-bottom) var(--safe-area-left); }
-        
-        #stage::before { content: ''; position: absolute; inset: 0; z-index: 99; pointer-events: none; box-shadow: inset 0 0 100px 20px rgba(10, 25, 47, 0.8); background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXVpaWl9fX1ZWVkICAgHBwdQUFBKSkpISEhHR0dISEhDQ0NERERGRkYAAAAAAAD///8EBAQAAAAAAAD///8fHx9aWloBAQG2S3bOAAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAEBJREFUOI1jYBgFo2AUjIJRMApGwSigixrB+d9h56/58x8w8M9/4M8/YOB3+PNfMPA/fPif+fMfMPA/fPif+fM/AAC23wHlKULTiAAAAABJRU5ErkJggg=='); opacity: 0.05; }
-        #stage::after { content: ''; position: absolute; inset: 0; z-index: 100; pointer-events: none; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 3px 100%; animation: flicker 0.15s infinite; }
-        @keyframes flicker { 0% { opacity: 0.2; } 20% { opacity: 0.8; } 40% { opacity: 0.3; } 60% { opacity: 0.9; } 80% { opacity: 0.2; } 100% { opacity: 0.8; } }
-        @keyframes screen-shake { 0%, 100% { transform: translate(0, 0) rotate(0); } 10% { transform: translate(-1px, -2px) rotate(-0.5deg); } 30% { transform: translate(2px, 1px) rotate(0.5deg); } 50% { transform: translate(-1px, 2px) rotate(-0.2deg); } 70% { transform: translate(2px, 1px) rotate(0.2deg); } 90% { transform: translate(-1px, -1px) rotate(0); } }
-        .is-shaking { animation: screen-shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-        @media (prefers-reduced-motion: reduce) { .is-shaking, #stage::after { animation: none; } }
-        
-        .font-orbitron { font-family: 'Orbitron', sans-serif; }
-        .scene { position: absolute; inset: 0; display: flex; flex-direction: column; transition: opacity 0.4s ease, transform 0.4s ease; }
-        .scene.hidden { opacity: 0; transform: scale(0.98); pointer-events: none; }
-        #hud { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 12px; z-index: 10; gap: 8px; }
-        .hud-pill { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 4px 8px; border-radius: 99px; font-size: 12px; text-shadow: 0 0 5px var(--glow-cyan); }
-        .btn { font-family: 'Orbitron', sans-serif; font-weight: 700; padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); color: var(--text-primary); text-transform: uppercase; letter-spacing: 1.5px; background: linear-gradient(45deg, rgba(7, 245, 245, 0.8), rgba(195, 85, 247, 0.8)); box-shadow: 0 0 20px 2px var(--glow-cyan), inset 0 0 5px rgba(255,255,255,0.5); transition: all 0.2s ease; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
-        .btn:hover:not(:disabled) { box-shadow: 0 0 30px 5px var(--glow-purple), inset 0 0 10px rgba(255,255,255,0.5); transform: translateY(-2px); }
-        .btn:active:not(:disabled) { transform: scale(0.97) translateY(1px); }
-        .btn:disabled { filter: grayscale(80%) brightness(0.7); opacity: 0.6; cursor: not-allowed; box-shadow: none; }
-        #toast-container { position: absolute; bottom: 20px; left: 20px; right: 20px; display: flex; flex-direction: column-reverse; gap: 8px; z-index: 40; pointer-events: none; }
-        .toast { background: var(--glass-bg); backdrop-filter: blur(10px); padding: 10px 14px; border-radius: 12px; font-size: 13px; border-left: 4px solid var(--accent-cyan); transition: all 0.4s ease; transform-origin: bottom center; }
-        .toast.toast-entering { opacity: 0; transform: translateY(20px); }
-        .toast.toast-exiting { opacity: 0; transform: scale(0.9); }
-        .toast.success { border-color: var(--accent-green); }
-        .toast.fail { border-color: var(--accent-red); }
-        .toast.achievement { border-color: var(--accent-yellow); color: var(--accent-yellow); font-weight: bold; }
-        .panel { margin: auto; width: 90%; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); padding: 24px; text-align: center; transition: border-color 0.3s; }
-        .upgrade-item, .log-item, .achievement-item { padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; margin-bottom: 8px; text-align: left; }
-        .upgrade-item.unlocked, .achievement-item.unlocked { border-color: var(--accent-green); background-color: rgba(74, 222, 128, 0.1); }
-        .upgrade-item h4, .achievement-item h4 { color: var(--accent-yellow); }
+            --primary-dark: #0a192f;
+            --neon-blue: #00f6ff;
+            --neon-purple: #a855f7;
+            --light-text: #ccd6f6;
+            --dark-text: #8892b0;
+            --glass-bg: rgba(23, 42, 69, 0.3);
+            --glass-border: rgba(0, 246, 255, 0.2);
+            
+            --font-header: 'Orbitron', sans-serif;
+            --font-body: 'Share Tech Mono', monospace;
 
-        #radar { position: relative; width: 320px; height: 320px; display: flex; justify-content: center; align-items: center; }
-        .scanner-disk { width: 280px; height: 280px; background-color: rgba(10, 25, 47, 0.5); border: 2px solid rgba(7, 245, 245, 0.3); border-radius: 50%; box-shadow: 0 0 40px var(--glow-cyan) inset, 0 0 10px var(--glow-cyan); animation: pulse-disk 4s infinite ease-in-out; position: relative; overflow: hidden; }
-        .scanner-disk::before { content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; background-image: radial-gradient(rgba(7, 245, 245, 0.1) 1px, transparent 1px), radial-gradient(rgba(7, 245, 245, 0.1) 1px, transparent 1px); background-size: 20px 20px; background-position: 0 0, 10px 10px; }
-        .scanner-line { position: absolute; left: 5%; width: 90%; height: var(--scan-line-height, 3px); background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent); box-shadow: 0 0 15px 3px var(--glow-cyan); border-radius: 3px; animation: scan-line 4s ease-in-out infinite; top: 10%; transition: height 0.3s ease; }
-        .target-dot { position: absolute; border-radius: 50%; transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(var(--s, 1)); transition: transform 0.1s linear, box-shadow 0.3s ease, opacity 0.3s ease; cursor: pointer; background-color: var(--accent-green); box-shadow: 0 0 10px var(--glow-green); opacity: 1; min-width: 12px; min-height: 12px; }
-        .dot-decoy { background-color: var(--accent-red); box-shadow: 0 0 10px var(--glow-red); }
-        .dot-epic { background-color: var(--accent-purple); box-shadow: 0 0 10px var(--glow-purple); }
-        .dot-target { background-color: var(--accent-cyan); box-shadow: 0 0 10px var(--glow-cyan); }
-        .blink { animation: blink 0.3s; }
-        @keyframes blink { 50% { opacity: 0.5; } }
-        @keyframes pulse-disk { 50% { box-shadow: 0 0 50px var(--glow-cyan) inset, 0 0 20px var(--glow-cyan); } }
-        @keyframes scan-line { 0%, 100% { top: 10%; } 50% { top: 90%; } }
+            /* Safe areas for iPhone notch */
+            --safe-area-top: env(safe-area-inset-top, 20px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 20px);
+            --safe-area-left: env(safe-area-inset-left, 20px);
+            --safe-area-right: env(safe-area-inset-right, 20px);
+        }
+
+        /* --- Základní styly --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--primary-dark);
+            color: var(--light-text);
+            font-family: var(--font-body);
+            -webkit-tap-highlight-color: transparent; /* Disable tap highlight on iOS */
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #game-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #0a192f 0%, #172a46 70%, #303C55 100%);
+        }
+
+        /* --- HUD (Heads-Up Display) --- */
+        #hud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            padding-top: calc(15px + var(--safe-area-top));
+            padding-left: calc(15px + var(--safe-area-left));
+            padding-right: calc(15px + var(--safe-area-right));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .hud-item {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-family: var(--font-header);
+            text-shadow: 0 0 5px var(--neon-blue);
+            background: var(--glass-bg);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+        }
         
-        #varna-container { width: 100%; height: 60px; background-color: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 10px; position: relative; overflow: hidden; }
-        #varna-bar { position: absolute; top: 0; left: 0; width: 2%; height: 100%; background-color: var(--accent-cyan); animation: varna-move 3s ease-in-out infinite; }
-        #varna-zone { position: absolute; top: 0; height: 100%; width: 15%; background-color: rgba(74, 222, 128, 0.5); border-left: 2px solid var(--accent-green); border-right: 2px solid var(--accent-green); }
-        @keyframes varna-move { 0% { left: 0%; } 50% { left: 98%; } 100% { left: 0%; } }
-        .tutorial { position: absolute; bottom: 80px; text-align: center; font-size: 12px; color: var(--text-secondary); }
+        .hud-item-right {
+            pointer-events: all;
+        }
+
+        .hud-item span {
+            margin-left: 10px;
+        }
+
+        .hud-item svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--neon-blue);
+            filter: drop-shadow(0 0 3px var(--neon-blue));
+        }
+
+        /* --- Glassmorphism Panely (Menu, Game Over) --- */
+        .glass-panel {
+            position: absolute;
+            width: calc(100% - 40px);
+            max-width: 350px;
+            padding: 30px;
+            padding-bottom: calc(30px + var(--safe-area-bottom));
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            z-index: 20;
+            display: none; /* Skryto defaultně */
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .glass-panel.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .game-title {
+            font-family: var(--font-header);
+            font-size: 2.5rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+            margin-bottom: 5px;
+        }
+
+        .game-subtitle {
+            font-size: 1rem;
+            color: var(--dark-text);
+            margin-bottom: 30px;
+        }
+
+        .menu-title {
+            font-family: var(--font-header);
+            font-size: 2rem;
+            color: var(--neon-purple);
+            text-shadow: 0 0 8px var(--neon-purple);
+            margin-bottom: 15px;
+        }
+
+        .quote-text, .score-summary p {
+            font-size: 1.1rem;
+            color: var(--light-text);
+            margin-bottom: 15px;
+        }
+
+        .score-summary {
+            margin: 20px 0;
+        }
+
+        /* --- Tlačítka --- */
+        .ui-button {
+            min-width: 44px;
+            min-height: 44px;
+            padding: 10px 20px;
+            font-family: var(--font-header);
+            font-size: 1rem;
+            color: var(--light-text);
+            background: transparent;
+            border: 2px solid var(--neon-purple);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 5px var(--neon-purple);
+            box-shadow: 0 0 10px 0 var(--neon-purple) inset, 0 0 10px 0 var(--neon-purple);
+        }
+
+        .ui-button:hover, .ui-button:focus {
+            background: rgba(168, 85, 247, 0.2);
+            box-shadow: 0 0 15px 0 var(--neon-purple) inset, 0 0 20px 0 var(--neon-purple);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .ui-button:active {
+            transform: scale(0.98);
+        }
+
+        .large-button {
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            margin: 20px 0;
+        }
+
+        .menu-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Styly pro ikony v tlačítkách */
+        .ui-button svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--neon-purple);
+            transition: all 0.3s ease;
+        }
+
+        .ui-button:hover svg, .ui-button:focus svg {
+            fill: white;
+            filter: drop-shadow(0 0 5px white);
+        }
+
+        #pause-button {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px 0 var(--neon-blue) inset, 0 0 10px 0 var(--neon-blue);
+        }
+        #pause-button svg {
+            fill: var(--neon-blue);
+        }
+        #pause-button:hover {
+             background: rgba(0, 246, 255, 0.2);
+             box-shadow: 0 0 15px 0 var(--neon-blue) inset, 0 0 20px 0 var(--neon-blue);
+        }
+
+        /* --- Zprávy ve hře --- */
+        #message-display {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            font-family: var(--font-header);
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 8px var(--neon-blue);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        #message-display.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-20px);
+        }
     </style>
 </head>
 <body>
-    <canvas id="webgl-canvas"></canvas>
-    <div id="root" role="application">
-        <div id="stage">
-            <div id="scene-menu" class="scene items-center justify-center">
-                <div class="panel">
-                    <h1 class="font-orbitron text-4xl font-black text-cyan-300 mb-2" style="text-shadow: 0 0 15px var(--glow-cyan);">NAJDI SMAŽÁK</h1>
-                    <p class="text-slate-400 mb-6">v17.4 - Vylepšená Detekce</p>
-                    <div class="flex flex-col gap-3">
-                        <button data-action="play" class="btn w-full">NOVÁ HRA</button>
-                        <button data-action="continue" class="btn w-full hidden" style="background: linear-gradient(45deg, #4ade80, #22c55e); box-shadow: 0 0 20px rgba(74, 222, 128, 0.45);">POKRAČOVAT</button>
-                        <button data-action="show-upgrades" class="btn w-full" style="background: linear-gradient(45deg, #fde047, #f59e0b); box-shadow: 0 0 20px rgba(250, 204, 21, 0.45);">SKLAD</button>
-                        <button data-action="show-logs" class="btn w-full" style="background: linear-gradient(45deg, #c355f7, #9333ea); box-shadow: 0 0 20px rgba(195, 85, 247, 0.45);">DENÍK & ÚSPĚCHY</button>
-                    </div>
-                </div>
-            </div>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
 
-            <div id="scene-dispatcher" class="scene hidden">
-                <header id="hud" aria-label="Herní statistiky">
-                    <div class="text-left"><div class="hud-pill">DEN <b id="stat-day">1</b></div></div>
-                    <div id="hud-title" class="font-orbitron font-bold text-lg text-cyan-300 text-center">DISPEČINK</div>
-                    <div class="text-right"><div class="hud-pill">REPUTACE <b id="stat-rep">0</b></div></div>
-                </header>
-                <main class="flex-1 flex flex-col justify-center items-center p-4">
-                    <div id="event-panel" class="panel w-full mb-4 hidden"></div>
-                    <div id="job-panel" class="panel w-full">
-                        <div id="job-placeholder">
-                            <h2 class="font-orbitron text-xl font-bold text-cyan-300 mb-2">ŽÁDNÝ SIGNÁL</h2>
-                            <p class="text-slate-400">Potřebuješ nasbírat <b id="intel-needed" class="text-yellow-300"></b> intelu.</p>
-                            <p class="text-xs text-slate-500 mt-2">Aktuálně: <b id="intel-current" class="text-yellow-400"></b> | Heat: <b id="heat-current" class="text-red-400"></b></p>
-                        </div>
-                        <div id="job-details" class="hidden">
-                            <h2 class="font-orbitron text-xl font-bold text-cyan-300 mb-2">PŘÍCHOZÍ ÚKOL</h2>
-                            <div id="job-contact-avatar" class="mx-auto my-3 w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center font-orbitron font-black text-2xl border-2 p-2"></div>
-                            <h3 id="job-contact-name" class="text-lg font-bold text-yellow-300"></h3>
-                            <p id="job-description" class="text-slate-300 my-4"></p>
-                        </div>
-                    </div>
-                </main>
-                <footer id="actions" class="p-4">
-                    <button data-action="scan" class="btn w-full">SKENOVAT OBLAST</button>
-                    <button data-action="accept-job" class="btn w-full hidden">PŘIJMOUT ÚKOL</button>
-                </footer>
+        <div id="hud">
+            <div class="hud-item score-container">
+                <span id="score-icon"></span>
+                <span id="score">0</span>
             </div>
-
-            <div id="scene-scan" class="scene hidden items-center justify-center">
-                <div class="panel absolute top-4 w-auto"><h2 class="font-orbitron text-xl font-bold text-cyan-300">NAJDI ZDROJOVÝ SIGNÁL</h2></div>
-                <div id="radar">
-                    <div class="scanner-disk">
-                        <div class="target-dots-container"></div>
-                    </div>
-                    <div class="scanner-line"></div>
-                </div>
-                <p class="tutorial">Klikni na cyanové/fialové tečky pro intel. Vyhněte se červeným návnadám!</p>
-                 <button data-action="scan-back" class="btn absolute bottom-4 w-1/2 bg-gray-500/80" style="background: #4b5563; box-shadow: none;">ZPĚT</button>
+            <div class="hud-item health-container">
+                <span id="health-icon"></span>
+                <span id="health">3</span>
             </div>
-
-            <div id="scene-minigame-varna" class="scene hidden items-center justify-center">
-                <div class="panel">
-                    <h2 class="font-orbitron text-xl font-bold text-cyan-300 mb-4">KALIBRACE TEPLOTY</h2>
-                    <p class="text-slate-400 mb-4">Zastav sondu v zelené zóně pro maximální čistotu!</p>
-                    <div id="varna-container">
-                        <div id="varna-zone"></div>
-                        <div id="varna-bar"></div>
-                    </div>
-                    <button data-action="minigame-varna-stop" class="btn w-full mt-6">ZASTAVIT</button>
-                </div>
+            <div class="hud-item-right">
+                 <button id="pause-button" class="ui-button" aria-label="Pozastavit hru"></button>
             </div>
-            <div id="scene-minigame-deal" class="scene hidden items-center justify-center">
-                <div class="panel">
-                    <h2 class="font-orbitron text-xl font-bold text-yellow-300 mb-4">PŘEDÁVKA PROBÍHÁ</h2>
-                    <p class="text-slate-400">Zůstaň ve stínu a čekej na signál...</p>
-                    <div class="w-full bg-slate-700 rounded-full h-2.5 mt-4"><div class="bg-yellow-400 h-2.5 rounded-full animate-pulse"></div></div>
-                </div>
-            </div>
-            <div id="scene-minigame-chill" class="scene hidden items-center justify-center">
-                <div class="panel">
-                    <h2 class="font-orbitron text-xl font-bold text-green-400 mb-4">RELAXACE</h2>
-                    <p class="text-slate-400">Udržuj nízký profil a klidnou hlavu...</p>
-                    <div class="w-full bg-slate-700 rounded-full h-2.5 mt-4"><div class="bg-green-400 h-2.5 rounded-full animate-pulse"></div></div>
-                </div>
-            </div>
-             <div id="scene-game-over" class="scene hidden items-center justify-center">
-                <div class="panel text-center">
-                    <h1 class="font-orbitron text-4xl font-black text-red-500 mb-2" style="text-shadow: 0 0 15px var(--glow-red);">SIGNÁL ZTRACEN</h1>
-                    <p class="text-slate-400 mb-6">Příliš velký heat. Musels zmizet ze sítě.</p>
-                    <button data-action="restart" class="btn w-full">ZAČÍT ZNOVU</button>
-                </div>
-            </div>
-            
-            <div id="scene-upgrades" class="scene hidden items-center justify-center"></div>
-            <div id="scene-logs" class="scene hidden items-center justify-center"></div>
-            <div id="toast-container" aria-live="assertive" aria-atomic="true"></div>
         </div>
+
+        <div id="main-menu" class="glass-panel active">
+            <h1 class="game-title">Piko Přepadení</h1>
+            <p class="game-subtitle">Satirická jízda Prahou</p>
+            <button id="start-game-button" class="ui-button large-button">
+                <span id="play-icon-menu"></span>
+                <span>Spustit Jízdu</span>
+            </button>
+            <div class="menu-buttons">
+                <button id="leaderboard-button" class="ui-button" aria-label="Žebříček"></button>
+                <button id="settings-button" class="ui-button" aria-label="Nastavení"></button>
+            </div>
+        </div>
+
+        <div id="pause-menu" class="glass-panel">
+            <h2 class="menu-title">Pauza</h2>
+            <p>Dáváš si čouda?</p>
+            <button id="resume-game-button" class="ui-button large-button">
+                <span id="play-icon-pause"></span>
+                <span>Pokračovat</span>
+            </button>
+            <button id="main-menu-button" class="ui-button">Zpět do Menu</button>
+        </div>
+
+        <div id="game-over-screen" class="glass-panel">
+            <h2 class="menu-title">Chytli Tě!</h2>
+            <p id="game-over-quote" class="quote-text">Příště běž jinudy!</p>
+            <div class="score-summary">
+                <p>Tvoje Skóre: <span id="final-score">0</span></p>
+                <p>Nejlepší Jízda: <span id="high-score">0</span></p>
+            </div>
+            <button id="restart-game-button" class="ui-button large-button">
+                 <span id="restart-icon-gameover"></span>
+                <span>Zkusit Znovu</span>
+            </button>
+        </div>
+
+        <div id="message-display" class="message"></div>
     </div>
 
-    <template id="template-upgrades">
-        <div class="panel">
-            <h2 class="font-orbitron text-2xl font-bold text-cyan-300 mb-2">VYLEPŠENÍ SKLADU</h2>
-            <p class="mb-4">Reputace: <b id="upgrades-rep-label">0</b></p>
-            <div id="upgrades-list" class="max-h-64 overflow-y-auto"></div>
-            <button data-action="back-to-menu" class="btn w-full bg-gray-500/80 mt-4" style="background: #4b5563; box-shadow: none;">ZPĚT DO MENU</button>
-        </div>
-    </template>
-    <template id="template-logs">
-        <div class="panel w-full">
-            <h2 class="font-orbitron text-2xl font-bold text-cyan-300 mb-4">DENÍK & ÚSPĚCHY</h2>
-            <h3 class="font-orbitron text-lg font-bold text-yellow-300 mb-2 text-left">ÚSPĚCHY</h3>
-            <div id="achievements-list" class="max-h-32 overflow-y-auto mb-4"></div>
-            <h3 class="font-orbitron text-lg font-bold text-yellow-300 mb-2 text-left">ZÁPISKY ZE DNA</h3>
-            <div id="logs-list" class="max-h-40 overflow-y-auto text-left text-sm text-slate-400"></div>
-            <button data-action="back-to-menu" class="btn w-full bg-gray-500/80 mt-4" style="background: #4b5563; box-shadow: none;">ZPĚT DO MENU</button>
-        </div>
-    </template>
-
-    <script type="module">
-        import * as THREE from 'three';
-        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-        import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const STATE_VERSION = 17.4;
-            const MAX_HEAT = 10;
-            const DATA = {
-                subjects: [ { id: 'slehac', color: 'var(--accent-red)', name: 'Šlehař Delta-Piko', logPhrases: ['Vařím dávku, drž se', 'Šlehám vrstvičku I', 'Dealer hlásí, že zboží jede', 'Piko čistota 78 %, dobrý', 'Připravuju stříkačku', 'Váha ukazuje přesně, dneska to bude jízda.', 'Filtruju přes cigaretu, klasika.'] }, { id: 'hulic', color: 'var(--accent-green)', name: 'Hulič Zubatá Žárovka', logPhrases: ['Přepaluju sklo', 'Už to bublá, kámo', 'Mám totální červený oči', 'Kde je zapalovač?', 'Tohle je silnej model', 'Tenhle model lepí prsty, to je dobře.', 'Sháním papírky, došly mi.'] }, { id: 'domingo', color: 'var(--accent-yellow)', name: 'Domingo ze Smíchova', logPhrases: ['Mám čerstvej matroš, chceš?', 'Dneska akce, dva za cenu jednoho.', 'Bacha, za rohem stojej fízlové.', 'Platba jen v hotovosti, kámo.', 'Tohle je čistý, přísahám.'] }, { id: 'pedro', color: 'var(--accent-cyan)', name: 'Pedro Perníček', logPhrases: ['Jsem na cestě, čekej.', 'Už jsem za rohem, připrav prachy.', 'Máš přesně? Nemám na vrácení.', 'Dneska mám zpoždění, kolony.', 'Nová várka, silnější než minule.'] }, { id: 'sypac', color: 'var(--accent-purple)', name: 'Sypač Kartelovej Kocour', logPhrases: ['Sypu čáru na CDčko.', 'Pytlíky zamotaný, trvá to.', 'Někdo klepe na dveře, stopka.', 'Šňůra rovná jak pravítko.', 'Prášek se sype sám.'] }, ],
-                jobTemplates: [
-                    { type: 'cook', character: 'slehac', description: 'Šlehař potřebuje dohled nad novou várkou. Ujisti se, že to nepokazí.', minigame: 'varna', intelRequired: 10, repReward: 2 },
-                    { type: 'deal', character: 'domingo', description: 'Domingo má kupce na Smíchově. Musí to proběhnout čistě a rychle.', minigame: 'deal', intelRequired: 15, repReward: 3 },
-                    { type: 'chill', character: 'hulic', description: 'Hulič testuje nový model a potřebuje udržet klidnou hlavu. Pomoz mu s tím.', minigame: 'chill', intelRequired: 8, repReward: 1 },
-                ],
-                upgrades: {
-                    scanWidth: { name: 'Širší Scanner', description: 'Zvětšuje detekční okno skenovací linky.', cost: 3, unlocked: false },
-                    heatSink: { name: 'Tichý režim', description: 'Snižuje nárůst "heatu" při zasažení návnady.', cost: 5, unlocked: false },
-                    intelBoost: { name: 'Zesilovač Signálu', description: 'Zvyšuje šanci na nalezení epického signálu (více intelu).', cost: 8, unlocked: false },
-                    dotVisibility: { name: 'Zlepšená Viditelnost', description: 'Tečky jsou viditelnější a větší.', cost: 4, unlocked: false },
-                },
-                achievements: { dealerHunter: { name: 'Certified Dealer Hunter', description: 'Dokonči 10 úspěšných misí.', unlocked: false, condition: (state) => state.jobsCompleted >= 10 }, masterCook: { name: 'Master Cook', description: 'Dokonči vaření s čistotou 100%.', unlocked: false, condition: (state, result) => result?.minigame === 'varna' && result?.purity === 100 }, },
-                randomEvents: [
-                    { id: 'police_raid', title: 'Policejní Razie!', description: 'V oblasti je zvýšená aktivita. Dnes bude všechno víc horký.', effect: (state) => { state.heat += 3; return `Heat se okamžitě zvýšil o 3!`; } },
-                    { id: 'double_rep', title: 'Zlatá Horečka', description: 'Poptávka je obrovská. Dneska jsou odměny dvojnásobné!', effect: (state) => { state.eventFlags.doubleRep = true; return `Všechny odměny reputace jsou dnes dvojnásobné.`; } },
-                    { id: 'signal_boost', title: 'Solární Bouře', description: 'Atmosférické poruchy zesilují signály. Snadněji získáš intel.', effect: (state) => { state.eventFlags.signalBoost = true; return `Zisk intelu ze skenování je o 1 vyšší.`; } },
-                ]
-            };
-            DATA.subjects.forEach(s => { s.avatar = `<svg viewBox="0 0 100 100" style="fill:${s.color}; stroke:${s.color};"><text x="50" y="55" font-size="60" text-anchor="middle" dominant-baseline="central" font-family="Orbitron">${s.name.charAt(0)}</text></svg>`; });
-
-            class AudioManager { constructor() { this.isInitialized = false; this.synth = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination(); } async init() { if (this.isInitialized) return; try { await Tone.start(); this.isInitialized = true; } catch(e) { console.error("Could not initialize audio context.", e); } } playBeep() { if(!this.isInitialized) this.init(); this.synth.triggerAttackRelease("C5", "8n"); } playSuccess() { if(!this.isInitialized) this.init(); this.synth.triggerAttackRelease("G5", "8n", Tone.now()); this.synth.triggerAttackRelease("C6", "8n", Tone.now() + 0.1); } playFailure() { if(!this.isInitialized) this.init(); this.synth.triggerAttackRelease("C4", "4n"); } }
-            class InteractiveBackground { constructor(container) { this.container = container; this.scene = new THREE.Scene(); this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); this.renderer = new THREE.WebGLRenderer({ canvas: this.container, alpha: true }); this.composer = null; this.glitchPass = null; this.init(); } init() { this.renderer.setSize(window.innerWidth, window.innerHeight); this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); this.camera.position.z = 5; this.scene.fog = new THREE.Fog(0x0a192f, 5, 15); this.composer = new EffectComposer(this.renderer); this.composer.addPass(new RenderPass(this.scene, this.camera)); this.glitchPass = new GlitchPass(); this.glitchPass.enabled = false; this.composer.addPass(this.glitchPass); const particleCount = 1000; const positions = new Float32Array(particleCount * 3); for (let i = 0; i < particleCount * 3; i++) { positions[i] = (Math.random() - 0.5) * 20; } const particlesGeometry = new THREE.BufferGeometry(); particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3)); const particlesMaterial = new THREE.PointsMaterial({ size: 0.02, color: 0x475569, transparent: true, opacity: 0.5 }); const dust = new THREE.Points(particlesGeometry, particlesMaterial); this.scene.add(dust); window.addEventListener('resize', this.onWindowResize.bind(this)); this.animate(); } onWindowResize() { this.camera.aspect = window.innerWidth / window.innerHeight; this.camera.updateProjectionMatrix(); this.renderer.setSize(window.innerWidth, window.innerHeight); this.composer.setSize(window.innerWidth, window.innerHeight); } triggerGlitch(duration = 500) { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; this.glitchPass.enabled = true; setTimeout(() => { this.glitchPass.enabled = false; }, duration); } animate() { requestAnimationFrame(this.animate.bind(this)); this.composer.render(); } }
-            class RadarScanner {
-                constructor(radarElementId, config, callbacks) { this.radar = document.getElementById(radarElementId); if (!this.radar) return; this.callbacks = callbacks; this.config = config; this.scanLine = this.radar.querySelector('.scanner-line'); this.dotsContainer = this.radar.querySelector('.target-dots-container'); this.dots = []; this.isActive = false; this.animationFrameId = null; }
-                start() { this.isActive = true; this.dotsContainer.innerHTML = ''; this.dots = []; this.generateDots(); this.animationFrameId = requestAnimationFrame(() => this.scanLoop()); }
-                stop() { this.isActive = false; if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId); this.animationFrameId = null; }
-                generateDots() { const scannerRadius = this.dotsContainer.offsetWidth / 2; let targetCount = 0; for (let i = 0; i < this.config.dotCount; i++) { const dotEl = document.createElement('div'); const size = Math.floor(Math.random() * 5) + 12; let dotType = 'decoy'; if (targetCount < this.config.maxTargets && Math.random() < this.config.targetChance) { dotType = Math.random() < this.config.epicChance ? 'epic' : 'target'; targetCount++; } dotEl.className = `target-dot dot-${dotType}`; dotEl.style.width = `${size}px`; dotEl.style.height = `${size}px`; const angle = Math.random() * 2 * Math.PI; const radius = Math.sqrt(Math.random()) * (scannerRadius - size); const x = scannerRadius + radius * Math.cos(angle) - size / 2; const y = scannerRadius + radius * Math.sin(angle) - size / 2; dotEl.style.left = `${x}px`; dotEl.style.top = `${y}px`; const dot = { element: dotEl, type: dotType, wasInScanWindow: false }; dotEl.addEventListener('click', (e) => { e.stopPropagation(); if (!this.isActive) return; this.callbacks.hit(dot); }); this.dotsContainer.appendChild(dotEl); this.dots.push(dot); } }
-                scanLoop() { if (!this.isActive) return; const lineRect = this.scanLine.getBoundingClientRect(); this.dots.forEach(dot => { const dotRect = dot.element.getBoundingClientRect(); const isCurrentlyInScanWindow = (lineRect.bottom > dotRect.top && lineRect.top < dotRect.bottom); if (isCurrentlyInScanWindow && !dot.wasInScanWindow) { dot.element.classList.add('blink'); setTimeout(() => dot.element.classList.remove('blink'), 300); } dot.wasInScanWindow = isCurrentlyInScanWindow; }); this.animationFrameId = requestAnimationFrame(() => this.scanLoop()); }
-            }
-
-            class SmazakGame {
-                constructor() { this.state = null; this.radar = null; this.saveStateDebounced = this.debounce(() => this.saveState(), 300); this.elements = { stage: document.getElementById('stage'), scenes: { menu: document.getElementById('scene-menu'), dispatcher: document.getElementById('scene-dispatcher'), scan: document.getElementById('scene-scan'), upgrades: document.getElementById('scene-upgrades'), logs: document.getElementById('scene-logs'), 'minigame-varna': document.getElementById('scene-minigame-varna'), 'minigame-deal': document.getElementById('scene-minigame-deal'), 'minigame-chill': document.getElementById('scene-minigame-chill'), 'game-over': document.getElementById('scene-game-over') }, buttons: { continue: document.querySelector('[data-action="continue"]') }, hud: { day: document.getElementById('stat-day'), rep: document.getElementById('stat-rep') }, job: { panel: document.getElementById('job-panel'), placeholder: document.getElementById('job-placeholder'), details: document.getElementById('job-details'), avatar: document.getElementById('job-contact-avatar'), name: document.getElementById('job-contact-name'), description: document.getElementById('job-description'), intelNeeded: document.getElementById('intel-needed'), intelCurrent: document.getElementById('intel-current'), heatCurrent: document.getElementById('heat-current') }, eventPanel: document.getElementById('event-panel'), templates: { upgrades: document.getElementById('template-upgrades'), logs: document.getElementById('template-logs') }, toastContainer: document.getElementById('toast-container'), }; this.background = new InteractiveBackground(document.getElementById('webgl-canvas')); this.audio = new AudioManager(); this.init(); }
-
-                init() { this.loadState(); this.scaleStage(); this.setupEventListeners(); this.setGameState('menu'); }
-                debounce = (func, delay) => { let timeout; return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), delay); }; };
-                getRandomElement = (arr) => arr[Math.floor(Math.random() * arr.length)];
-                scaleStage = () => { const scale = Math.min(window.innerWidth / 360, window.innerHeight / 640); this.elements.stage.style.transform = `scale(${scale})`; };
-                vibrate = (pattern) => { if (navigator.vibrate) navigator.vibrate(pattern); };
-
-                saveState() { localStorage.setItem(`smazakGameState_v${STATE_VERSION}`, JSON.stringify(this.state)); }
-                loadState() { const defaultState = { version: STATE_VERSION, gameState: 'menu', day: 1, reputation: 0, intel: 0, heat: 0, nextJobIntel: 10, currentJob: null, jobsCompleted: 0, upgrades: JSON.parse(JSON.stringify(DATA.upgrades)), achievements: JSON.parse(JSON.stringify(DATA.achievements)), logEntries: [], eventFlags: {}, }; let savedState = null; const savedStateJSON = localStorage.getItem(`smazakGameState_v${STATE_VERSION}`); if (savedStateJSON) { try { savedState = JSON.parse(savedStateJSON); if (savedState.version !== STATE_VERSION) { savedState = null; } } catch (e) { savedState = null; } } this.state = { ...defaultState, ...savedState }; }
-
-                setGameState(newState) {
-                    if(this.radar) this.radar.stop();
-                    this.state.gameState = newState;
-                    Object.values(this.elements.scenes).forEach(s => s.classList.add('hidden'));
-                    const scene = this.elements.scenes[newState];
-                    if (scene) { setTimeout(() => scene.classList.remove('hidden'), 50); }
-                    this.audio.playBeep();
-                    
-                    if (newState === 'menu') {
-                        const hasSave = !!localStorage.getItem(`smazakGameState_v${STATE_VERSION}`);
-                        this.elements.buttons.continue.classList.toggle('hidden', !hasSave);
-                    } else if (newState === 'dispatcher') { this.updateDispatcherUI();
-                    } else if (newState === 'upgrades') { this.renderUpgrades();
-                    } else if (newState === 'logs') { this.renderLogsAndAchievements(); }
+    <script>
+        // ===================================================================================
+        // SCRIPT 1: UTILS.JS
+        // ===================================================================================
+        const Utils = {
+            getRandomQuote(category) {
+                if (Content && Content.quotes && Content.quotes[category]) {
+                    const quotes = Content.quotes[category];
+                    return quotes[Math.floor(Math.random() * quotes.length)];
                 }
+                return "Hláška nenalezena.";
+            },
+            saveData(key, value) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                } catch (e) {
+                    console.error("Chyba při ukládání dat do localStorage:", e);
+                }
+            },
+            loadData(key, defaultValue) {
+                try {
+                    const value = localStorage.getItem(key);
+                    return value ? JSON.parse(value) : defaultValue;
+                } catch (e) {
+                    console.error("Chyba při načítání dat z localStorage:", e);
+                    return defaultValue;
+                }
+            },
+            vibrate(pattern) {
+                if ('vibrate' in navigator) {
+                    try {
+                        navigator.vibrate(pattern);
+                    } catch (e) {
+                        console.warn("Haptická odezva selhala:", e);
+                    }
+                }
+            }
+        };
+
+        // ===================================================================================
+        // SCRIPT 2: ASSETS.JS (s novými SVG pro herní objekty)
+        // ===================================================================================
+        const Assets = {
+            icons: {
+                play: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>`,
+                pause: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>`,
+                settings: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69-.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path></svg>`,
+                leaderboard: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11V3H8v8H2v10h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-8h4v8z"></path></svg>`,
                 
-                setupEventListeners() {
-                    window.addEventListener('resize', this.scaleStage);
-                    this.elements.stage.addEventListener('click', (e) => {
-                        const target = e.target.closest('[data-action]');
-                        if (!target) return;
-                        const action = target.dataset.action;
-                        const actions = {
-                            'play': () => this.startGame(true),
-                            'continue': () => this.startGame(false),
-                            'restart': () => this.startGame(true),
-                            'show-upgrades': () => this.setGameState('upgrades'),
-                            'show-logs': () => this.setGameState('logs'),
-                            'back-to-menu': () => this.setGameState('menu'),
-                            'scan': () => this.startScan(),
-                            'scan-back': () => this.setGameState('dispatcher'),
-                            'accept-job': () => this.startCurrentJob(),
-                            'minigame-varna-stop': () => this.endMinigameVarna(),
-                            'buy-upgrade': () => this.buyUpgrade(target.closest('[data-upgrade-id]').dataset.upgradeId)
-                        };
-                        if (actions[action]) actions[action]();
-                    });
+                // In-game icons pro HUD
+                drug_pill: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 2.5A6.49 6.49 0 009 9v6a6.5 6.5 0 0013 0V9a6.49 6.49 0 00-6.5-6.5zM12 4h7a3.5 3.5 0 010 7h-7V4z"></path></svg>`,
+                syringe: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" transform="rotate(45)"><path d="M19 3h-1V2h-2v1h-1c-1.1 0-2 .9-2 2v1H2v2h11v1c0 .83-.67 1.5-1.5 1.5H11v2h.5c.28 0 .5.22.5.5V16h-1v2h1v1h2v-1h1v-2h-1v-1.5c0-.28.22-.5.5-.5H13v-2h-.5c-.83 0-1.5-.67-1.5-1.5V9h7V7h-7V5c0-.55.45-1 1-1h1V2h2v1h1v2h-1v2h-2V5h-1c-.55 0-1 .45-1 1v1h2v2h-2v1.68c.84.32 1.5.98 1.5 1.82v2h2v-2h2v-2h-2v-2h-2V7h2V5h2V3z"></path></svg>`,
+
+                // Nové in-game ikony
+                player_piko_pete: `
+                    <svg viewBox="0 0 50 80" xmlns="http://www.w3.org/2000/svg" fill="var(--neon-purple)">
+                        <rect x="15" y="0" width="20" height="20" rx="10" ry="10" stroke="var(--neon-blue)" stroke-width="2"/> <rect x="10" y="20" width="30" height="30" rx="5" ry="5" stroke="var(--neon-blue)" stroke-width="2"/> <rect x="5" y="25" width="10" height="20" rx="3" ry="3" stroke="var(--neon-blue)" stroke-width="2"/> <rect x="35" y="25" width="10" height="20" rx="3" ry="3" stroke="var(--neon-blue)" stroke-width="2"/> <rect x="15" y="50" width="10" height="30" rx="3" ry="3" stroke="var(--neon-blue)" stroke-width="2"/> <rect x="25" y="50" width="10" height="30" rx="3" ry="3" stroke="var(--neon-blue)" stroke-width="2"/> </svg>`,
+
+                lajna_matro: `
+                    <svg viewBox="0 0 50 20" xmlns="http://www.w3.org/2000/svg" fill="white">
+                        <path d="M5 10 H45" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="5" cy="10" r="3" fill="var(--neon-blue)"/>
+                        <circle cx="45" cy="10" r="3" fill="var(--neon-blue)"/>
+                    </svg>`,
+
+                cevko_syringe: `
+                    <svg viewBox="0 0 30 60" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="red" stroke-width="3">
+                        <rect x="10" y="5" width="10" height="40" rx="5" ry="5" fill="rgba(255,0,0,0.5)"/>
+                        <path d="M15 45 L15 55 M15 55 L10 50 M15 55 L20 50" stroke="red" stroke-linecap="round"/>
+                    </svg>`,
+
+                policajt_chase: `
+                    <svg viewBox="0 0 50 60" xmlns="http://www.w3.org/2000/svg" fill="blue">
+                        <rect x="15" y="0" width="20" height="20" rx="10" ry="10" stroke="var(--neon-blue)" stroke-width="2"/> <rect x="10" y="20" width="30" height="30" rx="5" ry="5" fill="darkblue" stroke="var(--neon-blue)" stroke-width="2"/> <circle cx="25" cy="35" r="8" fill="var(--neon-blue)"/> <path d="M10 25 L5 15 M40 25 L45 15" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"/> <path d="M15 50 L10 60 M35 50 L40 60" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"/> </svg>`,
+
+                auto_prekazka: `
+                    <svg viewBox="0 0 70 40" xmlns="http://www.w3.org/2000/svg" fill="gray">
+                        <rect x="5" y="10" width="60" height="25" rx="5" ry="5" fill="darkslategray" stroke="var(--neon-blue)" stroke-width="2"/>
+                        <rect x="15" y="5" width="40" height="10" rx="3" ry="3" fill="rgba(0,0,0,0.5)" stroke="var(--neon-blue)" stroke-width="2"/> <circle cx="15" cy="30" r="7" fill="black" stroke="var(--neon-blue)" stroke-width="2"/>
+                        <circle cx="55" cy="30" r="7" fill="black" stroke="var(--neon-blue)" stroke-width="2"/>
+                    </svg>`
+            }
+        };
+
+        // ===================================================================================
+        // SCRIPT 3: CONTENT.JS
+        // ===================================================================================
+        const Content = {
+            quotes: {
+                start: ["Jdeme na to, kámo!","Dneska to bude jízda!","Hlavně nenápadně...","Potřebuju na vlakáč!"],
+                collect: ["Dobrý matroš!","Tohle zachrání večer!","Čistá práce!","Kvalitka z Dejvic."],
+                health: ["Extra cévko se hodí!","Ještě nejsem na odpis!","Tohle mě postaví na nohy.","Zdravíčko!"],
+                damage: ["Prásknul ses!","Tohle bolí víc než absťák!","Do prdele, fízlové!","Bacha, díra!"],
+                gameOver: ["Chytli tě, šlehaři!","Příště běž jinudy!", "Konec jízdy, kámo.", "Game over, smažko."]
+            }
+        };
+
+        // ===================================================================================
+        // SCRIPT 4: AUDIOMANAGER.JS (NOVÝ SKRIPT)
+        // ===================================================================================
+        const AudioManager = {
+            isInitialized: false,
+            synth: null,
+            noiseSynth: null,
+
+            // Inicializuje Tone.js při první interakci uživatele
+            async initialize() {
+                if (this.isInitialized || typeof Tone === 'undefined') return;
+                try {
+                    await Tone.start();
+                    this.synth = new Tone.Synth().toDestination();
+                    this.noiseSynth = new Tone.NoiseSynth({
+                        noise: { type: 'white' },
+                        envelope: { attack: 0.005, decay: 0.1, sustain: 0 }
+                    }).toDestination();
+                    this.isInitialized = true;
+                    console.log("Audio bylo úspěšně inicializováno.");
+                } catch (e) {
+                    console.error("Chyba při inicializaci audia:", e);
                 }
+            },
 
-                startGame(isNewGame) {
-                    if (isNewGame) { localStorage.removeItem(`smazakGameState_v${STATE_VERSION}`); this.loadState(); }
-                    this.startNewDay(); this.setGameState('dispatcher');
+            playStart() {
+                if (!this.isInitialized) return;
+                this.synth.triggerAttackRelease("C4", "8n", Tone.now());
+                this.synth.triggerAttackRelease("E4", "8n", Tone.now() + 0.1);
+                this.synth.triggerAttackRelease("G4", "8n", Tone.now() + 0.2);
+            },
+
+            playCollect() {
+                if (!this.isInitialized) return;
+                this.synth.triggerAttackRelease("C6", "16n");
+            },
+
+            playHealth() {
+                if (!this.isInitialized) return;
+                this.synth.triggerAttackRelease("A5", "16n", Tone.now());
+                this.synth.triggerAttackRelease("E6", "16n", Tone.now() + 0.1);
+            },
+
+            playDamage() {
+                if (!this.isInitialized) return;
+                this.noiseSynth.triggerAttackRelease("0.1");
+                this.synth.triggerAttackRelease("A2", "8n");
+            },
+
+            playGameOver() {
+                if (!this.isInitialized) return;
+                this.synth.triggerAttackRelease("G3", "8n", Tone.now());
+                this.synth.triggerAttackRelease("E3", "8n", Tone.now() + 0.2);
+                this.synth.triggerAttackRelease("C3", "4n", Tone.now() + 0.4);
+            }
+        };
+
+
+        // ===================================================================================
+        // SCRIPT 5: GAME.JS (UPRAVENÝ)
+        // ===================================================================================
+        window.addEventListener('load', () => {
+            const canvas = document.getElementById('game-canvas');
+            const ctx = canvas.getContext('2d');
+            const gameContainer = document.getElementById('game-container');
+            const mainMenu = document.getElementById('main-menu');
+            const pauseMenu = document.getElementById('pause-menu');
+            const gameOverScreen = document.getElementById('game-over-screen');
+            const hud = document.getElementById('hud');
+            const startButton = document.getElementById('start-game-button');
+            const pauseButton = document.getElementById('pause-button');
+            const resumeButton = document.getElementById('resume-game-button');
+            const restartButton = document.getElementById('restart-game-button');
+            const toMenuButton = document.getElementById('main-menu-button');
+            const scoreDisplay = document.getElementById('score');
+            const healthDisplay = document.getElementById('health');
+            const finalScoreDisplay = document.getElementById('final-score');
+            const highScoreDisplay = document.getElementById('high-score');
+            const gameOverQuoteDisplay = document.getElementById('game-over-quote');
+            const messageDisplay = document.getElementById('message-display');
+            
+            let gameState = 'MENU';
+            let score = 0;
+            let health = 3;
+            let highScore = Utils.loadData('pikoHeistHighScore', 0);
+            let gameSpeed = 3;
+            const initialGameSpeed = 3;
+            const maxGameSpeed = 10;
+            let animationFrameId;
+
+            const player = {
+                x: 0,
+                y: 0,
+                width: 50,
+                height: 80,
+                lane: 1,
+                lanes: [],
+                draw() {
+                    const x = this.x;
+                    const y = this.y;
+                    drawSvg(ctx, Assets.icons.player_piko_pete, x, y, this.width, this.height, 'var(--neon-purple)');
+                },
+                update() {
+                    this.lanes = [canvas.width / 4, canvas.width / 2, canvas.width * 3 / 4];
+                    const targetX = this.lanes[this.lane];
+                    const ease = 0.2;
+                    this.x += (targetX - this.x) * ease;
+                    this.draw();
                 }
+            };
 
-                startNewDay() {
-                    this.state.eventFlags = {}; this.elements.eventPanel.classList.add('hidden');
-                    if (Math.random() < 0.25) {
-                        const event = this.getRandomElement(DATA.randomEvents);
-                        const effectMessage = event.effect(this.state);
-                        this.elements.eventPanel.innerHTML = `<h3 class="font-orbitron font-bold text-yellow-300">${event.title}</h3><p class="text-sm text-slate-300">${event.description}</p><p class="text-xs text-cyan-300 mt-1">${effectMessage}</p>`;
-                        this.elements.eventPanel.classList.remove('hidden'); this.toast(event.title, 'info'); this.checkHeat();
-                    } this.saveState();
+            function drawSvg(ctx, svgString, x, y, width, height, glowColor = null) {
+                const img = new Image();
+                img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
+                ctx.save();
+                if (glowColor) {
+                    ctx.shadowColor = glowColor;
+                    ctx.shadowBlur = 10;
                 }
+                ctx.drawImage(img, x - width / 2, y - height, width, height);
+                ctx.restore();
+            }
 
-                updateDispatcherUI() {
-                    const jobReady = this.state.intel >= this.state.nextJobIntel;
-                    if (jobReady && !this.state.currentJob) { this.generateNewJob(); }
-                    const hasJob = !!this.state.currentJob;
-                    this.elements.job.placeholder.classList.toggle('hidden', hasJob);
-                    this.elements.job.details.classList.toggle('hidden', !hasJob);
-                    document.querySelector('[data-action="scan"]').classList.toggle('hidden', hasJob);
-                    document.querySelector('[data-action="accept-job"]').classList.toggle('hidden', !hasJob);
-                    if (hasJob) { const character = DATA.subjects.find(s => s.id === this.state.currentJob.character); this.elements.job.avatar.innerHTML = character.avatar; this.elements.job.avatar.style.borderColor = character.color; this.elements.job.panel.style.borderColor = character.color; this.elements.job.name.textContent = character.name; this.elements.job.description.textContent = this.state.currentJob.description;
-                    } else { this.elements.job.intelNeeded.textContent = this.state.nextJobIntel; this.elements.job.intelCurrent.textContent = this.state.intel; this.elements.job.heatCurrent.textContent = this.state.heat; }
-                    this.updateHUD();
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                if (player) {
+                    player.y = canvas.height - 100;
                 }
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
 
-                generateNewJob() { this.state.currentJob = this.getRandomElement(DATA.jobTemplates); }
+            function renderUIicons() {
+                document.getElementById('score-icon').innerHTML = Assets.icons.drug_pill;
+                document.getElementById('health-icon').innerHTML = Assets.icons.syringe;
+                document.getElementById('pause-button').innerHTML = Assets.icons.pause;
+                document.getElementById('play-icon-menu').innerHTML = Assets.icons.play;
+                document.getElementById('play-icon-pause').innerHTML = Assets.icons.play;
+                document.getElementById('restart-icon-gameover').innerHTML = Assets.icons.play;
+                document.getElementById('leaderboard-button').innerHTML = Assets.icons.leaderboard;
+                document.getElementById('settings-button').innerHTML = Assets.icons.settings;
+            }
+            
+            let gameObjects = [];
+            let roadLines = [];
+            let cityBackground = [];
 
-                startScan() {
-                    this.elements.stage.classList.add('is-shaking'); setTimeout(() => this.elements.stage.classList.remove('is-shaking'), 400); this.background.triggerGlitch(400); this.setGameState('scan');
-                    const radarEl = document.getElementById('radar');
-                    radarEl.style.setProperty('--scan-line-height', this.state.upgrades.scanWidth.unlocked ? '15px' : '3px');
-                    const radarConfig = { dotCount: 12, maxTargets: 4, targetChance: 0.5 - (this.state.heat * 0.01), epicChance: this.state.upgrades.intelBoost.unlocked ? 0.3 : 0.1 };
-                    this.radar = new RadarScanner('radar', radarConfig, { hit: (dot) => this.onRadarHit(dot) }); this.radar.start();
-                }
+            function createRoadLine() {
+                 roadLines.push({ y: -20, height: 40 });
+            }
 
-                onRadarHit(dot) {
-                    this.radar.stop(); this.vibrate(50);
-                    if (dot.type === 'decoy') {
-                        const heatGain = this.state.upgrades.heatSink.unlocked ? 1 : 2; this.state.heat += heatGain;
-                        this.toast(`Návnada! Heat +${heatGain}`, 'fail'); this.audio.playFailure(); this.checkHeat();
-                    } else {
-                        let intelGain = dot.type === 'epic' ? 5 : 2; if(this.state.eventFlags.signalBoost) intelGain++;
-                        this.state.intel += intelGain; this.toast(`Signál zaměřen! Intel +${intelGain}`, 'success'); this.audio.playSuccess();
-                    } this.saveStateDebounced(); setTimeout(() => this.setGameState('dispatcher'), 500);
-                }
+            function updateRoad() {
+                ctx.strokeStyle = 'rgba(136, 146, 176, 0.3)';
+                ctx.lineWidth = 2;
+                roadLines.forEach((line, index) => {
+                    line.y += gameSpeed * 0.8;
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2, line.y);
+                    ctx.lineTo(canvas.width / 2, line.y - line.height);
+                    ctx.stroke();
+                    if(line.y > canvas.height + line.height) roadLines.splice(index, 1);
+                });
+                if(roadLines.length < 20 && (!roadLines.length || roadLines[roadLines.length - 1]?.y > 80)) createRoadLine();
+            }
 
-                checkHeat() { if (this.state.heat >= MAX_HEAT) { this.setGameState('game-over'); } }
+            function createCityBackground() {
+                const skylineSVG = `
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="#303C55" stroke="rgba(0,0,0,0.1)">
+                        <rect x="0" y="50" width="10" height="50"/> <rect x="15" y="40" width="10" height="60"/> <rect x="30" y="60" width="10" height="40"/> <rect x="45" y="30" width="10" height="70"/> <rect x="60" y="55" width="10" height="45"/> <rect x="75" y="45" width="10" height="55"/> <rect x="90" y="65" width="10" height="35"/> </svg>
+                `;
+                cityBackground.push({
+                    y: -canvas.height * 2,
+                    height: canvas.height * 2,
+                    svg: skylineSVG,
+                    xOffset: Math.random() * (canvas.width / 2) - (canvas.width / 4),
+                    width: canvas.width
+                });
+            }
 
-                startCurrentJob() {
-                    const minigame = this.state.currentJob.minigame; this.setGameState(`minigame-${minigame}`);
-                    if (minigame === 'varna') { const zone = document.getElementById('varna-zone'); zone.style.left = `${Math.floor(Math.random() * 51) + 20}%`;
-                    } else if (minigame === 'deal' || minigame === 'chill') { setTimeout(() => { if (this.state.gameState === `minigame-${minigame}`) { this.endMinigame(true, 'Akce proběhla hladce.', 100); } }, 3000); }
-                }
-
-                endMinigameVarna() {
-                    const bar = document.getElementById('varna-bar'); const zone = document.getElementById('varna-zone');
-                    const barRect = bar.getBoundingClientRect(); const zoneRect = zone.getBoundingClientRect();
-                    const isInside = barRect.left >= zoneRect.left && barRect.right <= zoneRect.right;
-                    const success = isInside;
-                    const purity = success ? 100 : 0;
-                    const message = success ? 'Perfektní kalibrace!' : 'Kalibrace selhala.';
-                    this.endMinigame(success, message, purity);
-                }
-
-                endMinigame(success, message, purity = 100) {
-                    this.toast(message, success ? 'success' : 'fail');
-                    const minigame = this.state.currentJob.minigame;
-                    if (success) {
-                        let repGain = this.state.currentJob.repReward;
-                        if (this.state.eventFlags.doubleRep) repGain *= 2;
-                        this.state.reputation += repGain;
-                        this.state.jobsCompleted++;
-                        this.addLogEntry();
-                        this.checkAchievements({ minigame, purity });
-                    } else {
-                        this.state.heat += 2;
-                        this.checkHeat();
+            function updateCityBackground() {
+                ctx.globalAlpha = 0.2;
+                cityBackground.forEach((bg, index) => {
+                    bg.y += gameSpeed * 0.1;
+                    drawSvg(ctx, bg.svg, canvas.width / 2 + bg.xOffset, bg.y, bg.width, bg.height, null);
+                    if (bg.y > canvas.height + bg.height / 2) {
+                        cityBackground.splice(index, 1);
                     }
-                    this.state.intel = 0;
-                    this.state.currentJob = null;
-                    this.state.nextJobIntel = Math.floor(Math.random() * 10) + 5;
-                    this.state.day++;
-                    this.startNewDay();
-                    this.setGameState('dispatcher');
-                    this.saveState();
-                }
+                });
+                ctx.globalAlpha = 1;
 
-                checkAchievements(result = null) {
-                    for (let key in this.state.achievements) {
-                        const ach = this.state.achievements[key];
-                        if (!ach.unlocked && ach.condition(this.state, result)) {
-                            ach.unlocked = true;
-                            this.toast(`Úspěch: ${ach.name}`, 'achievement');
-                        }
-                    }
-                }
-
-                addLogEntry() {
-                    const character = DATA.subjects.find(s => s.id === this.state.currentJob.character);
-                    const phrase = this.getRandomElement(character.logPhrases);
-                    this.state.logEntries.push(`Den ${this.state.day}: ${phrase}`);
-                }
-
-                updateHUD() {
-                    this.elements.hud.day.textContent = this.state.day;
-                    this.elements.hud.rep.textContent = this.state.reputation;
-                }
-
-                toast(message, type, duration = 3000) {
-                    const toast = document.createElement('div');
-                    toast.className = `toast toast-entering ${type}`;
-                    toast.textContent = message;
-                    this.elements.toastContainer.appendChild(toast);
-                    setTimeout(() => toast.classList.remove('toast-entering'), 50);
-                    setTimeout(() => {
-                        toast.classList.add('toast-exiting');
-                        setTimeout(() => toast.remove(), 400);
-                    }, duration);
-                }
-
-                renderUpgrades() {
-                    const container = this.elements.scenes.upgrades;
-                    container.innerHTML = this.elements.templates.upgrades.innerHTML;
-                    const list = container.querySelector('#upgrades-list');
-                    for (let id in this.state.upgrades) {
-                        const u = this.state.upgrades[id];
-                        const el = document.createElement('div');
-                        el.className = `upgrade-item ${u.unlocked ? 'unlocked' : ''}`;
-                        el.dataset.upgradeId = id;
-                        el.innerHTML = `<h4>${u.name}</h4><p>${u.description}</p><p>Cena: ${u.cost} rep</p>${u.unlocked ? '<p>Zakoupeno</p>' : '<button data-action="buy-upgrade">Koupit</button>'}`;
-                        list.appendChild(el);
-                    }
-                    container.querySelector('#upgrades-rep-label').textContent = this.state.reputation;
-                }
-
-                buyUpgrade(id) {
-                    const u = this.state.upgrades[id];
-                    if (u.unlocked || this.state.reputation < u.cost) return;
-                    this.state.reputation -= u.cost;
-                    u.unlocked = true;
-                    this.toast(`${u.name} zakoupeno!`, 'success');
-                    this.renderUpgrades();
-                    this.saveState();
-                }
-
-                renderLogsAndAchievements() {
-                    const container = this.elements.scenes.logs;
-                    container.innerHTML = this.elements.templates.logs.innerHTML;
-                    const achList = container.querySelector('#achievements-list');
-                    for (let id in this.state.achievements) {
-                        const a = this.state.achievements[id];
-                        const el = document.createElement('div');
-                        el.className = `achievement-item ${a.unlocked ? 'unlocked' : ''}`;
-                        el.innerHTML = `<h4>${a.name}</h4><p>${a.description}</p>`;
-                        achList.appendChild(el);
-                    }
-                    const logList = container.querySelector('#logs-list');
-                    this.state.logEntries.forEach(log => {
-                        const el = document.createElement('div');
-                        el.className = 'log-item';
-                        el.textContent = log;
-                        logList.appendChild(el);
-                    });
+                if (cityBackground.length === 0 || cityBackground[cityBackground.length - 1].y > -canvas.height * 0.5) {
+                    createCityBackground();
                 }
             }
 
-            new SmazakGame();
+            function createGameObject() {
+                const types = [
+                    { type: 'lajna', svg: Assets.icons.lajna_matro, width: 50, height: 20, glow: 'white' },
+                    { type: 'cevko', svg: Assets.icons.cevko_syringe, width: 30, height: 60, glow: 'red' },
+                    { type: 'policajt', svg: Assets.icons.policajt_chase, width: 50, height: 60, glow: 'blue' },
+                    { type: 'auto', svg: Assets.icons.auto_prekazka, width: 70, height: 40, glow: 'gray' }
+                ];
+                const typeObj = types[Math.floor(Math.random() * types.length)];
+                const lane = Math.floor(Math.random() * 3);
+                
+                let newObject = {
+                    type: typeObj.type,
+                    svg: typeObj.svg,
+                    y: -100,
+                    width: typeObj.width,
+                    height: typeObj.height,
+                    lane: lane,
+                    glowColor: typeObj.glow,
+                    draw() {
+                        const x = player.lanes[this.lane];
+                        drawSvg(ctx, this.svg, x, this.y, this.width, this.height, this.glowColor);
+                    },
+                    update() {
+                        this.y += gameSpeed;
+                        this.draw();
+                    },
+                };
+                gameObjects.push(newObject);
+            }
+
+            let gameObjectTimer = 0;
+            
+            function gameLoop() {
+                if (gameState !== 'PLAYING') return;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                updateCityBackground();
+                updateRoad();
+
+                gameObjectTimer++;
+                if (gameObjectTimer > 100 / (gameSpeed / initialGameSpeed)) {
+                    createGameObject();
+                    gameObjectTimer = 0;
+                }
+
+                gameObjects.forEach((obj, index) => {
+                    obj.update();
+                    if ( player.lane === obj.lane && obj.y + obj.height / 2 > player.y - player.height && obj.y - obj.height / 2 < player.y ) {
+                        handleCollision(obj, index);
+                    }
+                    if (obj.y > canvas.height + obj.height) {
+                        gameObjects.splice(index, 1);
+                    }
+                });
+                
+                player.update();
+                
+                gameSpeed = Math.min(maxGameSpeed, gameSpeed + 0.001);
+                score += Math.floor(gameSpeed);
+                updateHUD();
+
+                animationFrameId = requestAnimationFrame(gameLoop);
+            }
+
+            function handleCollision(obj, index) {
+                gameObjects.splice(index, 1);
+                Utils.vibrate(50);
+                switch (obj.type) {
+                    case 'lajna': 
+                        score += 1000; 
+                        showMessage(Utils.getRandomQuote('collect'));
+                        AudioManager.playCollect(); // ZVUK
+                        break;
+                    case 'cevko': 
+                        health = Math.min(5, health + 1); 
+                        showMessage(Utils.getRandomQuote('health'));
+                        AudioManager.playHealth(); // ZVUK
+                        break;
+                    case 'policajt': 
+                    case 'auto':
+                        health--;
+                        showMessage(Utils.getRandomQuote('damage'));
+                        AudioManager.playDamage(); // ZVUK
+                        if (health <= 0) endGame();
+                        break;
+                }
+            }
+
+            function updateHUD() {
+                scoreDisplay.textContent = score;
+                healthDisplay.textContent = health;
+            }
+
+            function showMessage(text) {
+                messageDisplay.textContent = text;
+                messageDisplay.classList.add('show');
+                setTimeout(() => { messageDisplay.classList.remove('show'); }, 2000);
+            }
+
+            function resetGame() {
+                score = 0;
+                health = 3;
+                gameSpeed = initialGameSpeed;
+                player.x = canvas.width / 2;
+                player.y = canvas.height - 100;
+                player.lane = 1;
+                gameObjects = [];
+                roadLines = [];
+                cityBackground = [];
+                createRoadLine();
+                createCityBackground();
+                updateHUD();
+            }
+
+            function startGame() {
+                AudioManager.initialize(); // Inicializace zvuku při startu
+                resetGame();
+                gameState = 'PLAYING';
+                mainMenu.classList.remove('active');
+                gameOverScreen.classList.remove('active');
+                hud.style.display = 'flex';
+                gameLoop();
+                showMessage(Utils.getRandomQuote('start'));
+                AudioManager.playStart(); // ZVUK
+            }
+
+            function pauseGame() {
+                if (gameState !== 'PLAYING') return;
+                gameState = 'PAUSED';
+                cancelAnimationFrame(animationFrameId);
+                pauseMenu.classList.add('active');
+            }
+
+            function resumeGame() {
+                if (gameState !== 'PAUSED') return;
+                gameState = 'PLAYING';
+                pauseMenu.classList.remove('active');
+                gameLoop();
+            }
+
+            function endGame() {
+                gameState = 'GAMEOVER';
+                cancelAnimationFrame(animationFrameId);
+                Utils.vibrate([100, 50, 100]);
+                AudioManager.playGameOver(); // ZVUK
+                if (score > highScore) {
+                    highScore = score;
+                    Utils.saveData('pikoHeistHighScore', highScore);
+                }
+                finalScoreDisplay.textContent = score;
+                highScoreDisplay.textContent = highScore;
+                gameOverQuoteDisplay.textContent = Utils.getRandomQuote('gameOver');
+                gameOverScreen.classList.add('active');
+                hud.style.display = 'none';
+            }
+
+            function showMainMenu() {
+                gameState = 'MENU';
+                mainMenu.classList.add('active');
+                pauseMenu.classList.remove('active');
+                gameOverScreen.classList.remove('active');
+                hud.style.display = 'none';
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            let touchStartX = 0;
+            let touchStartY = 0;
+            function handleTouchStart(e) { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; }
+            function handleTouchMove(e) {
+                if (!touchStartX || !touchStartY || gameState !== 'PLAYING') return;
+                let diffX = e.touches[0].clientX - touchStartX;
+                if (Math.abs(diffX) > 30) {
+                    if (diffX > 0) player.lane = Math.min(2, player.lane + 1);
+                    else player.lane = Math.max(0, player.lane - 1);
+                    touchStartX = 0; touchStartY = 0;
+                }
+            }
+            function handleKeyDown(e) {
+                if (gameState !== 'PLAYING') return;
+                if (e.key === 'ArrowLeft' || e.key === 'a') player.lane = Math.max(0, player.lane - 1);
+                else if (e.key === 'ArrowRight' || e.key === 'd') player.lane = Math.min(2, player.lane + 1);
+            }
+
+            startButton.addEventListener('click', startGame);
+            pauseButton.addEventListener('click', pauseGame);
+            resumeButton.addEventListener('click', resumeGame);
+            restartButton.addEventListener('click', startGame);
+            toMenuButton.addEventListener('click', showMainMenu);
+            gameContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+            gameContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+            window.addEventListener('keydown', handleKeyDown);
+
+            function init() {
+                highScoreDisplay.textContent = highScore;
+                renderUIicons();
+                showMainMenu();
+            }
+            init();
         });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('Service Worker registered:', registration))
+                    .catch(error => console.log('Service Worker registration failed:', error));
+            });
+        }
     </script>
 </body>
 </html>
