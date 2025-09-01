@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0b1220">
+    <meta name="background-color" content="#0b1220">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fofr Pedro">
+    <title>Fofr Pedro - České Endless Runner</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkZvZnIgUGVkcm8iLAogICJzaG9ydF9uYW1lIjogIkZvZnJQZWRybyIsCiAgInRoZW1lX2NvbG9yIjogIiMwYjEyMjAiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwYjEyMjAiLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJzdGFydF91cmwiOiAiLiIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiY2F0ZWdvcnkiOiAiZ2FtZXMiLAogICJkZXNjcmlwdGlvbiI6ICJDW2VzaFx1MDBlOSBlbmRsZXNzIHJ1bm5lciBocmEgc1x1MDBlOCBwXHUwMWUxcmFqaFx1MDExYSBQZWRyZW0iLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUJwWkQwaWFXTnZiaUlnZG1sbGQwSnZlRDBpTUNBd0lERTVNaUF4T1RJaUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1EQXdMMk41WnlJK1BISmxZM1FnZUQwaU16SWlJSGs5SWpNeUlpQjNhV1IwYUQwaU1USTRJaUJvWldsbmFIUTlJakV5T0NJZ1ptbHNiRDBpSTJZd05qa3pObUVpTHo0OGNtVmpkQ0I0UFNJMk5DSWdlVDBpTmpRaUlIZHBaSFJvUFNJMk5DSWdhR1ZwWjJoMFBTSTJOQ0lnWm1sc2JEMGlJekF3WkRSbVppSXZQand2YzNablBnPT0iLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QnBaRDBpYVdOdmJpSWdkbWxsZDBKdmVEMGlNQ0F3SURVeE1pQTFNVElpSUhodGJHNXpQU0pvZEhSd09pOHZkM2QzTG5jekxtOXlaeTh5TURBd0wyTjVaeUkrUEhKbFkzUWdlRDBpT0RRaUlIazlJamcwSWlCM2FXUjBhRDBpTXpRMElpQm9aV2xuYUhROUlqTTBOQ0lnWm1sc2JEMGlJell3VkRaQ1JpSXZQanh5WldOMElIZzlJakUyT0NJZ2VUMGlNVFk0SWlCM2FXUjBhRDBpTVRjMklpQm9aV2xuYUhROUlqRTNOaUlnWm1sc2JEMGlJell3WkRobVppSXZQand2YzNablBnPT0iLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.3/src/regular/style.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="screen active">
+        <div class="loading-content">
+            <div class="game-logo">
+                <h1>Fofr Pedro</h1>
+                <p>Pražské útěky</p>
+            </div>
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Načítání hry...</div>
+            <div class="age-rating">16+ satirický obsah</div>
+        </div>
+    </div>
+
+    <!-- Install Prompt -->
+    <div id="install-prompt" class="glass-card hidden">
+        <div class="install-content">
+            <i class="ph ph-download"></i>
+            <h3>Přidat na plochu</h3>
+            <p>Pro nejlepší zážitek si nainstaluj hru</p>
+            <div class="install-buttons">
+                <button id="install-btn" class="btn btn--primary">Instalovat</button>
+                <button id="install-close" class="btn btn--secondary">Možná později</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="screen">
+        <div class="menu-content">
+            <div class="game-title">
+                <h1>Fofr Pedro</h1>
+                <div class="subtitle">Pražské útěky z podsvětí</div>
+            </div>
+            
+            <div class="pedro-character">
+                <div class="pedro-sprite running"></div>
+            </div>
+            
+            <div class="menu-buttons">
+                <button id="play-btn" class="btn btn--primary btn--lg">
+                    <i class="ph ph-play"></i> Hrát
+                </button>
+                <button id="daily-challenge-btn" class="btn btn--secondary">
+                    <i class="ph ph-trophy"></i> Denní výzva
+                </button>
+                <button id="leaderboard-btn" class="btn btn--secondary">
+                    <i class="ph ph-ranking"></i> Žebříček
+                </button>
+                <button id="settings-btn" class="btn btn--secondary">
+                    <i class="ph ph-gear"></i> Nastavení
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <!-- HUD -->
+        <div class="hud">
+            <div class="hud-top">
+                <div class="score-display">
+                    <span class="label">Skóre</span>
+                    <span id="score" class="value">0</span>
+                </div>
+                <div class="speed-display">
+                    <span class="label">Rychlost</span>
+                    <span id="speed" class="value">0</span>
+                </div>
+                <div class="lives-display">
+                    <i class="ph ph-heart-fill"></i>
+                    <span id="lives" class="value">3</span>
+                </div>
+            </div>
+            
+            <div class="powerup-display hidden" id="powerup-hud">
+                <div class="powerup-icon"></div>
+                <div class="powerup-timer"></div>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="game-canvas"></canvas>
+
+        <!-- Touch Controls Overlay -->
+        <div class="touch-controls">
+            <div class="swipe-area" id="swipe-area"></div>
+            <div class="control-buttons hidden" id="alt-controls">
+                <button class="control-btn" data-action="left">←</button>
+                <button class="control-btn" data-action="right">→</button>
+                <button class="control-btn" data-action="jump">↑</button>
+                <button class="control-btn" data-action="slide">↓</button>
+            </div>
+        </div>
+
+        <!-- Pause Menu -->
+        <div id="pause-menu" class="glass-overlay hidden">
+            <div class="glass-card">
+                <h2>Pauza</h2>
+                <div class="pause-buttons">
+                    <button id="resume-btn" class="btn btn--primary">Pokračovat</button>
+                    <button id="restart-btn" class="btn btn--secondary">Restart</button>
+                    <button id="menu-btn" class="btn btn--outline">Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="game-over" class="screen">
+        <div class="game-over-content">
+            <h2>Konec hry!</h2>
+            <div class="final-stats">
+                <div class="stat">
+                    <span class="label">Finální skóre</span>
+                    <span id="final-score" class="value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Nejrychlejší rychlost</span>
+                    <span id="final-speed" class="value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Vzdálenost</span>
+                    <span id="final-distance" class="value">0m</span>
+                </div>
+            </div>
+            
+            <div class="new-record hidden" id="new-record">
+                <i class="ph ph-trophy"></i>
+                <span>Nový rekord!</span>
+            </div>
+            
+            <div class="name-input hidden" id="name-input">
+                <input type="text" placeholder="Tvé jméno" maxlength="20" id="player-name">
+                <button id="save-score-btn" class="btn btn--primary">Uložit skóre</button>
+            </div>
+            
+            <div class="game-over-buttons">
+                <button id="play-again-btn" class="btn btn--primary">Hrát znovu</button>
+                <button id="back-to-menu-btn" class="btn btn--secondary">Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen">
+        <div class="settings-content">
+            <div class="screen-header">
+                <button id="settings-back-btn" class="btn btn--outline">
+                    <i class="ph ph-arrow-left"></i> Zpět
+                </button>
+                <h2>Nastavení</h2>
+            </div>
+            
+            <div class="settings-groups">
+                <div class="settings-group">
+                    <h3>Audio</h3>
+                    <div class="setting-item">
+                        <label>Zvuky</label>
+                        <input type="checkbox" id="sound-toggle" checked>
+                    </div>
+                    <div class="setting-item">
+                        <label>Hudba</label>
+                        <input type="checkbox" id="music-toggle" checked>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3>Ovládání</h3>
+                    <div class="setting-item">
+                        <label>Vibrace</label>
+                        <input type="checkbox" id="haptics-toggle" checked>
+                    </div>
+                    <div class="setting-item">
+                        <label>Alternativní tlačítka</label>
+                        <input type="checkbox" id="alt-controls-toggle">
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3>Vzhled</h3>
+                    <div class="setting-item">
+                        <label>Téma</label>
+                        <select id="theme-select">
+                            <option value="auto">Automaticky</option>
+                            <option value="day">Den</option>
+                            <option value="night">Noc</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3>Obsah</h3>
+                    <div class="setting-item">
+                        <label>Ostrost humoru</label>
+                        <select id="spice-select">
+                            <option value="mild">Mírná</option>
+                            <option value="spicy">Ostrá</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-group">
+                    <h3>Data</h3>
+                    <button id="export-data-btn" class="btn btn--secondary btn--full-width">
+                        <i class="ph ph-download"></i> Exportovat data
+                    </button>
+                    <button id="import-data-btn" class="btn btn--secondary btn--full-width">
+                        <i class="ph ph-upload"></i> Importovat data
+                    </button>
+                    <input type="file" id="import-file" accept=".json" style="display: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Screen -->
+    <div id="leaderboard-screen" class="screen">
+        <div class="leaderboard-content">
+            <div class="screen-header">
+                <button id="leaderboard-back-btn" class="btn btn--outline">
+                    <i class="ph ph-arrow-left"></i> Zpět
+                </button>
+                <h2>Žebříček</h2>
+            </div>
+            
+            <div class="leaderboard-list" id="leaderboard-list">
+                <!-- Leaderboard entries will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Challenge Screen -->
+    <div id="challenge-screen" class="screen">
+        <div class="challenge-content">
+            <div class="screen-header">
+                <button id="challenge-back-btn" class="btn btn--outline">
+                    <i class="ph ph-arrow-left"></i> Zpět
+                </button>
+                <h2>Denní výzva</h2>
+            </div>
+            
+            <div class="challenge-card glass-card" id="challenge-card">
+                <div class="challenge-title">
+                    <i class="ph ph-trophy"></i>
+                    <h3 id="challenge-name">Načítání...</h3>
+                </div>
+                <p id="challenge-description">Načítání výzvy...</p>
+                <div class="challenge-reward">
+                    <span class="reward-badge">🏆 Odznáček</span>
+                </div>
+                <button id="start-challenge-btn" class="btn btn--primary btn--full-width">
+                    Začít výzvu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Messages -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- FPS Counter (debug) -->
+    <div id="fps-counter" class="debug-info hidden">
+        FPS: <span id="fps-value">60</span>
+    </div>
+
+    <!-- Service Worker Registration -->
+    <script>
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                const CACHE_NAME = 'fofr-pedro-v3';
+                const urlsToCache = [
+                    './',
+                    './index.html',
+                    './style.css',  
+                    './app.js',
+                    'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap',
+                    'https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC_X9Ht.woff2',
+                    'https://fonts.gstatic.com/s/sharetechmono/v15/J7aHnp1uDWRBEqV98dVQztYldFcLowEF.woff2',
+                    'https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.3/src/regular/style.css'
+                ];
+
+                self.addEventListener('install', event => {
+                    event.waitUntil(
+                        caches.open(CACHE_NAME)
+                            .then(cache => cache.addAll(urlsToCache))
+                            .then(() => self.skipWaiting())
+                    );
+                });
+
+                self.addEventListener('activate', event => {
+                    event.waitUntil(
+                        caches.keys().then(cacheNames => {
+                            return Promise.all(
+                                cacheNames.map(cacheName => {
+                                    if (cacheName !== CACHE_NAME) {
+                                        return caches.delete(cacheName);
+                                    }
+                                })
+                            );
+                        }).then(() => self.clients.claim())
+                    );
+                });
+
+                self.addEventListener('fetch', event => {
+                    event.respondWith(
+                        caches.match(event.request)
+                            .then(response => {
+                                if (response) {
+                                    return response;
+                                }
+                                return fetch(event.request);
+                            })
+                    );
+                });
+            `;
+
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            
+            navigator.serviceWorker.register(swUrl)
+                .then(registration => {
+                    console.log('ServiceWorker registration successful');
+                    
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                showToast('K dispozici update – Restart doporučen', 'info');
+                            }
+                        });
+                    });
+                })
+                .catch(err => console.log('ServiceWorker registration failed'));
+        }
+    </script>
+    
+    <script src="app.js"></script>
+</body>
+</html>
