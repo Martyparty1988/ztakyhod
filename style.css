@@ -492,6 +492,7 @@ textarea.form-control {
 select.form-control {
   padding: var(--space-8) var(--space-12);
   -webkit-appearance: none;
+  appearance: none;
   -moz-appearance: none;
   appearance: none;
   background-image: var(--select-caret-light);
@@ -1707,12 +1708,14 @@ body {
 @supports (-webkit-touch-callout: none) {
   body {
     -webkit-user-select: none;
+    user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
   }
   
   input {
     -webkit-appearance: none;
+    appearance: none;
     border-radius: 0;
   }
   
