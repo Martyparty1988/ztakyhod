@@ -9,10 +9,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>Fofr Pedro - Pražský Endless Runner</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Three.js -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.min.js"></script>
     
     <script>
@@ -102,7 +100,6 @@
 </head>
 
 <body class="bg-prague text-white font-sans overflow-hidden fixed inset-0 select-none">
-    <!-- Age Rating Warning -->
     <div id="age-warning" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl p-4">
         <div class="glass-strong rounded-3xl p-8 text-center max-w-sm mx-auto shadow-2xl">
             <h2 class="text-2xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -119,7 +116,6 @@
         </div>
     </div>
 
-    <!-- Main Menu -->
     <div id="main-menu" class="fixed inset-0 z-40 flex items-center justify-center pt-safe pb-safe pl-safe pr-safe">
         <div class="w-full max-w-sm px-4">
             <div class="text-center mb-12">
@@ -174,26 +170,21 @@
         </div>
     </div>
 
-    <!-- Game Canvas -->
     <canvas id="game-canvas" class="fixed inset-0 z-10"></canvas>
 
-    <!-- HUD -->
-    <div id="hud" class="fixed top-0 left-0 right-0 z-30 pt-safe pl-safe pr-safe p-4 pointer-events-none">
+    <div id="hud" class="fixed top-0 left-0 right-0 z-30 pt-safe pl-safe pr-safe p-4 pointer-events-none hidden">
         <div class="flex justify-between items-start mb-4">
-            <!-- Score Display -->
             <div class="glass-strong rounded-xl px-4 py-3 shadow-lg">
                 <div class="text-xs text-gray-300 font-mono">VZDÁLENOST</div>
                 <div id="hud-score" class="text-xl font-bold text-primary font-mono tabular-nums">0 m</div>
             </div>
             
-            <!-- Speed Display -->
             <div class="glass-strong rounded-xl px-4 py-3 shadow-lg">
                 <div class="text-xs text-gray-300 font-mono">RYCHLOST</div>
                 <div id="hud-speed" class="text-xl font-bold text-secondary font-mono tabular-nums">0</div>
             </div>
         </div>
         
-        <!-- Power-up indicator -->
         <div id="hud-powerup" class="glass-strong rounded-xl px-3 py-2 hidden items-center gap-2 shadow-lg max-w-fit">
             <div id="powerup-icon" class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">⚡</div>
             <div class="flex-1 min-w-20">
@@ -205,10 +196,8 @@
         </div>
     </div>
 
-    <!-- Touch Controls -->
     <div id="touch-controls" class="fixed bottom-0 left-0 right-0 z-30 pb-safe pl-safe pr-safe p-4 pointer-events-none">
         <div class="flex justify-between items-end">
-            <!-- Left controls -->
             <div class="flex flex-col gap-3">
                 <button id="btn-left" data-action="left"
                         class="w-14 h-14 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
@@ -217,7 +206,6 @@
                 </button>
             </div>
             
-            <!-- Center controls -->
             <div class="flex gap-3">
                 <button id="btn-up" data-action="jump"
                         class="w-16 h-16 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
@@ -231,7 +219,6 @@
                 </button>
             </div>
             
-            <!-- Right controls -->
             <div class="flex flex-col gap-3">
                 <button id="btn-right" data-action="right"
                         class="w-14 h-14 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
@@ -241,7 +228,6 @@
             </div>
         </div>
         
-        <!-- Pause button -->
         <div class="flex justify-center mt-4">
             <button id="btn-pause"
                     class="glass-strong rounded-xl px-6 py-2 text-sm font-medium
@@ -251,7 +237,6 @@
         </div>
     </div>
 
-    <!-- Settings Panel -->
     <div id="settings-panel" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-xl pt-safe pb-safe pl-safe pr-safe">
         <div class="glass-strong rounded-3xl p-8 w-full max-w-sm mx-4 max-h-screen overflow-y-auto scrollbar-hide shadow-2xl">
             <h2 class="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -326,7 +311,6 @@
         </div>
     </div>
 
-    <!-- Game Over Screen -->
     <div id="game-over" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-xl pt-safe pb-safe pl-safe pr-safe">
         <div class="glass-strong rounded-3xl p-8 w-full max-w-sm mx-4 text-center shadow-2xl">
             <h2 class="text-3xl font-bold mb-4 bg-gradient-to-r from-red-400 to-accent bg-clip-text text-transparent">
@@ -368,13 +352,11 @@
         </div>
     </div>
 
-    <!-- Toast Notifications -->
     <div id="toast" 
          class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 glass-strong rounded-xl px-6 py-3 
                 font-medium shadow-lg opacity-0 transition-all duration-300 pointer-events-none max-w-xs text-center">
     </div>
 
-    <!-- Debug Overlay -->
     <div id="debug-overlay" 
          class="fixed top-0 right-0 bg-black/80 text-green-400 font-mono text-xs p-3 rounded-bl-xl z-50 
                 hidden max-w-48 backdrop-blur-sm pt-safe pr-safe">
@@ -388,14 +370,12 @@
         </div>
     </div>
 
-    <!-- Flip indicator -->
     <div id="flip-indicator" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 
                                     glass-strong rounded-full w-16 h-16 flex items-center justify-center text-2xl 
                                     opacity-0 transition-all duration-300 pointer-events-none">
         🤸‍♂️
     </div>
 
-    <!-- Loading scripts... -->
     <script>
         // Initialize basic app state
         window.FOFR_PEDRO = {
@@ -515,7 +495,6 @@ class FofrPedroGame {
     init() {
         this.setupEventListeners();
         this.checkDebugMode();
-        this.registerServiceWorker();
         this.applyTheme();
         
         // Show age warning first
@@ -572,7 +551,7 @@ class FofrPedroGame {
             touchStartX = touch.clientX;
             touchStartY = touch.clientY;
             touchStartTime = Date.now();
-        });
+        }, { passive: false });
         
         canvas.addEventListener('touchend', (e) => {
             e.preventDefault();
@@ -611,11 +590,11 @@ class FofrPedroGame {
                     }
                 }
             }
-        });
+        }, { passive: false });
         
         // Button controls
         document.querySelectorAll('[data-action]').forEach(btn => {
-            btn.addEventListener('touchstart', (e) => {
+            btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 const action = btn.dataset.action;
                 if (action === 'jump') {
@@ -852,7 +831,8 @@ class FofrPedroGame {
         // Show touch controls if enabled
         if (this.settings.controls === 'buttons') {
             document.getElementById('touch-controls').classList.remove('pointer-events-none');
-            document.getElementById('touch-controls').classList.add('pointer-events-auto');
+        } else {
+            document.getElementById('touch-controls').classList.add('pointer-events-none');
         }
         
         this.resetGameState();
@@ -887,8 +867,6 @@ class FofrPedroGame {
         this.swipeBuffer = [];
     }
 
-// Pokračování FofrPedroGame class - 3D systémy
-    
     init3D() {
         if (this.renderer) {
             this.disposeThreeObjects();
@@ -1148,8 +1126,6 @@ class FofrPedroGame {
         
         requestAnimationFrame(() => this.gameLoop());
     }
-
-// Pokračování FofrPedroGame class - herní mechaniky
     
     updateGame(deltaTime) {
         if (!this.player) return;
@@ -1349,12 +1325,6 @@ class FofrPedroGame {
                 material = new THREE.MeshLambertMaterial({ color: 0x0066cc });
                 height = 0.6;
                 behavior = 'wide_block';
-                // Add blue light on top
-                const lightGeometry = new THREE.SphereGeometry(0.1, 6, 6);
-                const lightMaterial = new THREE.MeshLambertMaterial({ 
-                    color: 0x0088ff,
-                    emissive: 0x0044aa
-                });
                 break;
                 
             case 'barrier_low':
@@ -1776,8 +1746,6 @@ class FofrPedroGame {
         }
     }
 
-// Pokračování FofrPedroGame class - power-upy a achievements
-    
     activatePowerUp(type, duration) {
         // Remove existing power-up of same type
         this.activePowerUps = this.activePowerUps.filter(pu => pu.type !== type);
@@ -2012,7 +1980,7 @@ class FofrPedroGame {
             }
             return defaultData;
         } catch (e) {
-            console.warn('Could not load game ', e);
+            console.warn('Could not load game data', e);
             return defaultData;
         }
     }
@@ -2022,7 +1990,7 @@ class FofrPedroGame {
             this.gameData.settings = this.settings;
             localStorage.setItem('fofr-pedro-data', JSON.stringify(this.gameData));
         } catch (e) {
-            console.warn('Could not save game ', e);
+            console.warn('Could not save game data', e);
         }
     }
     
@@ -2063,8 +2031,6 @@ class FofrPedroGame {
             }
         }
     }
-
-// Pokračování FofrPedroGame class - UI systémy
     
     gameOver(message = 'Konec hry!') {
         this.isPlaying = false;
@@ -2100,7 +2066,6 @@ class FofrPedroGame {
         // Hide game UI
         document.getElementById('hud').style.display = 'none';
         document.getElementById('touch-controls').classList.add('pointer-events-none');
-        document.getElementById('touch-controls').classList.remove('pointer-events-auto');
         
         // Show game over screen
         document.getElementById('game-over').classList.remove('hidden');
@@ -2141,7 +2106,6 @@ class FofrPedroGame {
         document.getElementById('game-over').classList.remove('flex');
         document.getElementById('hud').style.display = 'none';
         document.getElementById('touch-controls').classList.add('pointer-events-none');
-        document.getElementById('touch-controls').classList.remove('pointer-events-auto');
         
         // Show main menu
         document.getElementById('main-menu').style.display = 'flex';
@@ -2201,16 +2165,16 @@ class FofrPedroGame {
         const body = document.body;
         
         if (this.settings.theme === 'day') {
-            body.className = body.className.replace('bg-prague', 'bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200');
+            body.className = body.className.replace(/bg-prague/g, 'bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200');
         } else if (this.settings.theme === 'night') {
-            body.className = body.className.replace(/bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200|bg-prague/, 'bg-prague');
+            body.className = body.className.replace(/bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200/g, 'bg-prague');
         } else {
             // Auto - use system preference
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (prefersDark) {
-                body.className = body.className.replace(/bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200/, 'bg-prague');
+                body.className = body.className.replace(/bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200/g, 'bg-prague');
             } else {
-                body.className = body.className.replace('bg-prague', 'bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200');
+                body.className = body.className.replace(/bg-prague/g, 'bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200');
             }
         }
     }
@@ -2262,7 +2226,7 @@ class FofrPedroGame {
                         </div>
                     </div>
                     <div class="text-right">
-                        <div class="text-lg font-bold text-primary">${entry.score}m</div>
+                        <div class="text-lg font-bold text-primary">${entry.score}</div>
                         <div class="text-xs text-gray-400">${entry.distance}m vzdálenost</div>
                     </div>
                 </div>
@@ -2536,13 +2500,12 @@ class FofrPedroGame {
         this.particles = [];
     }
 
-// PWA Service Worker a finalizace FofrPedroGame
-    
+    // PWA Service Worker a finalizace
     async registerServiceWorker() {
         if ('serviceWorker' in navigator) {
             try {
                 const swCode = `
-                    const CACHE_NAME = 'fofr-pedro-v1.0.0';
+                    const CACHE_NAME = 'fofr-pedro-v1.0.1';
                     const urlsToCache = [
                         './',
                         'https://cdn.tailwindcss.com',
@@ -2569,15 +2532,7 @@ class FofrPedroGame {
                                     if (response) {
                                         return response;
                                     }
-                                    return fetch(event.request);
-                                })
-                                .catch(() => {
-                                    // Offline fallback
-                                    return new Response('Offline - Fofr Pedro', {
-                                        status: 200,
-                                        statusText: 'OK',
-                                        headers: {'Content-Type': 'text/plain'}
-                                    });
+                                    return fetch(event.request).catch(() => caches.match('./'));
                                 })
                         );
                     });
@@ -2603,7 +2558,6 @@ class FofrPedroGame {
                 const registration = await navigator.serviceWorker.register(swURL);
                 console.log('✅ Service Worker registered successfully');
                 
-                // Check for updates
                 registration.addEventListener('updatefound', () => {
                     const newWorker = registration.installing;
                     newWorker.addEventListener('statechange', () => {
@@ -2621,35 +2575,32 @@ class FofrPedroGame {
     
     generateManifest() {
         const manifest = {
-            name: "Fofr Pedro - Pražský Endless Runner",
+            name: "Fofr Pedro",
             short_name: "Fofr Pedro",
-            description: "3D satirický endless runner z pražského podsvětí",
-            start_url: "./",
+            description: "Satirická česká endless runner hra s černým humorem.",
+            start_url: ".",
             display: "standalone",
             orientation: "portrait",
-            background_color: "#1a1a2e",
-            theme_color: "#1a1a2e",
-            categories: ["games", "entertainment"],
+            background_color: "#0b1220",
+            theme_color: "#0b1220",
             lang: "cs",
             icons: [
                 {
-                    src: "image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjMWExYTJlIi8+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iOTYiIHI9IjQwIiBmaWxsPSIjNjRmZmRhIi8+Cjx0ZXh0IHg9Ijk2IiB5PSIxMDQiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzFhMWEyZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UDwvdGV4dD4KPC9zdmc+",
-                    sizes: "192x192",
-                    type: "image/svg+xml"
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMwYjEyMjAiLz4KPHRleHQgeD0iNTAlIiB5PSI1NSUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJPcmJpdHJvbiwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI5NiIgZmlsbD0iIzY0ZmZkYSI+UDwvdGV4dD4KPC9zdmc+",
+                    "sizes": "192x192",
+                    "type": "image/svg+xml"
                 },
                 {
-                    src: "image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjMWExYTJlIi8+CjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTAwIiBmaWxsPSIjNjRmZmRhIi8+Cjx0ZXh0IHg9IjI1NiIgeT0iMjgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNzIiIGZpbGw9IiMxYTFhMmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlA8L3RleHQ+Cjwvc3ZnPg==",
-                    sizes: "512x512",
-                    type: "image/svg+xml"
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMwYjEyMjAiLz4KPHRleHQgeD0iNTAlIiB5PSI1NSUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJPcmJpdHJvbiwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNTYiIGZpbGw9IiM2NGZmZGEiPlA8L3RleHQ+Cjwvc3ZnPg==",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml"
                 }
             ]
         };
         
-        // Create manifest blob URL
         const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
         const manifestURL = URL.createObjectURL(manifestBlob);
         
-        // Update manifest link
         let manifestLink = document.querySelector('link[rel="manifest"]');
         if (!manifestLink) {
             manifestLink = document.createElement('link');
@@ -2661,137 +2612,12 @@ class FofrPedroGame {
 }
 
 // Initialize game
-
-// PWA Service Worker a finalizace FofrPedroGame
-    
-    async registerServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            try {
-                const swCode = `
-                    const CACHE_NAME = 'fofr-pedro-v1.0.0';
-                    const urlsToCache = [
-                        './',
-                        'https://cdn.tailwindcss.com',
-                        'https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.min.js'
-                    ];
-                    
-                    self.addEventListener('install', (event) => {
-                        event.waitUntil(
-                            caches.open(CACHE_NAME)
-                                .then((cache) => {
-                                    console.log('Opened cache');
-                                    return cache.addAll(urlsToCache);
-                                })
-                                .catch((error) => {
-                                    console.log('Cache addAll failed:', error);
-                                })
-                        );
-                    });
-                    
-                    self.addEventListener('fetch', (event) => {
-                        event.respondWith(
-                            caches.match(event.request)
-                                .then((response) => {
-                                    if (response) {
-                                        return response;
-                                    }
-                                    return fetch(event.request);
-                                })
-                                .catch(() => {
-                                    // Offline fallback
-                                    return new Response('Offline - Fofr Pedro', {
-                                        status: 200,
-                                        statusText: 'OK',
-                                        headers: {'Content-Type': 'text/plain'}
-                                    });
-                                })
-                        );
-                    });
-                    
-                    self.addEventListener('activate', (event) => {
-                        event.waitUntil(
-                            caches.keys().then((cacheNames) => {
-                                return Promise.all(
-                                    cacheNames.map((cacheName) => {
-                                        if (cacheName !== CACHE_NAME) {
-                                            return caches.delete(cacheName);
-                                        }
-                                    })
-                                );
-                            })
-                        );
-                    });
-                `;
-                
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swURL = URL.createObjectURL(blob);
-                
-                const registration = await navigator.serviceWorker.register(swURL);
-                console.log('✅ Service Worker registered successfully');
-                
-                // Check for updates
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            this.showToast('Dostupná nová verze! Restartuj aplikaci 🔄');
-                        }
-                    });
-                });
-                
-            } catch (error) {
-                console.log('❌ Service Worker registration failed:', error);
-            }
-        }
-    }
-    
-    generateManifest() {
-        const manifest = {
-            name: "Fofr Pedro - Pražský Endless Runner",
-            short_name: "Fofr Pedro",
-            description: "3D satirický endless runner z pražského podsvětí",
-            start_url: "./",
-            display: "standalone",
-            orientation: "portrait",
-            background_color: "#1a1a2e",
-            theme_color: "#1a1a2e",
-            categories: ["games", "entertainment"],
-            lang: "cs",
-            icons: [
-                {
-                    src: "image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjMWExYTJlIi8+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iOTYiIHI9IjQwIiBmaWxsPSIjNjRmZmRhIi8+Cjx0ZXh0IHg9Ijk2IiB5PSIxMDQiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzFhMWEyZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UDwvdGV4dD4KPC9zdmc+",
-                    sizes: "192x192",
-                    type: "image/svg+xml"
-                },
-                {
-                    src: "image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjMWExYTJlIi8+CjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTAwIiBmaWxsPSIjNjRmZmRhIi8+Cjx0ZXh0IHg9IjI1NiIgeT0iMjgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNzIiIGZpbGw9IiMxYTFhMmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlA8L3RleHQ+Cjwvc3ZnPg==",
-                    sizes: "512x512",
-                    type: "image/svg+xml"
-                }
-            ]
-        };
-        
-        // Create manifest blob URL
-        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-        const manifestURL = URL.createObjectURL(manifestBlob);
-        
-        // Update manifest link
-        let manifestLink = document.querySelector('link[rel="manifest"]');
-        if (!manifestLink) {
-            manifestLink = document.createElement('link');
-            manifestLink.rel = 'manifest';
-            document.head.appendChild(manifestLink);
-        }
-        manifestLink.href = manifestURL;
-    }
-}
-
-// Initialize game
-
 window.addEventListener('DOMContentLoaded', () => {
-    if (!window.fofrPedroGame) { window.fofrPedroGame = new FofrPedroGame(); }
+    if (!window.fofrPedroGame) { 
+        window.fofrPedroGame = new FofrPedroGame(); 
+    }
     
-    // Additional event listeners
+    // Additional event listeners for modals
     document.getElementById('show-leaderboard').addEventListener('click', () => {
         window.fofrPedroGame.showLeaderboard();
     });
@@ -2825,10 +2651,10 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () 
 // Handle reduced motion preference
 window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
     if (e.matches) {
-        document.documentElement.style.setProperty('--animation-duration', '0.01s');
+        document.body.classList.add('reduced-motion');
         console.log('🔇 Reduced motion activated');
     } else {
-        document.documentElement.style.removeProperty('--animation-duration');
+        document.body.classList.remove('reduced-motion');
         console.log('🎬 Animations restored');
     }
 });
@@ -2839,41 +2665,39 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     
-    // Show custom install button
-    const installBtn = document.createElement('button');
-    installBtn.innerHTML = '📱 Nainstalovat hru';
-    installBtn.className = 'glass-strong text-white font-medium py-2 px-4 rounded-xl text-sm btn-touch hover:bg-white/20 transition-all duration-300 mt-2';
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                console.log('✅ PWA install accepted');
-                window.fofrPedroGame.showToast('Hra byla nainstalována! 🎉');
+    const menuContainer = document.querySelector('#main-menu > div');
+    if(menuContainer && !document.getElementById('install-btn')) {
+        const installBtn = document.createElement('button');
+        installBtn.id = 'install-btn';
+        installBtn.innerHTML = '📱 Nainstalovat hru';
+        installBtn.className = 'w-full glass-strong text-white font-medium py-3 px-4 rounded-xl text-sm btn-touch hover:bg-white/20 transition-all duration-300 mt-4';
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('✅ PWA install accepted');
+                }
+                deferredPrompt = null;
+                installBtn.remove();
             }
-            deferredPrompt = null;
-            installBtn.remove();
-        }
-    });
-    
-    // Add to menu footer
-    const menuFooter = document.querySelector('.main-menu .flex.gap-3');
-    if (menuFooter) {
-        menuFooter.appendChild(installBtn);
+        });
+        menuContainer.appendChild(installBtn);
     }
 });
 
 // iOS PWA install prompt
 if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.navigator.standalone) {
     setTimeout(() => {
+        if(document.querySelector('.ios-prompt')) return; // Don't show if already visible
         const iosPrompt = document.createElement('div');
-        iosPrompt.className = 'fixed bottom-0 left-0 right-0 glass-strong m-4 rounded-xl p-4 z-50 pb-safe';
+        iosPrompt.className = 'ios-prompt fixed bottom-0 left-0 right-0 glass-strong m-4 rounded-xl p-4 z-50 pb-safe';
         iosPrompt.innerHTML = `
             <div class="flex items-center gap-3">
                 <div class="text-2xl">📱</div>
                 <div class="flex-1">
-                    <p class="font-semibold text-sm text-white">Nainstaluj Fofr Pedro</p>
-                    <p class="text-xs text-gray-400">Tap Share → Add to Home Screen</p>
+                    <p class="font-semibold text-sm text-white">Nainstaluj si Fofr Pedro</p>
+                    <p class="text-xs text-gray-400">Klepni na Sdílet → Přidat na plochu</p>
                 </div>
                 <button onclick="this.parentElement.parentElement.remove()" 
                         class="text-xl text-white hover:text-gray-300 btn-touch">✕</button>
@@ -2881,26 +2705,8 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.navigator.standalone
         `;
         document.body.appendChild(iosPrompt);
         
-        // Auto-remove after 10 seconds
-        setTimeout(() => {
-            if (iosPrompt.parentElement) {
-                iosPrompt.remove();
-            }
-        }, 10000);
+        setTimeout(() => iosPrompt.remove(), 10000);
     }, 3000);
-}
-
-// Performance monitoring
-let performanceObserver;
-if ('PerformanceObserver' in window) {
-    performanceObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-            if (entry.entryType === 'navigation') {
-                console.log(`⚡ Page load time: ${entry.loadEventEnd - entry.loadEventStart}ms`);
-            }
-        }
-    });
-    performanceObserver.observe({ entryTypes: ['navigation'] });
 }
 
 // Cleanup on unload
@@ -2908,153 +2714,11 @@ window.addEventListener('beforeunload', () => {
     if (window.fofrPedroGame && window.fofrPedroGame.isPlaying) {
         window.fofrPedroGame.saveGameData();
     }
-    
-    if (performanceObserver) {
-        performanceObserver.disconnect();
-    }
 });
 
 console.log('🚀 Fofr Pedro - Pražský Endless Runner loaded');
 console.log('🎯 Debug mode: Use ?debug=1 in URL');
 </script>
 
-<!-- Final closing tags -->
-</body>
-</html>
-
-window.addEventListener('DOMContentLoaded', () => {
-    if (!window.fofrPedroGame) { window.fofrPedroGame = new FofrPedroGame(); }
-    
-    // Additional event listeners
-    document.getElementById('show-leaderboard').addEventListener('click', () => {
-        window.fofrPedroGame.showLeaderboard();
-    });
-    
-    document.getElementById('show-achievements').addEventListener('click', () => {
-        window.fofrPedroGame.showAchievements();
-    });
-    
-    document.getElementById('daily-challenge').addEventListener('click', () => {
-        window.fofrPedroGame.showDailyChallenge();
-    });
-    
-    document.getElementById('export-data').addEventListener('click', () => {
-        window.fofrPedroGame.exportGameData();
-    });
-    
-    // Generate and register PWA components
-    window.fofrPedroGame.generateManifest();
-    window.fofrPedroGame.registerServiceWorker();
-    
-    console.log('🎮 Fofr Pedro initialized');
-});
-
-// Handle system theme changes
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (window.fofrPedroGame && window.fofrPedroGame.settings.theme === 'auto') {
-        window.fofrPedroGame.applyTheme();
-    }
-});
-
-// Handle reduced motion preference
-window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
-    if (e.matches) {
-        document.documentElement.style.setProperty('--animation-duration', '0.01s');
-        console.log('🔇 Reduced motion activated');
-    } else {
-        document.documentElement.style.removeProperty('--animation-duration');
-        console.log('🎬 Animations restored');
-    }
-});
-
-// PWA install prompt handling
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    
-    // Show custom install button
-    const installBtn = document.createElement('button');
-    installBtn.innerHTML = '📱 Nainstalovat hru';
-    installBtn.className = 'glass-strong text-white font-medium py-2 px-4 rounded-xl text-sm btn-touch hover:bg-white/20 transition-all duration-300 mt-2';
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                console.log('✅ PWA install accepted');
-                window.fofrPedroGame.showToast('Hra byla nainstalována! 🎉');
-            }
-            deferredPrompt = null;
-            installBtn.remove();
-        }
-    });
-    
-    // Add to menu footer
-    const menuFooter = document.querySelector('.main-menu .flex.gap-3');
-    if (menuFooter) {
-        menuFooter.appendChild(installBtn);
-    }
-});
-
-// iOS PWA install prompt
-if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.navigator.standalone) {
-    setTimeout(() => {
-        const iosPrompt = document.createElement('div');
-        iosPrompt.className = 'fixed bottom-0 left-0 right-0 glass-strong m-4 rounded-xl p-4 z-50 pb-safe';
-        iosPrompt.innerHTML = `
-            <div class="flex items-center gap-3">
-                <div class="text-2xl">📱</div>
-                <div class="flex-1">
-                    <p class="font-semibold text-sm text-white">Nainstaluj Fofr Pedro</p>
-                    <p class="text-xs text-gray-400">Tap Share → Add to Home Screen</p>
-                </div>
-                <button onclick="this.parentElement.parentElement.remove()" 
-                        class="text-xl text-white hover:text-gray-300 btn-touch">✕</button>
-            </div>
-        `;
-        document.body.appendChild(iosPrompt);
-        
-        // Auto-remove after 10 seconds
-        setTimeout(() => {
-            if (iosPrompt.parentElement) {
-                iosPrompt.remove();
-            }
-        }, 10000);
-    }, 3000);
-}
-
-// Performance monitoring
-let performanceObserver;
-if ('PerformanceObserver' in window) {
-    performanceObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-            if (entry.entryType === 'navigation') {
-                console.log(`⚡ Page load time: ${entry.loadEventEnd - entry.loadEventStart}ms`);
-            }
-        }
-    });
-    performanceObserver.observe({ entryTypes: ['navigation'] });
-}
-
-// Cleanup on unload
-window.addEventListener('beforeunload', () => {
-    if (window.fofrPedroGame && window.fofrPedroGame.isPlaying) {
-        window.fofrPedroGame.saveGameData();
-    }
-    
-    if (performanceObserver) {
-        performanceObserver.disconnect();
-    }
-});
-
-console.log('🚀 Fofr Pedro - Pražský Endless Runner loaded');
-console.log('🎯 Debug mode: Use ?debug=1 in URL');
-</script>
-
-<!-- Final closing tags -->
-</body>
-</html>
-</script>
 </body>
 </html>
