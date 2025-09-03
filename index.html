@@ -1,0 +1,3060 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Fofr Pedro - Pražský Endless Runner</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.min.js"></script>
+    
+    <script>
+        // Tailwind config
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'glass': 'rgba(255, 255, 255, 0.1)',
+                        'glass-border': 'rgba(255, 255, 255, 0.2)',
+                        'primary': '#64ffda',
+                        'secondary': '#7c4dff',
+                        'accent': '#ff6b9d',
+                    },
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'Courier New', 'monospace'],
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px rgba(100, 255, 218, 0.3)' },
+                            '100%': { boxShadow: '0 0 40px rgba(100, 255, 218, 0.6)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Safe area utilities */
+        .pt-safe { padding-top: max(1rem, env(safe-area-inset-top)); }
+        .pb-safe { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+        .pl-safe { padding-left: max(1rem, env(safe-area-inset-left)); }
+        .pr-safe { padding-right: max(1rem, env(safe-area-inset-right)); }
+        
+        /* Glassmorphism */
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        /* Prague gradient background */
+        .bg-prague {
+            background: linear-gradient(135deg, 
+                #0f1419 0%, 
+                #1a1f26 25%, 
+                #2d1b69 50%, 
+                #1a1f26 75%, 
+                #0f1419 100%);
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Touch-friendly interactions */
+        .btn-touch {
+            min-width: 44px;
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+        
+        /* Hide scrollbars but keep functionality */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-prague text-white font-sans overflow-hidden fixed inset-0 select-none">
+    <!-- Age Rating Warning -->
+    <div id="age-warning" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl p-4">
+        <div class="glass-strong rounded-3xl p-8 text-center max-w-sm mx-auto shadow-2xl">
+            <h2 class="text-2xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                16+ satirický obsah
+            </h2>
+            <p class="text-gray-300 mb-6 leading-relaxed">
+                Tato hra obsahuje satirický černý humor bez glorifikace nelegálních aktivit.
+            </p>
+            <button id="age-confirm-btn" 
+                    class="w-full bg-gradient-to-r from-primary to-secondary text-black font-semibold py-3 px-6 rounded-xl 
+                           shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 animate-glow btn-touch">
+                Rozumím a chci pokračovat
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="fixed inset-0 z-40 flex items-center justify-center pt-safe pb-safe pl-safe pr-safe">
+        <div class="w-full max-w-sm px-4">
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-black mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent 
+                           drop-shadow-lg animate-float">
+                    Fofr Pedro
+                </h1>
+                <p class="text-gray-400 text-lg font-medium">Pražský Endless Runner</p>
+            </div>
+            
+            <div class="space-y-4 mb-8">
+                <button id="start-game" 
+                        class="w-full bg-gradient-to-r from-primary to-secondary text-black font-bold py-4 px-6 rounded-2xl 
+                               shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 
+                               text-lg btn-touch">
+                    Začít hru
+                </button>
+                
+                <button id="show-settings" 
+                        class="w-full glass-strong text-white font-semibold py-4 px-6 rounded-2xl 
+                               hover:bg-white/20 transform hover:-translate-y-1 transition-all duration-300 btn-touch">
+                    Nastavení
+                </button>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="show-leaderboard" 
+                            class="glass-strong text-white font-semibold py-3 px-4 rounded-xl 
+                                   hover:bg-white/20 transition-all duration-300 btn-touch">
+                        Žebříček
+                    </button>
+                    
+                    <button id="show-achievements" 
+                            class="glass-strong text-white font-semibold py-3 px-4 rounded-xl 
+                                   hover:bg-white/20 transition-all duration-300 btn-touch">
+                        Úspěchy
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button id="daily-challenge" 
+                        class="flex-1 glass-strong text-white font-medium py-3 px-4 rounded-xl 
+                               hover:bg-white/20 transition-all duration-300 text-sm btn-touch">
+                    Denní výzva
+                </button>
+                <button id="export-data" 
+                        class="flex-1 glass-strong text-white font-medium py-3 px-4 rounded-xl 
+                               hover:bg-white/20 transition-all duration-300 text-sm btn-touch">
+                    Export dat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Canvas -->
+    <canvas id="game-canvas" class="fixed inset-0 z-10"></canvas>
+
+    <!-- HUD -->
+    <div id="hud" class="fixed top-0 left-0 right-0 z-30 pt-safe pl-safe pr-safe p-4 pointer-events-none">
+        <div class="flex justify-between items-start mb-4">
+            <!-- Score Display -->
+            <div class="glass-strong rounded-xl px-4 py-3 shadow-lg">
+                <div class="text-xs text-gray-300 font-mono">VZDÁLENOST</div>
+                <div id="hud-score" class="text-xl font-bold text-primary font-mono tabular-nums">0 m</div>
+            </div>
+            
+            <!-- Speed Display -->
+            <div class="glass-strong rounded-xl px-4 py-3 shadow-lg">
+                <div class="text-xs text-gray-300 font-mono">RYCHLOST</div>
+                <div id="hud-speed" class="text-xl font-bold text-secondary font-mono tabular-nums">0</div>
+            </div>
+        </div>
+        
+        <!-- Power-up indicator -->
+        <div id="hud-powerup" class="glass-strong rounded-xl px-3 py-2 hidden items-center gap-2 shadow-lg max-w-fit">
+            <div id="powerup-icon" class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">⚡</div>
+            <div class="flex-1 min-w-20">
+                <div class="text-xs text-gray-300 font-mono mb-1">POWER-UP</div>
+                <div class="h-1 bg-white/20 rounded-full overflow-hidden">
+                    <div id="powerup-progress" class="h-full bg-primary rounded-full transition-all duration-100 ease-linear" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Touch Controls -->
+    <div id="touch-controls" class="fixed bottom-0 left-0 right-0 z-30 pb-safe pl-safe pr-safe p-4 pointer-events-none">
+        <div class="flex justify-between items-end">
+            <!-- Left controls -->
+            <div class="flex flex-col gap-3">
+                <button id="btn-left" data-action="left"
+                        class="w-14 h-14 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
+                               hover:bg-white/20 active:scale-95 transition-all duration-200 shadow-lg pointer-events-auto btn-touch">
+                    ←
+                </button>
+            </div>
+            
+            <!-- Center controls -->
+            <div class="flex gap-3">
+                <button id="btn-up" data-action="jump"
+                        class="w-16 h-16 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
+                               hover:bg-white/20 active:scale-95 transition-all duration-200 shadow-lg pointer-events-auto btn-touch">
+                    ↑
+                </button>
+                <button id="btn-down" data-action="slide"
+                        class="w-16 h-16 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
+                               hover:bg-white/20 active:scale-95 transition-all duration-200 shadow-lg pointer-events-auto btn-touch">
+                    ↓
+                </button>
+            </div>
+            
+            <!-- Right controls -->
+            <div class="flex flex-col gap-3">
+                <button id="btn-right" data-action="right"
+                        class="w-14 h-14 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
+                               hover:bg-white/20 active:scale-95 transition-all duration-200 shadow-lg pointer-events-auto btn-touch">
+                    →
+                </button>
+            </div>
+        </div>
+        
+        <!-- Pause button -->
+        <div class="flex justify-center mt-4">
+            <button id="btn-pause"
+                    class="glass-strong rounded-xl px-6 py-2 text-sm font-medium
+                           hover:bg-white/20 transition-all duration-200 shadow-lg pointer-events-auto btn-touch">
+                ⏸ Pauza
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-xl pt-safe pb-safe pl-safe pr-safe">
+        <div class="glass-strong rounded-3xl p-8 w-full max-w-sm mx-4 max-h-screen overflow-y-auto scrollbar-hide shadow-2xl">
+            <h2 class="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Nastavení
+            </h2>
+            
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <label class="block font-semibold text-gray-200">Téma</label>
+                    <select id="setting-theme" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white 
+                                   focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+                        <option value="auto">Automatické</option>
+                        <option value="day">Den</option>
+                        <option value="night">Noc</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block font-semibold text-gray-200">Ostrost humoru</label>
+                    <select id="setting-spice" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white 
+                                   focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+                        <option value="mild">Mírná</option>
+                        <option value="spicy">Ostrá</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block font-semibold text-gray-200">Zvuk</label>
+                    <select id="setting-sound" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white 
+                                   focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+                        <option value="true">Zapnuto</option>
+                        <option value="false">Vypnuto</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block font-semibold text-gray-200">Haptika</label>
+                    <select id="setting-haptics" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white 
+                                   focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+                        <option value="true">Zapnuto</option>
+                        <option value="false">Vypnuto</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block font-semibold text-gray-200">Ovládání</label>
+                    <select id="setting-controls" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white 
+                                   focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+                        <option value="touch">Pouze dotyky</option>
+                        <option value="buttons">Zobrazit tlačítka</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mt-8 space-y-3">
+                <button id="save-settings" 
+                        class="w-full bg-gradient-to-r from-primary to-secondary text-black font-bold py-3 px-6 rounded-xl 
+                               shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 btn-touch">
+                    Uložit nastavení
+                </button>
+                <button id="close-settings" 
+                        class="w-full glass-strong text-white font-semibold py-3 px-6 rounded-xl 
+                               hover:bg-white/20 transition-all duration-300 btn-touch">
+                    Zavřít
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="game-over" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-xl pt-safe pb-safe pl-safe pr-safe">
+        <div class="glass-strong rounded-3xl p-8 w-full max-w-sm mx-4 text-center shadow-2xl">
+            <h2 class="text-3xl font-bold mb-4 bg-gradient-to-r from-red-400 to-accent bg-clip-text text-transparent">
+                Konec hry!
+            </h2>
+            <div id="game-over-message" class="text-gray-300 mb-6 text-lg"></div>
+            
+            <div class="bg-white/5 rounded-2xl p-6 mb-6 space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300">Vzdálenost:</span>
+                    <span id="final-distance" class="font-bold text-primary text-xl">0 m</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300">Skóre:</span>
+                    <span id="final-score" class="font-bold text-primary text-xl">0</span>
+                </div>
+                <div class="flex justify-between items-center border-t border-white/10 pt-3">
+                    <span class="text-gray-300">Nejlepší:</span>
+                    <span id="best-score" class="font-bold text-secondary text-xl">0</span>
+                </div>
+            </div>
+            
+            <input id="player-name" type="text" placeholder="Zadej své jméno pro žebříček..." 
+                   class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white text-center mb-6
+                          placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+            
+            <div class="space-y-3">
+                <button id="restart-game" 
+                        class="w-full bg-gradient-to-r from-primary to-secondary text-black font-bold py-3 px-6 rounded-xl 
+                               shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 btn-touch">
+                    Hrát znovu
+                </button>
+                <button id="back-to-menu" 
+                        class="w-full glass-strong text-white font-semibold py-3 px-6 rounded-xl 
+                               hover:bg-white/20 transition-all duration-300 btn-touch">
+                    Hlavní menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" 
+         class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 glass-strong rounded-xl px-6 py-3 
+                font-medium shadow-lg opacity-0 transition-all duration-300 pointer-events-none max-w-xs text-center">
+    </div>
+
+    <!-- Debug Overlay -->
+    <div id="debug-overlay" 
+         class="fixed top-0 right-0 bg-black/80 text-green-400 font-mono text-xs p-3 rounded-bl-xl z-50 
+                hidden max-w-48 backdrop-blur-sm pt-safe pr-safe">
+        <div class="space-y-1">
+            <div>FPS: <span id="debug-fps" class="text-primary">60</span></div>
+            <div>Speed: <span id="debug-speed" class="text-primary">0</span></div>
+            <div>Lane: <span id="debug-lane" class="text-primary">1</span></div>
+            <div>State: <span id="debug-state" class="text-primary">menu</span></div>
+            <div>Obstacles: <span id="debug-obstacles" class="text-primary">0</span></div>
+            <div>PowerUps: <span id="debug-powerups" class="text-primary">0</span></div>
+        </div>
+    </div>
+
+    <!-- Flip indicator -->
+    <div id="flip-indicator" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 
+                                    glass-strong rounded-full w-16 h-16 flex items-center justify-center text-2xl 
+                                    opacity-0 transition-all duration-300 pointer-events-none">
+        🤸‍♂️
+    </div>
+
+    <!-- Loading scripts... -->
+    <script>
+        // Initialize basic app state
+        window.FOFR_PEDRO = {
+            initialized: false,
+            debug: new URLSearchParams(window.location.search).get('debug') === '1'
+        };
+        
+        if (window.FOFR_PEDRO.debug) {
+            document.getElementById('debug-overlay').classList.remove('hidden');
+        }
+    </script>
+<script type="module">
+// ==================== CORE GAME CLASS ====================
+class FofrPedroGame {
+    constructor() {
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+        this.player = null;
+        this.gameState = 'menu';
+        this.isPlaying = false;
+        this.isPaused = false;
+        
+        // Game configuration
+        this.config = {
+            lanes: 3,
+            laneWidth: 3,
+            startSpeed: 8,
+            maxSpeed: 25,
+            speedIncrease: 0.02,
+            gravityStrength: 15,
+            jumpHeight: 2.5,
+            flipHeight: 3.375,
+            slideTime: 800,
+            flipCooldown: 900,
+            coyoteTime: 120,
+            doubleSwipeWindow: 250
+        };
+        
+        // Game state
+        this.currentLane = 1; // 0 = left, 1 = center, 2 = right
+        this.targetLane = 1;
+        this.currentSpeed = this.config.startSpeed;
+        this.score = 0;
+        this.distance = 0;
+        this.lives = 3;
+        this.isJumping = false;
+        this.isSliding = false;
+        this.isFlipping = false;
+        this.flipCooldownTime = 0;
+        this.lastGroundTime = 0;
+        this.playerY = 0;
+        this.playerVelocityY = 0;
+        this.playerRotationX = 0;
+        this.gameStartTime = 0;
+        this.flipCount = 0;
+        this.consecutiveFlips = 0;
+        this.lastFlipTime = 0;
+        
+        // Touch controls
+        this.touches = [];
+        this.lastSwipeTime = 0;
+        this.swipeCount = 0;
+        this.lastSwipeDirection = null;
+        this.swipeBuffer = [];
+        
+        // Performance monitoring
+        this.fps = 60;
+        this.frameCount = 0;
+        this.lastFpsUpdate = 0;
+        this.lowPowerMode = false;
+        this.lastFrameTime = 0;
+        
+        // Game objects
+        this.obstacles = [];
+        this.powerUps = [];
+        this.activePowerUps = [];
+        this.particles = [];
+        this.lastObstacleZ = -20;
+        this.lastPowerUpZ = -30;
+        
+        // Audio
+        this.audioContext = null;
+        this.soundEnabled = false;
+        
+        // Data and settings
+        this.gameData = this.loadGameData();
+        this.settings = this.gameData.settings;
+        
+        // Czech voice lines
+        this.voiceLines = {
+            mild: [
+                "Motá se fízl na ocase, přidej!",
+                "Brčko na cestě, drž lajnu!",
+                "Sáček ve větru – změň pruh!",
+                "Karta píchá, skluzem to obejdi!",
+                "Injekce před tebou – přeskoč!",
+                "Neviditelnej? Tak dělej!",
+                "Holubi na tripu – uhni!",
+                "Majáky v zrcátku, běž!"
+            ],
+            spicy: [
+                "Motá se fízl na ocase, přidej do toho!",
+                "Brčko na cestě, drž lajnu nebo skončíš!",
+                "Sáček ve větru – změň pruh, než tě zabalí!",
+                "Karta píchá, skluzem to obejdi nebo se řízni!",
+                "Injekce před tebou – přeskoč a žij!",
+                "Neviditelnej? Tak dělej, než to vyprchá!",
+                "Holubi na tripu – fyziku nevyučuj, uhni!",
+                "Majáky v zrcátku. Mrtvý brouk? Radši běž!"
+            ]
+        };
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupEventListeners();
+        this.checkDebugMode();
+        this.registerServiceWorker();
+        this.applyTheme();
+        
+        // Show age warning first
+        document.getElementById('age-warning').style.display = 'flex';
+    }
+    
+    setupEventListeners() {
+        // Age confirmation
+        document.getElementById('age-confirm-btn').addEventListener('click', () => {
+            document.getElementById('age-warning').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'flex';
+            this.initAudio();
+        });
+        
+        // Menu buttons
+        document.getElementById('start-game').addEventListener('click', () => this.startGame());
+        document.getElementById('show-settings').addEventListener('click', () => this.showSettings());
+        document.getElementById('close-settings').addEventListener('click', () => this.hideSettings());
+        document.getElementById('save-settings').addEventListener('click', () => this.saveSettings());
+        
+        // Game over buttons
+        document.getElementById('restart-game').addEventListener('click', () => this.restartGame());
+        document.getElementById('back-to-menu').addEventListener('click', () => this.backToMenu());
+        
+        // Control buttons
+        document.getElementById('btn-pause').addEventListener('click', () => this.pauseGame());
+        
+        // Touch controls
+        this.setupTouchControls();
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+        
+        // Visibility changes
+        document.addEventListener('visibilitychange', () => this.handleVisibilityChange());
+        
+        // Window resize
+        window.addEventListener('resize', () => this.handleResize());
+    }
+    
+    setupTouchControls() {
+        // Touch gesture detection on canvas
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        
+        const canvas = document.getElementById('game-canvas');
+        
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (!this.isPlaying || this.isPaused) return;
+            
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            touchStartTime = Date.now();
+        });
+        
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (!this.isPlaying || this.isPaused) return;
+            
+            const touch = e.changedTouches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            const deltaTime = Date.now() - touchStartTime;
+            
+            // Minimum distance and maximum time for swipe
+            const minDistance = 48;
+            const maxTime = 500;
+            
+            if (deltaTime > maxTime) return;
+            
+            const absX = Math.abs(deltaX);
+            const absY = Math.abs(deltaY);
+            
+            if (absX > minDistance || absY > minDistance) {
+                if (absX > absY) {
+                    // Horizontal swipe
+                    if (deltaX > 0) {
+                        this.handleAction('right');
+                    } else {
+                        this.handleAction('left');
+                    }
+                } else {
+                    // Vertical swipe
+                    if (deltaY < 0) {
+                        // Swipe up - check for double swipe
+                        this.handleSwipeUp(absY, absX);
+                    } else {
+                        // Swipe down
+                        this.handleAction('slide');
+                    }
+                }
+            }
+        });
+        
+        // Button controls
+        document.querySelectorAll('[data-action]').forEach(btn => {
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const action = btn.dataset.action;
+                if (action === 'jump') {
+                    this.handleSwipeUp(64, 0); // Simulate perfect swipe
+                } else {
+                    this.handleAction(action);
+                }
+            });
+        });
+    }
+    
+    handleSwipeUp(verticalDelta, horizontalDelta) {
+        const now = Date.now();
+        
+        // Check double swipe conditions
+        if (verticalDelta >= 48 && verticalDelta <= 200 && horizontalDelta < 24) {
+            // Add to swipe buffer
+            this.swipeBuffer = this.swipeBuffer.filter(time => now - time < this.config.doubleSwipeWindow);
+            this.swipeBuffer.push(now);
+            
+            // Check for double swipe (front flip)
+            if (this.swipeBuffer.length >= 2 && 
+                this.flipCooldownTime <= 0 &&
+                !this.isSliding &&
+                (this.playerY <= 0.1 || now - this.lastGroundTime < this.config.coyoteTime)) {
+                
+                this.handleAction('flip');
+                this.swipeBuffer = []; // Clear buffer after flip
+            } else {
+                this.handleAction('jump');
+            }
+        } else {
+            this.handleAction('jump');
+        }
+    }
+    
+    handleAction(action) {
+        if (!this.isPlaying || this.isPaused) return;
+        
+        const now = Date.now();
+        
+        switch (action) {
+            case 'left':
+                if (this.currentLane > 0) {
+                    this.targetLane = this.currentLane - 1;
+                    this.playSound('swipe');
+                    this.vibrate([10]);
+                }
+                break;
+                
+            case 'right':
+                if (this.currentLane < 2) {
+                    this.targetLane = this.currentLane + 1;
+                    this.playSound('swipe');
+                    this.vibrate([10]);
+                }
+                break;
+                
+            case 'jump':
+                if (this.playerY <= 0.1 && !this.isSliding) {
+                    this.isJumping = true;
+                    this.playerVelocityY = this.config.jumpHeight;
+                    this.lastGroundTime = now;
+                    this.playSound('jump');
+                    this.vibrate([15]);
+                }
+                break;
+                
+            case 'flip':
+                if (this.flipCooldownTime <= 0 && !this.isSliding) {
+                    this.isFlipping = true;
+                    this.isJumping = true;
+                    this.playerVelocityY = this.config.flipHeight;
+                    this.flipCooldownTime = this.config.flipCooldown;
+                    this.flipCount++;
+                    this.consecutiveFlips++;
+                    this.lastFlipTime = now;
+                    
+                    // Show flip indicator
+                    this.showFlipIndicator();
+                    
+                    this.playSound('flip');
+                    this.vibrate([20, 50, 20]);
+                    
+                    // Score bonus
+                    const bonus = this.isOverObstacle() ? 25 : 10;
+                    this.score += bonus;
+                    this.showToast(`Front flip! +${bonus} bodů`);
+                    
+                    // Check for achievements
+                    if (this.flipCount >= 3) this.unlockAchievement('acrobat');
+                    if (this.flipCount >= 10) this.unlockAchievement('flip_master');
+                    if (this.isOverObstacle()) this.unlockAchievement('showtime');
+                }
+                break;
+                
+            case 'slide':
+                if (!this.isSliding && this.playerY <= 0.1) {
+                    this.isSliding = true;
+                    setTimeout(() => {
+                        this.isSliding = false;
+                    }, this.config.slideTime);
+                    this.playSound('slide');
+                    this.vibrate([25]);
+                }
+                break;
+        }
+    }
+    
+    handleKeyboard(e) {
+        if (!this.isPlaying || this.isPaused) return;
+        
+        switch (e.key) {
+            case 'ArrowLeft':
+            case 'a':
+            case 'A':
+                e.preventDefault();
+                this.handleAction('left');
+                break;
+                
+            case 'ArrowRight':
+            case 'd':
+            case 'D':
+                e.preventDefault();
+                this.handleAction('right');
+                break;
+                
+            case 'ArrowUp':
+            case 'w':
+            case 'W':
+            case ' ':
+                e.preventDefault();
+                this.handleSwipeUp(64, 0);
+                break;
+                
+            case 'ArrowDown':
+            case 's':
+            case 'S':
+                e.preventDefault();
+                this.handleAction('slide');
+                break;
+                
+            case 'Escape':
+            case 'p':
+            case 'P':
+                e.preventDefault();
+                this.pauseGame();
+                break;
+        }
+    }
+    
+    async initAudio() {
+        try {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.soundEnabled = true;
+            console.log('Audio initialized');
+        } catch (e) {
+            console.warn('Audio not supported');
+            this.soundEnabled = false;
+        }
+    }
+    
+    playSound(type, pitch = 1) {
+        if (!this.soundEnabled || !this.settings.sound || !this.audioContext) return;
+        
+        const frequencies = {
+            jump: 440,
+            flip: 880,
+            slide: 220,
+            swipe: 330,
+            powerup: 550,
+            collision: 150,
+            whoosh: 660
+        };
+        
+        const freq = frequencies[type] || 440;
+        const oscillator = this.audioContext.createOscillator();
+        const gain = this.audioContext.createGain();
+        
+        oscillator.connect(gain);
+        gain.connect(this.audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(freq * pitch, this.audioContext.currentTime);
+        gain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+        
+        oscillator.start();
+        oscillator.stop(this.audioContext.currentTime + 0.2);
+    }
+    
+    vibrate(pattern) {
+        if ('vibrate' in navigator && this.settings.haptics) {
+            navigator.vibrate(pattern);
+        }
+    }
+    
+    showToast(message, duration = 3000) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.remove('opacity-0');
+        toast.classList.add('opacity-100');
+        setTimeout(() => {
+            toast.classList.add('opacity-0');
+            toast.classList.remove('opacity-100');
+        }, duration);
+    }
+    
+    showFlipIndicator() {
+        const indicator = document.getElementById('flip-indicator');
+        indicator.classList.remove('opacity-0');
+        indicator.classList.add('opacity-100', 'scale-110');
+        setTimeout(() => {
+            indicator.classList.add('opacity-0', 'scale-100');
+            indicator.classList.remove('opacity-100', 'scale-110');
+        }, 500);
+    }
+    
+    startGame() {
+        if (!window.THREE) {
+            this.showToast('Načítání 3D enginu...');
+            setTimeout(() => this.startGame(), 1000);
+            return;
+        }
+        
+        this.gameState = 'playing';
+        this.isPlaying = true;
+        this.isPaused = false;
+        this.gameStartTime = Date.now();
+        
+        // Hide menus and show game UI
+        document.getElementById('main-menu').style.display = 'none';
+        document.getElementById('hud').style.display = 'block';
+        
+        // Show touch controls if enabled
+        if (this.settings.controls === 'buttons') {
+            document.getElementById('touch-controls').classList.remove('pointer-events-none');
+            document.getElementById('touch-controls').classList.add('pointer-events-auto');
+        }
+        
+        this.resetGameState();
+        this.init3D();
+        this.gameLoop();
+        
+        this.showToast('Začínáš utíkat! Pozor na fízly!');
+    }
+    
+    resetGameState() {
+        this.currentLane = 1;
+        this.targetLane = 1;
+        this.currentSpeed = this.config.startSpeed;
+        this.score = 0;
+        this.distance = 0;
+        this.lives = 3;
+        this.isJumping = false;
+        this.isSliding = false;
+        this.isFlipping = false;
+        this.flipCooldownTime = 0;
+        this.playerY = 0;
+        this.playerVelocityY = 0;
+        this.playerRotationX = 0;
+        this.flipCount = 0;
+        this.consecutiveFlips = 0;
+        this.obstacles = [];
+        this.powerUps = [];
+        this.activePowerUps = [];
+        this.particles = [];
+        this.lastObstacleZ = -20;
+        this.lastPowerUpZ = -30;
+        this.swipeBuffer = [];
+    }
+
+// Pokračování FofrPedroGame class - 3D systémy
+    
+    init3D() {
+        if (this.renderer) {
+            this.disposeThreeObjects();
+        }
+        
+        // Scene setup
+        this.scene = new THREE.Scene();
+        this.scene.fog = new THREE.Fog(0x1a1a2e, 50, 200);
+        
+        // Camera setup
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera.position.set(0, 4, 8);
+        this.camera.lookAt(0, 0, -10);
+        
+        // Renderer setup
+        const canvas = document.getElementById('game-canvas');
+        this.renderer = new THREE.WebGLRenderer({ 
+            canvas: canvas, 
+            antialias: !this.lowPowerMode,
+            alpha: false,
+            powerPreference: "high-performance"
+        });
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.lowPowerMode ? 1 : 2));
+        this.renderer.setClearColor(0x1a1a2e);
+        this.renderer.shadowMap.enabled = !this.lowPowerMode;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404080, 0.4);
+        this.scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0x64ffda, 0.8);
+        directionalLight.position.set(10, 20, 10);
+        directionalLight.castShadow = !this.lowPowerMode;
+        if (!this.lowPowerMode) {
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            directionalLight.shadow.camera.near = 0.5;
+            directionalLight.shadow.camera.far = 50;
+        }
+        this.scene.add(directionalLight);
+        
+        // Create game world
+        this.createPlayer();
+        this.createGround();
+        this.createBackground();
+    }
+    
+    createPlayer() {
+        const playerGroup = new THREE.Group();
+        
+        // Body (torso)
+        const bodyGeometry = new THREE.CapsuleGeometry(0.25, 1.0, 4, 8);
+        const bodyMaterial = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+        body.position.y = 0.5;
+        body.castShadow = !this.lowPowerMode;
+        playerGroup.add(body);
+        
+        // Head
+        const headGeometry = new THREE.SphereGeometry(0.2, 8, 8);
+        const headMaterial = new THREE.MeshLambertMaterial({ color: 0xffdbac });
+        const head = new THREE.Mesh(headGeometry, headMaterial);
+        head.position.y = 1.2;
+        head.castShadow = !this.lowPowerMode;
+        playerGroup.add(head);
+        
+        // Snapback cap
+        const capGeometry = new THREE.CylinderGeometry(0.22, 0.22, 0.08, 8);
+        const capMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+        const cap = new THREE.Mesh(capGeometry, capMaterial);
+        cap.position.y = 1.28;
+        cap.rotation.x = Math.PI * 0.1; // Tilted back
+        cap.castShadow = !this.lowPowerMode;
+        playerGroup.add(cap);
+        
+        // Cap visor
+        const visorGeometry = new THREE.CylinderGeometry(0.3, 0.25, 0.02, 8);
+        const visor = new THREE.Mesh(visorGeometry, capMaterial);
+        visor.position.set(0, 1.25, 0.15);
+        visor.rotation.x = Math.PI * 0.2;
+        visor.castShadow = !this.lowPowerMode;
+        playerGroup.add(visor);
+        
+        // Backpack
+        const backpackGeometry = new THREE.BoxGeometry(0.3, 0.4, 0.15);
+        const backpackMaterial = new THREE.MeshLambertMaterial({ color: 0x2a2a2a });
+        const backpack = new THREE.Mesh(backpackGeometry, backpackMaterial);
+        backpack.position.set(0, 0.7, -0.25);
+        backpack.castShadow = !this.lowPowerMode;
+        playerGroup.add(backpack);
+        
+        // Legs (simple capsules)
+        const legGeometry = new THREE.CapsuleGeometry(0.08, 0.4, 4, 8);
+        const legMaterial = new THREE.MeshLambertMaterial({ color: 0x4169e1 }); // Jeans blue
+        
+        const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+        leftLeg.position.set(-0.1, -0.1, 0);
+        leftLeg.castShadow = !this.lowPowerMode;
+        playerGroup.add(leftLeg);
+        
+        const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
+        rightLeg.position.set(0.1, -0.1, 0);
+        rightLeg.castShadow = !this.lowPowerMode;
+        playerGroup.add(rightLeg);
+        
+        // Sneakers
+        const shoeGeometry = new THREE.BoxGeometry(0.12, 0.08, 0.25);
+        const shoeMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff }); // White sneakers
+        
+        const leftShoe = new THREE.Mesh(shoeGeometry, shoeMaterial);
+        leftShoe.position.set(-0.1, -0.35, 0.05);
+        leftShoe.castShadow = !this.lowPowerMode;
+        playerGroup.add(leftShoe);
+        
+        const rightShoe = new THREE.Mesh(shoeGeometry, shoeMaterial);
+        rightShoe.position.set(0.1, -0.35, 0.05);
+        rightShoe.castShadow = !this.lowPowerMode;
+        playerGroup.add(rightShoe);
+        
+        // Position player
+        playerGroup.position.set(this.getLanePosition(1), 0, 0);
+        this.player = playerGroup;
+        this.scene.add(this.player);
+    }
+    
+    createGround() {
+        // Main ground plane
+        const groundGeometry = new THREE.PlaneGeometry(15, 200);
+        const groundMaterial = new THREE.MeshLambertMaterial({ 
+            color: 0x2a2a3a,
+            transparent: true,
+            opacity: 0.9
+        });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.z = -50;
+        ground.receiveShadow = !this.lowPowerMode;
+        this.scene.add(ground);
+        
+        // Lane markers
+        for (let i = 0; i < 4; i++) { // 4 lines for 3 lanes
+            const lineGeometry = new THREE.BoxGeometry(0.1, 0.02, 200);
+            const lineMaterial = new THREE.MeshLambertMaterial({ 
+                color: i === 0 || i === 3 ? 0x64ffda : 0xffffff,
+                transparent: true,
+                opacity: 0.6
+            });
+            const line = new THREE.Mesh(lineGeometry, lineMaterial);
+            line.position.set(this.getLanePosition(-0.5) + i * this.config.laneWidth, 0.01, -50);
+            this.scene.add(line);
+        }
+        
+        // Sidewalks
+        const sidewalkGeometry = new THREE.PlaneGeometry(3, 200);
+        const sidewalkMaterial = new THREE.MeshLambertMaterial({ color: 0x404050 });
+        
+        // Left sidewalk
+        const leftSidewalk = new THREE.Mesh(sidewalkGeometry, sidewalkMaterial);
+        leftSidewalk.rotation.x = -Math.PI / 2;
+        leftSidewalk.position.set(-6, 0.005, -50);
+        this.scene.add(leftSidewalk);
+        
+        // Right sidewalk
+        const rightSidewalk = new THREE.Mesh(sidewalkGeometry, sidewalkMaterial);
+        rightSidewalk.rotation.x = -Math.PI / 2;
+        rightSidewalk.position.set(6, 0.005, -50);
+        this.scene.add(rightSidewalk);
+    }
+    
+    createBackground() {
+        // Prague skyline buildings
+        const buildingMaterials = [
+            new THREE.MeshLambertMaterial({ color: 0x2a2a3a }),
+            new THREE.MeshLambertMaterial({ color: 0x3a3a4a }),
+            new THREE.MeshLambertMaterial({ color: 0x4a4a5a })
+        ];
+        
+        for (let i = 0; i < 30; i++) {
+            const width = 1 + Math.random() * 3;
+            const height = 3 + Math.random() * 12;
+            const depth = 1 + Math.random() * 2;
+            
+            const buildingGeometry = new THREE.BoxGeometry(width, height, depth);
+            const building = new THREE.Mesh(
+                buildingGeometry, 
+                buildingMaterials[Math.floor(Math.random() * buildingMaterials.length)]
+            );
+            
+            const side = Math.random() < 0.5 ? -1 : 1;
+            building.position.set(
+                side * (10 + Math.random() * 15),
+                height / 2,
+                -30 - Math.random() * 50
+            );
+            
+            this.scene.add(building);
+        }
+        
+        // Add some windows to buildings
+        for (let i = 0; i < 50; i++) {
+            const windowGeometry = new THREE.PlaneGeometry(0.3, 0.4);
+            const windowMaterial = new THREE.MeshLambertMaterial({ 
+                color: Math.random() > 0.7 ? 0xffff88 : 0x444444,
+                transparent: true,
+                opacity: Math.random() > 0.5 ? 0.8 : 0.3
+            });
+            const window = new THREE.Mesh(windowGeometry, windowMaterial);
+            
+            const side = Math.random() < 0.5 ? -1 : 1;
+            window.position.set(
+                side * (8 + Math.random() * 20),
+                1 + Math.random() * 8,
+                -25 - Math.random() * 60
+            );
+            window.rotation.y = side > 0 ? Math.PI : 0;
+            
+            this.scene.add(window);
+        }
+    }
+    
+    getLanePosition(lane) {
+        return (lane - 1) * this.config.laneWidth; // -3, 0, 3
+    }
+    
+    isOverObstacle() {
+        // Check if player is currently over an obstacle (for flip scoring)
+        const playerBox = new THREE.Box3().setFromObject(this.player);
+        return this.obstacles.some(obstacle => {
+            const obstacleBox = new THREE.Box3().setFromObject(obstacle.mesh);
+            return playerBox.intersectsBox(obstacleBox) && 
+                   obstacle.mesh.position.z >= -2 && 
+                   obstacle.mesh.position.z <= 2;
+        });
+    }
+    
+    gameLoop() {
+        if (!this.isPlaying) return;
+        
+        const now = Date.now();
+        const deltaTime = Math.min((now - (this.lastFrameTime || now)) / 1000, 1/30);
+        this.lastFrameTime = now;
+        
+        if (!this.isPaused) {
+            this.updateGame(deltaTime);
+        }
+        
+        this.updateHUD();
+        this.updateDebug();
+        
+        if (this.renderer && this.scene && this.camera) {
+            this.renderer.render(this.scene, this.camera);
+        }
+        
+        this.updateFPS();
+        
+        requestAnimationFrame(() => this.gameLoop());
+    }
+
+// Pokračování FofrPedroGame class - herní mechaniky
+    
+    updateGame(deltaTime) {
+        if (!this.player) return;
+        
+        // Update speed based on distance
+        this.currentSpeed = Math.min(
+            this.config.maxSpeed, 
+            this.config.startSpeed + this.distance * this.config.speedIncrease
+        );
+        
+        // Update distance and score
+        this.distance += this.currentSpeed * deltaTime;
+        this.score = Math.floor(this.distance);
+        
+        // Update player physics
+        this.updatePlayerPhysics(deltaTime);
+        
+        // Update player position
+        this.updatePlayerPosition(deltaTime);
+        
+        // Update camera
+        this.updateCamera(deltaTime);
+        
+        // Update cooldowns
+        if (this.flipCooldownTime > 0) {
+            this.flipCooldownTime -= deltaTime * 1000;
+        }
+        
+        // Reset consecutive flips if too much time passed
+        if (Date.now() - this.lastFlipTime > 6000) {
+            this.consecutiveFlips = 0;
+        }
+        
+        // Spawn game objects
+        this.spawnObstacles(deltaTime);
+        this.spawnPowerUps(deltaTime);
+        
+        // Update game objects
+        this.updateObstacles(deltaTime);
+        this.updatePowerUps(deltaTime);
+        this.updateParticles(deltaTime);
+        
+        // Check collisions
+        this.checkCollisions();
+        
+        // Update active power-ups
+        this.updateActivePowerUps(deltaTime);
+        
+        // Track achievements
+        this.trackAchievements();
+    }
+    
+    updatePlayerPhysics(deltaTime) {
+        // Gravity and jumping
+        if (this.isJumping || this.playerY > 0) {
+            this.playerVelocityY -= this.config.gravityStrength * deltaTime;
+            this.playerY += this.playerVelocityY * deltaTime;
+            
+            // Landing
+            if (this.playerY <= 0) {
+                this.playerY = 0;
+                this.playerVelocityY = 0;
+                this.isJumping = false;
+                
+                if (this.isFlipping) {
+                    this.isFlipping = false;
+                    this.playerRotationX = 0;
+                    // Reset flip cooldown timer
+                    this.flipCooldownTime = this.config.flipCooldown;
+                }
+            }
+        } else {
+            this.lastGroundTime = Date.now();
+        }
+        
+        // Flip rotation animation
+        if (this.isFlipping && this.playerVelocityY > 0) {
+            const flipProgress = 1 - (this.playerVelocityY / this.config.flipHeight);
+            this.playerRotationX = flipProgress * Math.PI * 2;
+        }
+    }
+    
+    updatePlayerPosition(deltaTime) {
+        if (!this.player) return;
+        
+        // Smooth lane transition
+        const targetX = this.getLanePosition(this.targetLane);
+        const currentX = this.player.position.x;
+        const laneSpeed = 12; // Fast lane switching
+        
+        if (Math.abs(targetX - currentX) > 0.1) {
+            this.player.position.x += (targetX - currentX) * laneSpeed * deltaTime;
+        } else {
+            this.player.position.x = targetX;
+            this.currentLane = this.targetLane;
+        }
+        
+        // Update Y position (jumping/falling)
+        this.player.position.y = this.playerY;
+        
+        // Sliding animation (scale down)
+        if (this.isSliding) {
+            this.player.scale.y = Math.max(0.5, this.player.scale.y - deltaTime * 2);
+        } else {
+            this.player.scale.y = Math.min(1.0, this.player.scale.y + deltaTime * 3);
+        }
+        
+        // Flip rotation
+        if (this.isFlipping) {
+            this.player.rotation.x = this.playerRotationX;
+        } else {
+            this.player.rotation.x = 0;
+        }
+        
+        // Running animation (simple bobbing)
+        const runCycle = (Date.now() * 0.01) % (Math.PI * 2);
+        if (!this.isJumping && !this.isSliding) {
+            this.player.position.y += Math.sin(runCycle * 2) * 0.02;
+        }
+    }
+    
+    updateCamera(deltaTime) {
+        if (!this.camera || !this.player) return;
+        
+        // Follow player horizontally with smooth interpolation
+        const targetCameraX = this.player.position.x * 0.3;
+        this.camera.position.x += (targetCameraX - this.camera.position.x) * deltaTime * 2;
+        
+        // Slight camera shake during high speed
+        if (this.currentSpeed > 15) {
+            const shakeIntensity = (this.currentSpeed - 15) / 10 * 0.05;
+            this.camera.position.y = 4 + Math.sin(Date.now() * 0.02) * shakeIntensity;
+            this.camera.position.x += (Math.random() - 0.5) * shakeIntensity;
+        }
+    }
+    
+    spawnObstacles(deltaTime) {
+        // Distance-based spawn rate
+        const baseSpawnRate = 0.015;
+        const speedMultiplier = 1 + (this.currentSpeed - this.config.startSpeed) / 20;
+        const spawnRate = baseSpawnRate * speedMultiplier;
+        
+        if (Math.random() < spawnRate * deltaTime * 60) { // Normalize for 60fps
+            this.createObstacle();
+        }
+    }
+    
+    spawnPowerUps(deltaTime) {
+        const spawnRate = 0.003; // Lower spawn rate for power-ups
+        
+        if (Math.random() < spawnRate * deltaTime * 60) {
+            this.createPowerUp();
+        }
+    }
+    
+    createObstacle() {
+        const types = [
+            { type: 'cop', weight: 2 },
+            { type: 'car', weight: 1 },
+            { type: 'barrier_low', weight: 3 },
+            { type: 'barrier_high', weight: 2 },
+            { type: 'pigeon', weight: 2 },
+            { type: 'needle', weight: 3 },
+            { type: 'bag', weight: 2 },
+            { type: 'card', weight: 3 },
+            { type: 'straw', weight: 1 }
+        ];
+        
+        // Weighted random selection
+        const totalWeight = types.reduce((sum, item) => sum + item.weight, 0);
+        let random = Math.random() * totalWeight;
+        let selectedType = types[0].type;
+        
+        for (const item of types) {
+            random -= item.weight;
+            if (random <= 0) {
+                selectedType = item.type;
+                break;
+            }
+        }
+        
+        const lane = Math.floor(Math.random() * 3);
+        const spawnZ = -40 - Math.random() * 20;
+        
+        let geometry, material, height, behavior;
+        
+        switch (selectedType) {
+            case 'cop':
+                geometry = new THREE.CapsuleGeometry(0.3, 1.5, 4, 8);
+                material = new THREE.MeshLambertMaterial({ color: 0x000080 });
+                height = 1.5;
+                behavior = 'aggressive_lanes';
+                break;
+                
+            case 'car':
+                geometry = new THREE.BoxGeometry(4, 1.2, 2);
+                material = new THREE.MeshLambertMaterial({ color: 0x0066cc });
+                height = 0.6;
+                behavior = 'wide_block';
+                // Add blue light on top
+                const lightGeometry = new THREE.SphereGeometry(0.1, 6, 6);
+                const lightMaterial = new THREE.MeshLambertMaterial({ 
+                    color: 0x0088ff,
+                    emissive: 0x0044aa
+                });
+                break;
+                
+            case 'barrier_low':
+                geometry = new THREE.BoxGeometry(2, 0.8, 0.5);
+                material = new THREE.MeshLambertMaterial({ color: 0xff6600 });
+                height = 0.4;
+                behavior = 'jump_over';
+                break;
+                
+            case 'barrier_high':
+                geometry = new THREE.BoxGeometry(2, 1.8, 0.5);
+                material = new THREE.MeshLambertMaterial({ color: 0xff6600 });
+                height = 0.9;
+                behavior = 'slide_under';
+                break;
+                
+            case 'pigeon':
+                geometry = new THREE.SphereGeometry(0.15, 6, 6);
+                material = new THREE.MeshLambertMaterial({ color: 0x666666 });
+                height = 0.8;
+                behavior = 'chaotic';
+                break;
+                
+            case 'needle':
+                geometry = new THREE.CylinderGeometry(0.02, 0.02, 0.2, 6);
+                material = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+                height = 0.1;
+                behavior = 'ground_jump';
+                break;
+                
+            case 'bag':
+                geometry = new THREE.SphereGeometry(0.2, 6, 6);
+                material = new THREE.MeshLambertMaterial({ 
+                    color: 0x8b4513,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                height = 0.6;
+                behavior = 'wind_drift';
+                break;
+                
+            case 'card':
+                geometry = new THREE.BoxGeometry(0.6, 0.02, 0.4);
+                material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+                height = 0.01;
+                behavior = 'ground_slide';
+                break;
+                
+            case 'straw':
+                geometry = new THREE.CylinderGeometry(0.01, 0.01, 1.5, 8);
+                material = new THREE.MeshLambertMaterial({ color: 0xffff00 });
+                height = 0.01;
+                behavior = 'slippery';
+                break;
+        }
+        
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(
+            this.getLanePosition(lane),
+            height,
+            spawnZ
+        );
+        mesh.castShadow = !this.lowPowerMode;
+        this.scene.add(mesh);
+        
+        const obstacle = {
+            mesh: mesh,
+            type: selectedType,
+            lane: lane,
+            behavior: behavior,
+            speed: this.currentSpeed,
+            originalY: height,
+            time: 0,
+            active: true
+        };
+        
+        this.obstacles.push(obstacle);
+        this.lastObstacleZ = spawnZ;
+    }
+    
+    createPowerUp() {
+        const types = ['speed', 'invisible', 'life'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        const lane = Math.floor(Math.random() * 3);
+        const spawnZ = -35 - Math.random() * 15;
+        
+        let color, emissiveColor;
+        switch (type) {
+            case 'speed':
+                color = 0x00ff00;
+                emissiveColor = 0x004400;
+                break;
+            case 'invisible':
+                color = 0x9999ff;
+                emissiveColor = 0x2222aa;
+                break;
+            case 'life':
+                color = 0xff0099;
+                emissiveColor = 0x440022;
+                break;
+        }
+        
+        const geometry = new THREE.SphereGeometry(0.3, 8, 8);
+        const material = new THREE.MeshLambertMaterial({ 
+            color: color,
+            emissive: emissiveColor,
+            transparent: true, 
+            opacity: 0.9
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        
+        mesh.position.set(this.getLanePosition(lane), 1, spawnZ);
+        this.scene.add(mesh);
+        
+        const powerUp = {
+            mesh: mesh,
+            type: type,
+            lane: lane,
+            time: 0,
+            active: true
+        };
+        
+        this.powerUps.push(powerUp);
+        this.lastPowerUpZ = spawnZ;
+    }
+    
+    updateObstacles(deltaTime) {
+        for (let i = this.obstacles.length - 1; i >= 0; i--) {
+            const obstacle = this.obstacles[i];
+            if (!obstacle.active) continue;
+            
+            obstacle.time += deltaTime;
+            obstacle.mesh.position.z += this.currentSpeed * deltaTime;
+            
+            // Behavior-specific animations
+            switch (obstacle.behavior) {
+                case 'aggressive_lanes':
+                    // Cops on bikes swerve between lanes
+                    const swerve = Math.sin(obstacle.time * 3) * 0.5;
+                    obstacle.mesh.position.x += swerve * deltaTime;
+                    break;
+                    
+                case 'chaotic':
+                    // Pigeons fly erratically
+                    obstacle.mesh.position.x += Math.sin(obstacle.time * 4) * deltaTime;
+                    obstacle.mesh.position.y = obstacle.originalY + Math.cos(obstacle.time * 3) * 0.3;
+                    break;
+                    
+                case 'wind_drift':
+                    // Bags drift sideways in wind
+                    const drift = Math.sin(obstacle.time * 2) * 0.8;
+                    obstacle.mesh.position.x += drift * deltaTime;
+                    obstacle.mesh.position.y = obstacle.originalY + Math.sin(obstacle.time * 2.5) * 0.2;
+                    break;
+                    
+                case 'slippery':
+                    // Straws (kluzký pás) cover wider area
+                    obstacle.mesh.rotation.z += deltaTime;
+                    break;
+            }
+            
+            // Remove obstacles that are too far behind
+            if (obstacle.mesh.position.z > 15) {
+                this.scene.remove(obstacle.mesh);
+                this.obstacles.splice(i, 1);
+            }
+        }
+    }
+    
+    updatePowerUps(deltaTime) {
+        for (let i = this.powerUps.length - 1; i >= 0; i--) {
+            const powerUp = this.powerUps[i];
+            if (!powerUp.active) continue;
+            
+            powerUp.time += deltaTime;
+            powerUp.mesh.position.z += this.currentSpeed * deltaTime;
+            
+            // Floating animation
+            powerUp.mesh.rotation.y += deltaTime * 2;
+            powerUp.mesh.position.y = 1 + Math.sin(powerUp.time * 3) * 0.2;
+            
+            // Pulsing glow effect
+            const pulse = 0.7 + Math.sin(powerUp.time * 4) * 0.3;
+            powerUp.mesh.material.opacity = pulse;
+            
+            // Remove power-ups that are too far behind
+            if (powerUp.mesh.position.z > 15) {
+                this.scene.remove(powerUp.mesh);
+                this.powerUps.splice(i, 1);
+            }
+        }
+    }
+    
+    updateParticles(deltaTime) {
+        // Simple particle system for trails and effects
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const particle = this.particles[i];
+            
+            particle.life -= deltaTime;
+            particle.mesh.position.add(particle.velocity.clone().multiplyScalar(deltaTime));
+            particle.mesh.material.opacity = particle.life / particle.maxLife;
+            
+            if (particle.life <= 0) {
+                this.scene.remove(particle.mesh);
+                this.particles.splice(i, 1);
+            }
+        }
+    }
+    
+    checkCollisions() {
+        if (!this.player) return;
+        
+        const playerBox = new THREE.Box3().setFromObject(this.player);
+        
+        // Make player hitbox slightly smaller for better gameplay
+        const hitboxPadding = this.isSliding ? 0.3 : 0.2;
+        playerBox.expandByScalar(-hitboxPadding);
+        
+        // Check obstacle collisions
+        for (let i = this.obstacles.length - 1; i >= 0; i--) {
+            const obstacle = this.obstacles[i];
+            if (!obstacle.active || obstacle.mesh.position.z < -5 || obstacle.mesh.position.z > 5) continue;
+            
+            const obstacleBox = new THREE.Box3().setFromObject(obstacle.mesh);
+            
+            if (playerBox.intersectsBox(obstacleBox)) {
+                this.handleCollision(obstacle);
+                obstacle.active = false;
+            }
+        }
+        
+        // Check power-up collections
+        for (let i = this.powerUps.length - 1; i >= 0; i--) {
+            const powerUp = this.powerUps[i];
+            if (!powerUp.active || powerUp.mesh.position.z < -3 || powerUp.mesh.position.z > 3) continue;
+            
+            const powerUpBox = new THREE.Box3().setFromObject(powerUp.mesh);
+            
+            if (playerBox.intersectsBox(powerUpBox)) {
+                this.collectPowerUp(powerUp);
+                powerUp.active = false;
+                this.scene.remove(powerUp.mesh);
+                this.powerUps.splice(i, 1);
+            }
+        }
+    }
+    
+    handleCollision(obstacle) {
+        const type = obstacle.type;
+        let canAvoid = false;
+        let avoidanceMethod = '';
+        
+        // Check if player can avoid collision based on obstacle type
+        switch (type) {
+            case 'needle':
+            case 'card':
+                canAvoid = this.isJumping || this.isFlipping;
+                avoidanceMethod = 'jump/flip';
+                break;
+            case 'barrier_low':
+                canAvoid = this.isJumping || this.isFlipping;
+                avoidanceMethod = 'jump';
+                break;
+            case 'barrier_high':
+                canAvoid = this.isSliding;
+                avoidanceMethod = 'slide';
+                break;
+            case 'car':
+            case 'cop':
+                canAvoid = false; // Must dodge by changing lanes
+                break;
+            case 'bag':
+                canAvoid = false; // Must dodge by changing lanes
+                break;
+            case 'straw':
+                // Slippery surface affects movement but doesn't cause immediate death
+                if (!this.isSliding) {
+                    this.applySlipperyEffect();
+                    return; // Don't treat as collision
+                }
+                canAvoid = true;
+                break;
+        }
+        
+        // Check for invulnerability power-up
+        const isInvulnerable = this.activePowerUps.some(pu => pu.type === 'invisible');
+        
+        if (!canAvoid && !isInvulnerable) {
+            // Collision damage
+            this.lives--;
+            this.playSound('collision');
+            this.vibrate([100, 50, 100]);
+            
+            // Show appropriate voice line
+            const messages = this.voiceLines[this.settings.spice];
+            const message = messages[Math.floor(Math.random() * messages.length)];
+            this.showToast(message);
+            
+            // Create collision effect
+            this.createCollisionEffect(obstacle.mesh.position);
+            
+            if (this.lives <= 0) {
+                this.gameOver('Chytli tě fízlové!');
+            }
+        } else if (canAvoid) {
+            // Successful avoidance - bonus points
+            const bonus = this.isFlipping ? 25 : 10;
+            this.score += bonus;
+            this.showToast(`${avoidanceMethod === 'jump/flip' ? '🤸‍♂️' : '⬇️'} +${bonus} bodů!`);
+            this.playSound('whoosh', 1.2);
+        }
+        
+        // Remove obstacle after collision
+        this.scene.remove(obstacle.mesh);
+    }
+    
+    collectPowerUp(powerUp) {
+        const type = powerUp.type;
+        
+        this.playSound('powerup');
+        this.vibrate([30, 10, 30]);
+        
+        switch (type) {
+            case 'speed':
+                this.activatePowerUp('speed', 4000);
+                this.showToast('⚡ Rychlý šleh! Přidáváš!');
+                break;
+            case 'invisible':
+                this.activatePowerUp('invisible', 5000);
+                this.showToast('👻 Neviditelnost! Jsi v bezpečí!');
+                break;
+            case 'life':
+                this.lives = Math.min(this.lives + 1, 5); // Max 5 lives
+                this.showToast('❤️ Extra cévko! +1 život');
+                break;
+        }
+        
+        // Create collection effect
+        this.createCollectionEffect(powerUp.mesh.position, type);
+    }
+    
+    applySlipperyEffect() {
+        // Slippery surface (brčka) makes controls less responsive
+        this.showToast('🟡 Kluzko! Pozor na ovládání!');
+        
+        // Temporarily reduce control responsiveness
+        // This is handled in the updatePlayerPosition method
+        setTimeout(() => {
+            if (this.isPlaying) {
+                this.showToast('Trakce obnovena');
+            }
+        }, 2000);
+    }
+    
+    createCollisionEffect(position) {
+        // Create simple particle explosion
+        for (let i = 0; i < 8; i++) {
+            const particleGeometry = new THREE.SphereGeometry(0.05, 4, 4);
+            const particleMaterial = new THREE.MeshLambertMaterial({ 
+                color: 0xff4444,
+                transparent: true
+            });
+            const particleMesh = new THREE.Mesh(particleGeometry, particleMaterial);
+            
+            particleMesh.position.copy(position);
+            this.scene.add(particleMesh);
+            
+            const velocity = new THREE.Vector3(
+                (Math.random() - 0.5) * 10,
+                Math.random() * 5 + 2,
+                (Math.random() - 0.5) * 10
+            );
+            
+            const particle = {
+                mesh: particleMesh,
+                velocity: velocity,
+                life: 0.8,
+                maxLife: 0.8
+            };
+            
+            this.particles.push(particle);
+        }
+    }
+    
+    createCollectionEffect(position, type) {
+        // Create sparkle effect for power-up collection
+        const colors = {
+            speed: 0x00ff00,
+            invisible: 0x9999ff,
+            life: 0xff0099
+        };
+        
+        for (let i = 0; i < 6; i++) {
+            const particleGeometry = new THREE.SphereGeometry(0.03, 4, 4);
+            const particleMaterial = new THREE.MeshLambertMaterial({ 
+                color: colors[type] || 0xffffff,
+                transparent: true,
+                emissive: colors[type] || 0xffffff
+            });
+            const particleMesh = new THREE.Mesh(particleGeometry, particleMaterial);
+            
+            particleMesh.position.copy(position);
+            this.scene.add(particleMesh);
+            
+            const velocity = new THREE.Vector3(
+                (Math.random() - 0.5) * 3,
+                Math.random() * 3 + 1,
+                (Math.random() - 0.5) * 3
+            );
+            
+            const particle = {
+                mesh: particleMesh,
+                velocity: velocity,
+                life: 1.0,
+                maxLife: 1.0
+            };
+            
+            this.particles.push(particle);
+        }
+    }
+
+// Pokračování FofrPedroGame class - power-upy a achievements
+    
+    activatePowerUp(type, duration) {
+        // Remove existing power-up of same type
+        this.activePowerUps = this.activePowerUps.filter(pu => pu.type !== type);
+        
+        const powerUp = {
+            type: type,
+            duration: duration,
+            maxDuration: duration,
+            startTime: Date.now()
+        };
+        
+        this.activePowerUps.push(powerUp);
+        this.updatePowerUpHUD();
+        
+        // Apply power-up effects
+        switch (type) {
+            case 'speed':
+                this.createSpeedTrail();
+                break;
+            case 'invisible':
+                this.applyInvisibilityEffect();
+                break;
+        }
+    }
+    
+    updateActivePowerUps(deltaTime) {
+        for (let i = this.activePowerUps.length - 1; i >= 0; i--) {
+            const powerUp = this.activePowerUps[i];
+            powerUp.duration -= deltaTime * 1000;
+            
+            if (powerUp.duration <= 0) {
+                this.deactivatePowerUp(powerUp.type);
+                this.activePowerUps.splice(i, 1);
+            }
+        }
+        
+        this.updatePowerUpHUD();
+    }
+    
+    deactivatePowerUp(type) {
+        switch (type) {
+            case 'speed':
+                this.removeSpeedTrail();
+                break;
+            case 'invisible':
+                this.removeInvisibilityEffect();
+                break;
+        }
+    }
+    
+    createSpeedTrail() {
+        // Visual effect for speed boost
+        if (!this.player) return;
+        
+        const trailGeometry = new THREE.SphereGeometry(0.1, 6, 6);
+        const trailMaterial = new THREE.MeshLambertMaterial({ 
+            color: 0x00ff00,
+            transparent: true,
+            opacity: 0.6
+        });
+        
+        for (let i = 0; i < 3; i++) {
+            const trail = new THREE.Mesh(trailGeometry, trailMaterial);
+            trail.position.copy(this.player.position);
+            trail.position.z += i * 0.5;
+            this.scene.add(trail);
+            
+            // Add to particles for automatic cleanup
+            const particle = {
+                mesh: trail,
+                velocity: new THREE.Vector3(0, 0, 2),
+                life: 0.5,
+                maxLife: 0.5
+            };
+            this.particles.push(particle);
+        }
+    }
+    
+    removeSpeedTrail() {
+        // Speed trail is automatically cleaned up by particle system
+    }
+    
+    applyInvisibilityEffect() {
+        if (!this.player) return;
+        
+        // Make player semi-transparent with outline
+        this.player.traverse(child => {
+            if (child.isMesh) {
+                child.material = child.material.clone();
+                child.material.transparent = true;
+                child.material.opacity = 0.5;
+            }
+        });
+    }
+    
+    removeInvisibilityEffect() {
+        if (!this.player) return;
+        
+        // Restore player visibility
+        this.player.traverse(child => {
+            if (child.isMesh) {
+                child.material.transparent = false;
+                child.material.opacity = 1.0;
+            }
+        });
+    }
+    
+    updatePowerUpHUD() {
+        const hudPowerup = document.getElementById('hud-powerup');
+        
+        if (this.activePowerUps.length > 0) {
+            const powerUp = this.activePowerUps[0]; // Show first active power-up
+            const icons = { 
+                speed: '⚡', 
+                invisible: '👻', 
+                life: '❤️' 
+            };
+            const colors = {
+                speed: '#00ff00',
+                invisible: '#9999ff',
+                life: '#ff0099'
+            };
+            
+            document.getElementById('powerup-icon').textContent = icons[powerUp.type];
+            document.getElementById('powerup-icon').style.backgroundColor = colors[powerUp.type];
+            
+            const progress = (powerUp.duration / powerUp.maxDuration) * 100;
+            document.getElementById('powerup-progress').style.width = progress + '%';
+            
+            hudPowerup.classList.remove('hidden');
+            hudPowerup.classList.add('flex');
+        } else {
+            hudPowerup.classList.add('hidden');
+            hudPowerup.classList.remove('flex');
+        }
+    }
+    
+    // Achievement system
+    trackAchievements() {
+        // Distance-based achievements
+        if (this.distance >= 1000) this.unlockAchievement('survivor');
+        if (this.distance >= 2000) this.unlockAchievement('marathon_runner');
+        
+        // Speed-based achievements
+        if (this.currentSpeed >= 20) this.unlockAchievement('speed_demon');
+        
+        // Flip-based achievements
+        if (this.flipCount >= 3) this.unlockAchievement('acrobat');
+        if (this.flipCount >= 10) this.unlockAchievement('flip_master');
+        
+        // Survival achievements
+        if (this.lives === 1 && this.distance >= 500) this.unlockAchievement('invincible');
+        
+        // Power-up achievements
+        const powerUpCount = this.gameData.stats?.powerUpsCollected || 0;
+        if (powerUpCount >= 50) this.unlockAchievement('collector');
+        
+        // Time-based achievements
+        const playTime = (Date.now() - this.gameStartTime) / 1000;
+        if (playTime >= 300) this.unlockAchievement('endurance');
+    }
+    
+    unlockAchievement(achievementId) {
+        const achievements = {
+            first_run: { name: 'První běh', desc: 'Dokončil jsi svůj první běh', icon: '🏃‍♂️' },
+            acrobat: { name: 'Akrobat', desc: '3 flipy v jednom běhu', icon: '🤸‍♂️' },
+            showtime: { name: 'Showtime', desc: 'Flip přes auto s majáky', icon: '🚗' },
+            speed_demon: { name: 'Rychlák', desc: 'Dosáhl jsi rychlosti 20', icon: '⚡' },
+            collector: { name: 'Sběratel', desc: 'Sebral jsi 50 power-upů', icon: '💎' },
+            survivor: { name: 'Přeživší', desc: 'Uběhl jsi 1000 metrů', icon: '🏅' },
+            flip_master: { name: 'Mistr flipů', desc: '10 flipů v jednom běhu', icon: '🎯' },
+            invincible: { name: 'Neporazitelný', desc: 'Přežil jsi s 1 životem 500m', icon: '🛡️' },
+            marathon_runner: { name: 'Maratonec', desc: 'Uběhl jsi 2000 metrů', icon: '🏃‍♂️' },
+            endurance: { name: 'Vytrvalec', desc: '5 minut nepřetržitého hraní', icon: '⏱️' }
+        };
+        
+        // Check if already unlocked
+        if (this.gameData.achievements.some(a => a.id === achievementId)) return;
+        
+        const achievement = achievements[achievementId];
+        if (achievement) {
+            const unlockedAchievement = {
+                id: achievementId,
+                ...achievement,
+                unlockedAt: new Date().toISOString()
+            };
+            
+            this.gameData.achievements.push(unlockedAchievement);
+            this.showToast(`🏆 ${achievement.icon} ${achievement.name}`);
+            this.playSound('powerup', 1.5);
+            this.vibrate([50, 25, 50, 25, 100]);
+            this.saveGameData();
+        }
+    }
+    
+    // Data management
+    loadGameData() {
+        const defaultData = {
+            highScore: 0,
+            bestDistance: 0,
+            bestSpeed: 0,
+            totalRuns: 0,
+            totalDistance: 0,
+            leaderboard: [],
+            achievements: [],
+            dailyChallenge: null,
+            stats: {
+                powerUpsCollected: 0,
+                obstaclesAvoided: 0,
+                totalFlips: 0
+            },
+            settings: {
+                sound: true,
+                music: true,
+                haptics: true,
+                theme: 'auto',
+                spice: 'mild',
+                controls: 'touch'
+            }
+        };
+        
+        try {
+            const saved = localStorage.getItem('fofr-pedro-data');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                return { 
+                    ...defaultData, 
+                    ...parsed, 
+                    settings: { ...defaultData.settings, ...parsed.settings },
+                    stats: { ...defaultData.stats, ...parsed.stats }
+                };
+            }
+            return defaultData;
+        } catch (e) {
+            console.warn('Could not load game ', e);
+            return defaultData;
+        }
+    }
+    
+    saveGameData() {
+        try {
+            this.gameData.settings = this.settings;
+            localStorage.setItem('fofr-pedro-data', JSON.stringify(this.gameData));
+        } catch (e) {
+            console.warn('Could not save game ', e);
+        }
+    }
+    
+    updateHUD() {
+        document.getElementById('hud-score').textContent = `${Math.floor(this.distance)} m`;
+        document.getElementById('hud-speed').textContent = `${Math.floor(this.currentSpeed)}`;
+    }
+    
+    updateDebug() {
+        if (window.FOFR_PEDRO.debug) {
+            document.getElementById('debug-fps').textContent = this.fps;
+            document.getElementById('debug-speed').textContent = this.currentSpeed.toFixed(1);
+            document.getElementById('debug-lane').textContent = this.currentLane;
+            document.getElementById('debug-state').textContent = this.gameState;
+            document.getElementById('debug-obstacles').textContent = this.obstacles.length;
+            document.getElementById('debug-powerups').textContent = this.powerUps.length;
+        }
+    }
+    
+    updateFPS() {
+        this.frameCount++;
+        const now = Date.now();
+        
+        if (now - this.lastFpsUpdate >= 1000) {
+            this.fps = Math.round((this.frameCount * 1000) / (now - this.lastFpsUpdate));
+            this.frameCount = 0;
+            this.lastFpsUpdate = now;
+            
+            // Enable low power mode if FPS drops
+            if (this.fps < 45 && !this.lowPowerMode) {
+                this.lowPowerMode = true;
+                this.showToast('Low power mód aktivován');
+                
+                if (this.renderer) {
+                    this.renderer.shadowMap.enabled = false;
+                    this.renderer.setPixelRatio(1);
+                }
+            }
+        }
+    }
+
+// Pokračování FofrPedroGame class - UI systémy
+    
+    gameOver(message = 'Konec hry!') {
+        this.isPlaying = false;
+        this.gameState = 'gameover';
+        
+        // Update statistics
+        this.gameData.totalRuns++;
+        this.gameData.totalDistance += this.distance;
+        this.gameData.stats.totalFlips += this.flipCount;
+        
+        // Update records
+        if (this.score > this.gameData.highScore) {
+            this.gameData.highScore = this.score;
+            this.gameData.bestDistance = Math.max(this.gameData.bestDistance, this.distance);
+            this.showToast('🏆 Nový rekord!');
+        }
+        this.gameData.bestSpeed = Math.max(this.gameData.bestSpeed, this.currentSpeed);
+        
+        // Unlock first run achievement
+        this.unlockAchievement('first_run');
+        
+        // Show game over screen
+        this.displayGameOverScreen(message);
+        this.saveGameData();
+    }
+    
+    displayGameOverScreen(message) {
+        document.getElementById('game-over-message').textContent = message;
+        document.getElementById('final-score').textContent = Math.floor(this.score);
+        document.getElementById('final-distance').textContent = `${Math.floor(this.distance)} m`;
+        document.getElementById('best-score').textContent = this.gameData.highScore;
+        
+        // Hide game UI
+        document.getElementById('hud').style.display = 'none';
+        document.getElementById('touch-controls').classList.add('pointer-events-none');
+        document.getElementById('touch-controls').classList.remove('pointer-events-auto');
+        
+        // Show game over screen
+        document.getElementById('game-over').classList.remove('hidden');
+        document.getElementById('game-over').classList.add('flex');
+        
+        // Setup name input for leaderboard
+        const nameInput = document.getElementById('player-name');
+        nameInput.value = localStorage.getItem('fofr-pedro-player-name') || '';
+        nameInput.addEventListener('input', (e) => {
+            localStorage.setItem('fofr-pedro-player-name', e.target.value);
+        });
+    }
+    
+    restartGame() {
+        // Add to leaderboard if name is provided
+        const playerName = document.getElementById('player-name').value.trim();
+        if (playerName && this.score > 0) {
+            this.addToLeaderboard(playerName, Math.floor(this.score), Math.floor(this.distance));
+        }
+        
+        document.getElementById('game-over').classList.add('hidden');
+        document.getElementById('game-over').classList.remove('flex');
+        this.startGame();
+    }
+    
+    backToMenu() {
+        // Add to leaderboard if name is provided
+        const playerName = document.getElementById('player-name').value.trim();
+        if (playerName && this.score > 0) {
+            this.addToLeaderboard(playerName, Math.floor(this.score), Math.floor(this.distance));
+        }
+        
+        this.isPlaying = false;
+        this.gameState = 'menu';
+        
+        // Hide all game screens
+        document.getElementById('game-over').classList.add('hidden');
+        document.getElementById('game-over').classList.remove('flex');
+        document.getElementById('hud').style.display = 'none';
+        document.getElementById('touch-controls').classList.add('pointer-events-none');
+        document.getElementById('touch-controls').classList.remove('pointer-events-auto');
+        
+        // Show main menu
+        document.getElementById('main-menu').style.display = 'flex';
+        
+        // Cleanup 3D objects
+        this.disposeThreeObjects();
+    }
+    
+    pauseGame() {
+        if (!this.isPlaying) return;
+        
+        this.isPaused = !this.isPaused;
+        const pauseBtn = document.getElementById('btn-pause');
+        
+        if (this.isPaused) {
+            pauseBtn.textContent = '▶️ Pokračovat';
+            this.showToast('Hra pozastavena');
+        } else {
+            pauseBtn.textContent = '⏸️ Pauza';
+            this.showToast('Pokračování...');
+        }
+    }
+    
+    showSettings() {
+        document.getElementById('settings-panel').classList.remove('hidden');
+        document.getElementById('settings-panel').classList.add('flex');
+        this.loadSettingsUI();
+    }
+    
+    hideSettings() {
+        document.getElementById('settings-panel').classList.add('hidden');
+        document.getElementById('settings-panel').classList.remove('flex');
+    }
+    
+    loadSettingsUI() {
+        document.getElementById('setting-theme').value = this.settings.theme;
+        document.getElementById('setting-spice').value = this.settings.spice;
+        document.getElementById('setting-sound').value = this.settings.sound.toString();
+        document.getElementById('setting-haptics').value = this.settings.haptics.toString();
+        document.getElementById('setting-controls').value = this.settings.controls;
+    }
+    
+    saveSettings() {
+        this.settings.theme = document.getElementById('setting-theme').value;
+        this.settings.spice = document.getElementById('setting-spice').value;
+        this.settings.sound = document.getElementById('setting-sound').value === 'true';
+        this.settings.haptics = document.getElementById('setting-haptics').value === 'true';
+        this.settings.controls = document.getElementById('setting-controls').value;
+        
+        this.applyTheme();
+        this.saveGameData();
+        this.hideSettings();
+        this.showToast('Nastavení uloženo ✅');
+    }
+    
+    applyTheme() {
+        const body = document.body;
+        
+        if (this.settings.theme === 'day') {
+            body.className = body.className.replace('bg-prague', 'bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200');
+        } else if (this.settings.theme === 'night') {
+            body.className = body.className.replace(/bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200|bg-prague/, 'bg-prague');
+        } else {
+            // Auto - use system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                body.className = body.className.replace(/bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200/, 'bg-prague');
+            } else {
+                body.className = body.className.replace('bg-prague', 'bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200');
+            }
+        }
+    }
+    
+    // Leaderboard system
+    addToLeaderboard(playerName, score, distance) {
+        if (!playerName || score <= 0) return;
+        
+        const entry = {
+            name: playerName.substring(0, 20),
+            score: score,
+            distance: distance,
+            date: new Date().toISOString()
+        };
+        
+        this.gameData.leaderboard.push(entry);
+        this.gameData.leaderboard.sort((a, b) => b.score - a.score);
+        this.gameData.leaderboard = this.gameData.leaderboard.slice(0, 5);
+        
+        this.saveGameData();
+    }
+    
+    showLeaderboard() {
+        const leaderboard = this.gameData.leaderboard;
+        if (leaderboard.length === 0) {
+            this.showToast('Žebříček je prázdný! 📊');
+            return;
+        }
+        
+        let content = `
+            <div class="glass-strong rounded-3xl p-6 w-full max-w-sm mx-4 max-h-[80vh] overflow-y-auto">
+                <h2 class="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    🏆 TOP 5 Žebříček
+                </h2>
+                <div class="space-y-3">
+        `;
+        
+        leaderboard.forEach((entry, index) => {
+            const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+            const date = new Date(entry.date).toLocaleDateString('cs-CZ');
+            
+            content += `
+                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${medal}</span>
+                        <div>
+                            <div class="font-semibold text-white">${entry.name}</div>
+                            <div class="text-xs text-gray-400">${date}</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-primary">${entry.score}m</div>
+                        <div class="text-xs text-gray-400">${entry.distance}m vzdálenost</div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        content += `
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" 
+                        class="w-full mt-6 bg-gradient-to-r from-primary to-secondary text-black font-bold py-3 px-6 rounded-xl btn-touch">
+                    Zavřít
+                </button>
+            </div>
+        `;
+        
+        this.showModal(content);
+    }
+    
+    showAchievements() {
+        const achievements = this.gameData.achievements;
+        if (achievements.length === 0) {
+            this.showToast('Zatím žádné úspěchy! 🎯');
+            return;
+        }
+        
+        let content = `
+            <div class="glass-strong rounded-3xl p-6 w-full max-w-sm mx-4 max-h-[80vh] overflow-y-auto scrollbar-hide">
+                <h2 class="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    🏆 Tvoje úspěchy
+                </h2>
+                <div class="space-y-3">
+        `;
+        
+        achievements.forEach(achievement => {
+            const date = new Date(achievement.unlockedAt).toLocaleDateString('cs-CZ');
+            content += `
+                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">${achievement.icon}</span>
+                        <span class="font-bold text-primary">${achievement.name}</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-1">${achievement.desc}</p>
+                    <p class="text-xs text-gray-500">Odemčeno: ${date}</p>
+                </div>
+            `;
+        });
+        
+        content += `
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" 
+                        class="w-full mt-6 bg-gradient-to-r from-primary to-secondary text-black font-bold py-3 px-6 rounded-xl btn-touch">
+                    Zavřít
+                </button>
+            </div>
+        `;
+        
+        this.showModal(content);
+    }
+    
+    showModal(content) {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center z-[60] p-4';
+        modal.innerHTML = content;
+        document.body.appendChild(modal);
+        
+        // Auto-remove on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+    }
+    
+    // Daily challenge system
+    generateDailyChallenge() {
+        const challenges = [
+            { id: 'no_powerup', name: 'Purista', desc: 'Přežij 400m bez power-upu', target: 400, type: 'distance_no_powerup' },
+            { id: 'slide_master', name: 'Mistr skluzu', desc: 'Projdi 5 překážek skluzem', target: 5, type: 'slide_obstacles' },
+            { id: 'flip_combo', name: 'Kombo akrobat', desc: '3 flipy za sebou', target: 3, type: 'consecutive_flips' },
+            { id: 'speed_run', name: 'Rychlý běh', desc: 'Dosáhni rychlosti 18 do 30s', target: 18, type: 'speed_time' },
+            { id: 'survivor', name: 'Přeživší', desc: 'Uběhni 800m v jednom běhu', target: 800, type: 'distance' },
+            { id: 'collector', name: 'Sběratel', desc: 'Sebej 10 power-upů', target: 10, type: 'collect_powerups' }
+        ];
+        
+        const today = new Date().toDateString();
+        const seed = this.stringToSeed(today);
+        const challengeIndex = seed % challenges.length;
+        
+        return {
+            ...challenges[challengeIndex],
+            date: today,
+            progress: 0,
+            completed: false
+        };
+    }
+    
+    stringToSeed(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        return Math.abs(hash);
+    }
+    
+    checkDailyChallenge() {
+        const today = new Date().toDateString();
+        
+        if (!this.gameData.dailyChallenge || this.gameData.dailyChallenge.date !== today) {
+            this.gameData.dailyChallenge = this.generateDailyChallenge();
+            this.saveGameData();
+        }
+        
+        return this.gameData.dailyChallenge;
+    }
+    
+    showDailyChallenge() {
+        const challenge = this.checkDailyChallenge();
+        const progress = challenge.completed ? '✅ Dokončeno' : `${challenge.progress}/${challenge.target}`;
+        
+        const content = `
+            <div class="glass-strong rounded-3xl p-6 w-full max-w-sm mx-4 text-center">
+                <h2 class="text-2xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    📅 Denní výzva
+                </h2>
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-white mb-2">${challenge.name}</h3>
+                    <p class="text-gray-300 mb-4">${challenge.desc}</p>
+                    <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
+                        <div class="text-lg font-bold text-primary">${progress}</div>
+                    </div>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" 
+                        class="w-full bg-gradient-to-r from-primary to-secondary text-black font-bold py-3 px-6 rounded-xl btn-touch">
+                    Zavřít
+                </button>
+            </div>
+        `;
+        
+        this.showModal(content);
+    }
+    
+    // Data export/import system
+    exportGameData() {
+        try {
+            const data = JSON.stringify(this.gameData, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fofr-pedro-data-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            this.showToast('Data exportována! 📁');
+        } catch (e) {
+            this.showToast('Chyba při exportu! ❌');
+        }
+    }
+    
+    importGameData() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        
+        input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.settings && typeof data.highScore === 'number') {
+                        // Merge data safely
+                        this.gameData.highScore = Math.max(this.gameData.highScore, data.highScore || 0);
+                        this.gameData.bestDistance = Math.max(this.gameData.bestDistance, data.bestDistance || 0);
+                        this.gameData.bestSpeed = Math.max(this.gameData.bestSpeed, data.bestSpeed || 0);
+                        
+                        // Merge achievements
+                        if (data.achievements) {
+                            const existingIds = this.gameData.achievements.map(a => a.id);
+                            data.achievements.forEach(achievement => {
+                                if (!existingIds.includes(achievement.id)) {
+                                    this.gameData.achievements.push(achievement);
+                                }
+                            });
+                        }
+                        
+                        // Merge leaderboard
+                        if (data.leaderboard) {
+                            this.gameData.leaderboard = [...this.gameData.leaderboard, ...data.leaderboard]
+                                .sort((a, b) => b.score - a.score)
+                                .slice(0, 5);
+                        }
+                        
+                        this.saveGameData();
+                        this.showToast('Data importována! ✅');
+                    } else {
+                        this.showToast('Neplatný formát dat! ❌');
+                    }
+                } catch (e) {
+                    this.showToast('Chyba při čtení souboru! ❌');
+                }
+            };
+            reader.readAsText(file);
+        });
+        
+        input.click();
+    }
+    
+    // Performance and cleanup
+    handleVisibilityChange() {
+        if (document.hidden && this.isPlaying) {
+            this.saveGameData();
+            this.pauseGame();
+        }
+    }
+    
+    handleResize() {
+        if (this.renderer && this.camera) {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            this.camera.aspect = width / height;
+            this.camera.updateProjectionMatrix();
+            this.renderer.setSize(width, height);
+        }
+    }
+    
+    checkDebugMode() {
+        if (window.FOFR_PEDRO.debug) {
+            document.getElementById('debug-overlay').classList.remove('hidden');
+            console.log('🎮 Debug mode activated');
+        }
+    }
+    
+    disposeThreeObjects() {
+        if (this.scene) {
+            // Dispose all geometries and materials
+            this.scene.traverse((object) => {
+                if (object.geometry) {
+                    object.geometry.dispose();
+                }
+                if (object.material) {
+                    if (Array.isArray(object.material)) {
+                        object.material.forEach(material => material.dispose());
+                    } else {
+                        object.material.dispose();
+                    }
+                }
+            });
+            
+            this.scene.clear();
+        }
+        
+        if (this.renderer) {
+            this.renderer.dispose();
+            this.renderer.forceContextLoss();
+            this.renderer = null;
+        }
+        
+        // Clear arrays
+        this.obstacles = [];
+        this.powerUps = [];
+        this.particles = [];
+    }
+
+// PWA Service Worker a finalizace FofrPedroGame
+    
+    async registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            try {
+                const swCode = `
+                    const CACHE_NAME = 'fofr-pedro-v1.0.0';
+                    const urlsToCache = [
+                        './',
+                        'https://cdn.tailwindcss.com',
+                        'https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.min.js'
+                    ];
+                    
+                    self.addEventListener('install', (event) => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then((cache) => {
+                                    console.log('Opened cache');
+                                    return cache.addAll(urlsToCache);
+                                })
+                                .catch((error) => {
+                                    console.log('Cache addAll failed:', error);
+                                })
+                        );
+                    });
+                    
+                    self.addEventListener('fetch', (event) => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then((response) => {
+                                    if (response) {
+                                        return response;
+                                    }
+                                    return fetch(event.request);
+                                })
+                                .catch(() => {
+                                    // Offline fallback
+                                    return new Response('Offline - Fofr Pedro', {
+                                        status: 200,
+                                        statusText: 'OK',
+                                        headers: {'Content-Type': 'text/plain'}
+                                    });
+                                })
+                        );
+                    });
+                    
+                    self.addEventListener('activate', (event) => {
+                        event.waitUntil(
+                            caches.keys().then((cacheNames) => {
+                                return Promise.all(
+                                    cacheNames.map((cacheName) => {
+                                        if (cacheName !== CACHE_NAME) {
+                                            return caches.delete(cacheName);
+                                        }
+                                    })
+                                );
+                            })
+                        );
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swURL = URL.createObjectURL(blob);
+                
+                const registration = await navigator.serviceWorker.register(swURL);
+                console.log('✅ Service Worker registered successfully');
+                
+                // Check for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            this.showToast('Dostupná nová verze! Restartuj aplikaci 🔄');
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.log('❌ Service Worker registration failed:', error);
+            }
+        }
+    }
+    
+    generateManifest() {
+        const manifest = {
+            name: "Fofr Pedro - Pražský Endless Runner",
+            short_name: "Fofr Pedro",
+            description: "3D satirický endless runner z pražského podsvětí",
+            start_url: "./",
+            display: "standalone",
+            orientation: "portrait",
+            background_color: "#1a1a2e",
+            theme_color: "#1a1a2e",
+            categories: ["games", "entertainment"],
+            lang: "cs",
+            icons: [
+                {
+                    src: "image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjMWExYTJlIi8+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iOTYiIHI9IjQwIiBmaWxsPSIjNjRmZmRhIi8+Cjx0ZXh0IHg9Ijk2IiB5PSIxMDQiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzFhMWEyZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UDwvdGV4dD4KPC9zdmc+",
+                    sizes: "192x192",
+                    type: "image/svg+xml"
+                },
+                {
+                    src: "image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjMWExYTJlIi8+CjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTAwIiBmaWxsPSIjNjRmZmRhIi8+Cjx0ZXh0IHg9IjI1NiIgeT0iMjgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNzIiIGZpbGw9IiMxYTFhMmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlA8L3RleHQ+Cjwvc3ZnPg==",
+                    sizes: "512x512",
+                    type: "image/svg+xml"
+                }
+            ]
+        };
+        
+        // Create manifest blob URL
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        
+        // Update manifest link
+        let manifestLink = document.querySelector('link[rel="manifest"]');
+        if (!manifestLink) {
+            manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            document.head.appendChild(manifestLink);
+        }
+        manifestLink.href = manifestURL;
+    }
+}
+
+// Initialize game
+
+// PWA Service Worker a finalizace FofrPedroGame
+    
+    async registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            try {
+                const swCode = `
+                    const CACHE_NAME = 'fofr-pedro-v1.0.0';
+                    const urlsToCache = [
+                        './',
+                        'https://cdn.tailwindcss.com',
+                        'https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.min.js'
+                    ];
+                    
+                    self.addEventListener('install', (event) => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then((cache) => {
+                                    console.log('Opened cache');
+                                    return cache.addAll(urlsToCache);
+                                })
+                                .catch((error) => {
+                                    console.log('Cache addAll failed:', error);
+                                })
+                        );
+                    });
+                    
+                    self.addEventListener('fetch', (event) => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then((response) => {
+                                    if (response) {
+                                        return response;
+                                    }
+                                    return fetch(event.request);
+                                })
+                                .catch(() => {
+                                    // Offline fallback
+                                    return new Response('Offline - Fofr Pedro', {
+                                        status: 200,
+                                        statusText: 'OK',
+                                        headers: {'Content-Type': 'text/plain'}
+                                    });
+                                })
+                        );
+                    });
+                    
+                    self.addEventListener('activate', (event) => {
+                        event.waitUntil(
+                            caches.keys().then((cacheNames) => {
+                                return Promise.all(
+                                    cacheNames.map((cacheName) => {
+                                        if (cacheName !== CACHE_NAME) {
+                                            return caches.delete(cacheName);
+                                        }
+                                    })
+                                );
+                            })
+                        );
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swURL = URL.createObjectURL(blob);
+                
+                const registration = await navigator.serviceWorker.register(swURL);
+                console.log('✅ Service Worker registered successfully');
+                
+                // Check for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            this.showToast('Dostupná nová verze! Restartuj aplikaci 🔄');
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.log('❌ Service Worker registration failed:', error);
+            }
+        }
+    }
+    
+    generateManifest() {
+        const manifest = {
+            name: "Fofr Pedro - Pražský Endless Runner",
+            short_name: "Fofr Pedro",
+            description: "3D satirický endless runner z pražského podsvětí",
+            start_url: "./",
+            display: "standalone",
+            orientation: "portrait",
+            background_color: "#1a1a2e",
+            theme_color: "#1a1a2e",
+            categories: ["games", "entertainment"],
+            lang: "cs",
+            icons: [
+                {
+                    src: "image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjMWExYTJlIi8+CjxjaXJjbGUgY3g9Ijk2IiBjeT0iOTYiIHI9IjQwIiBmaWxsPSIjNjRmZmRhIi8+Cjx0ZXh0IHg9Ijk2IiB5PSIxMDQiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzFhMWEyZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UDwvdGV4dD4KPC9zdmc+",
+                    sizes: "192x192",
+                    type: "image/svg+xml"
+                },
+                {
+                    src: "image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjMWExYTJlIi8+CjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMTAwIiBmaWxsPSIjNjRmZmRhIi8+Cjx0ZXh0IHg9IjI1NiIgeT0iMjgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNzIiIGZpbGw9IiMxYTFhMmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlA8L3RleHQ+Cjwvc3ZnPg==",
+                    sizes: "512x512",
+                    type: "image/svg+xml"
+                }
+            ]
+        };
+        
+        // Create manifest blob URL
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        
+        // Update manifest link
+        let manifestLink = document.querySelector('link[rel="manifest"]');
+        if (!manifestLink) {
+            manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            document.head.appendChild(manifestLink);
+        }
+        manifestLink.href = manifestURL;
+    }
+}
+
+// Initialize game
+
+window.addEventListener('DOMContentLoaded', () => {
+    if (!window.fofrPedroGame) { window.fofrPedroGame = new FofrPedroGame(); }
+    
+    // Additional event listeners
+    document.getElementById('show-leaderboard').addEventListener('click', () => {
+        window.fofrPedroGame.showLeaderboard();
+    });
+    
+    document.getElementById('show-achievements').addEventListener('click', () => {
+        window.fofrPedroGame.showAchievements();
+    });
+    
+    document.getElementById('daily-challenge').addEventListener('click', () => {
+        window.fofrPedroGame.showDailyChallenge();
+    });
+    
+    document.getElementById('export-data').addEventListener('click', () => {
+        window.fofrPedroGame.exportGameData();
+    });
+    
+    // Generate and register PWA components
+    window.fofrPedroGame.generateManifest();
+    window.fofrPedroGame.registerServiceWorker();
+    
+    console.log('🎮 Fofr Pedro initialized');
+});
+
+// Handle system theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (window.fofrPedroGame && window.fofrPedroGame.settings.theme === 'auto') {
+        window.fofrPedroGame.applyTheme();
+    }
+});
+
+// Handle reduced motion preference
+window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+    if (e.matches) {
+        document.documentElement.style.setProperty('--animation-duration', '0.01s');
+        console.log('🔇 Reduced motion activated');
+    } else {
+        document.documentElement.style.removeProperty('--animation-duration');
+        console.log('🎬 Animations restored');
+    }
+});
+
+// PWA install prompt handling
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Show custom install button
+    const installBtn = document.createElement('button');
+    installBtn.innerHTML = '📱 Nainstalovat hru';
+    installBtn.className = 'glass-strong text-white font-medium py-2 px-4 rounded-xl text-sm btn-touch hover:bg-white/20 transition-all duration-300 mt-2';
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('✅ PWA install accepted');
+                window.fofrPedroGame.showToast('Hra byla nainstalována! 🎉');
+            }
+            deferredPrompt = null;
+            installBtn.remove();
+        }
+    });
+    
+    // Add to menu footer
+    const menuFooter = document.querySelector('.main-menu .flex.gap-3');
+    if (menuFooter) {
+        menuFooter.appendChild(installBtn);
+    }
+});
+
+// iOS PWA install prompt
+if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.navigator.standalone) {
+    setTimeout(() => {
+        const iosPrompt = document.createElement('div');
+        iosPrompt.className = 'fixed bottom-0 left-0 right-0 glass-strong m-4 rounded-xl p-4 z-50 pb-safe';
+        iosPrompt.innerHTML = `
+            <div class="flex items-center gap-3">
+                <div class="text-2xl">📱</div>
+                <div class="flex-1">
+                    <p class="font-semibold text-sm text-white">Nainstaluj Fofr Pedro</p>
+                    <p class="text-xs text-gray-400">Tap Share → Add to Home Screen</p>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" 
+                        class="text-xl text-white hover:text-gray-300 btn-touch">✕</button>
+            </div>
+        `;
+        document.body.appendChild(iosPrompt);
+        
+        // Auto-remove after 10 seconds
+        setTimeout(() => {
+            if (iosPrompt.parentElement) {
+                iosPrompt.remove();
+            }
+        }, 10000);
+    }, 3000);
+}
+
+// Performance monitoring
+let performanceObserver;
+if ('PerformanceObserver' in window) {
+    performanceObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+            if (entry.entryType === 'navigation') {
+                console.log(`⚡ Page load time: ${entry.loadEventEnd - entry.loadEventStart}ms`);
+            }
+        }
+    });
+    performanceObserver.observe({ entryTypes: ['navigation'] });
+}
+
+// Cleanup on unload
+window.addEventListener('beforeunload', () => {
+    if (window.fofrPedroGame && window.fofrPedroGame.isPlaying) {
+        window.fofrPedroGame.saveGameData();
+    }
+    
+    if (performanceObserver) {
+        performanceObserver.disconnect();
+    }
+});
+
+console.log('🚀 Fofr Pedro - Pražský Endless Runner loaded');
+console.log('🎯 Debug mode: Use ?debug=1 in URL');
+</script>
+
+<!-- Final closing tags -->
+</body>
+</html>
+
+window.addEventListener('DOMContentLoaded', () => {
+    if (!window.fofrPedroGame) { window.fofrPedroGame = new FofrPedroGame(); }
+    
+    // Additional event listeners
+    document.getElementById('show-leaderboard').addEventListener('click', () => {
+        window.fofrPedroGame.showLeaderboard();
+    });
+    
+    document.getElementById('show-achievements').addEventListener('click', () => {
+        window.fofrPedroGame.showAchievements();
+    });
+    
+    document.getElementById('daily-challenge').addEventListener('click', () => {
+        window.fofrPedroGame.showDailyChallenge();
+    });
+    
+    document.getElementById('export-data').addEventListener('click', () => {
+        window.fofrPedroGame.exportGameData();
+    });
+    
+    // Generate and register PWA components
+    window.fofrPedroGame.generateManifest();
+    window.fofrPedroGame.registerServiceWorker();
+    
+    console.log('🎮 Fofr Pedro initialized');
+});
+
+// Handle system theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (window.fofrPedroGame && window.fofrPedroGame.settings.theme === 'auto') {
+        window.fofrPedroGame.applyTheme();
+    }
+});
+
+// Handle reduced motion preference
+window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+    if (e.matches) {
+        document.documentElement.style.setProperty('--animation-duration', '0.01s');
+        console.log('🔇 Reduced motion activated');
+    } else {
+        document.documentElement.style.removeProperty('--animation-duration');
+        console.log('🎬 Animations restored');
+    }
+});
+
+// PWA install prompt handling
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Show custom install button
+    const installBtn = document.createElement('button');
+    installBtn.innerHTML = '📱 Nainstalovat hru';
+    installBtn.className = 'glass-strong text-white font-medium py-2 px-4 rounded-xl text-sm btn-touch hover:bg-white/20 transition-all duration-300 mt-2';
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('✅ PWA install accepted');
+                window.fofrPedroGame.showToast('Hra byla nainstalována! 🎉');
+            }
+            deferredPrompt = null;
+            installBtn.remove();
+        }
+    });
+    
+    // Add to menu footer
+    const menuFooter = document.querySelector('.main-menu .flex.gap-3');
+    if (menuFooter) {
+        menuFooter.appendChild(installBtn);
+    }
+});
+
+// iOS PWA install prompt
+if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.navigator.standalone) {
+    setTimeout(() => {
+        const iosPrompt = document.createElement('div');
+        iosPrompt.className = 'fixed bottom-0 left-0 right-0 glass-strong m-4 rounded-xl p-4 z-50 pb-safe';
+        iosPrompt.innerHTML = `
+            <div class="flex items-center gap-3">
+                <div class="text-2xl">📱</div>
+                <div class="flex-1">
+                    <p class="font-semibold text-sm text-white">Nainstaluj Fofr Pedro</p>
+                    <p class="text-xs text-gray-400">Tap Share → Add to Home Screen</p>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" 
+                        class="text-xl text-white hover:text-gray-300 btn-touch">✕</button>
+            </div>
+        `;
+        document.body.appendChild(iosPrompt);
+        
+        // Auto-remove after 10 seconds
+        setTimeout(() => {
+            if (iosPrompt.parentElement) {
+                iosPrompt.remove();
+            }
+        }, 10000);
+    }, 3000);
+}
+
+// Performance monitoring
+let performanceObserver;
+if ('PerformanceObserver' in window) {
+    performanceObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+            if (entry.entryType === 'navigation') {
+                console.log(`⚡ Page load time: ${entry.loadEventEnd - entry.loadEventStart}ms`);
+            }
+        }
+    });
+    performanceObserver.observe({ entryTypes: ['navigation'] });
+}
+
+// Cleanup on unload
+window.addEventListener('beforeunload', () => {
+    if (window.fofrPedroGame && window.fofrPedroGame.isPlaying) {
+        window.fofrPedroGame.saveGameData();
+    }
+    
+    if (performanceObserver) {
+        performanceObserver.disconnect();
+    }
+});
+
+console.log('🚀 Fofr Pedro - Pražský Endless Runner loaded');
+console.log('🎯 Debug mode: Use ?debug=1 in URL');
+</script>
+
+<!-- Final closing tags -->
+</body>
+</html>
+</script>
+</body>
+</html>
