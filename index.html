@@ -1,0 +1,69 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Pedro Runner</title>
+    <meta name="theme-color" content="#1a1a1d">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Screens -->
+    <div id="age-warning" class="screen game-ui">
+        <h1>⚠️ Varování - 16+</h1>
+        <p>Tato hra obsahuje satirický černý humor<br>bez glorifikace nelegálních aktivit.</p>
+        <button id="age-confirm-btn">Rozumím a chci pokračovat</button>
+    </div>
+
+    <div id="main-menu" class="screen game-ui hidden">
+        <h1>🏃‍♂️ Pedro Runner</h1>
+        <p>Satirická endless runner hra</p>
+        <button id="start-game">Začít hru</button>
+        <button id="achievements-btn">Úspěchy</button>
+        <button id="settings" class="secondary">Nastavení</button>
+    </div>
+
+    <div id="game-over" class="screen game-ui hidden">
+        <h1>Konec hry!</h1>
+        <div id="game-over-stats"></div>
+        <button id="restart-game">Hrát znovu</button>
+        <button id="back-to-menu" class="secondary">Hlavní menu</button>
+    </div>
+
+    <div id="pause-screen" class="screen game-ui hidden">
+        <h1>Pauza</h1>
+        <button id="resume-game">Pokračovat</button>
+        <button id="menu-from-pause" class="secondary">Hlavní menu</button>
+    </div>
+
+    <div id="achievements-screen" class="screen game-ui hidden">
+        <h1>Úspěchy</h1>
+        <ul id="achievements-list"></ul>
+        <button id="back-from-achievements" class="secondary">Zpět</button>
+    </div>
+
+    <!-- Game Elements -->
+    <canvas id="game-canvas"></canvas>
+
+    <div id="hud" class="hidden game-ui">
+        <div id="hud-left" class="hud-element">
+            <span>Skóre: <span id="score">0</span></span>
+            <span>Combo: <span id="combo">x1</span></span>
+        </div>
+        <div id="hud-right" class="hud-element">
+            <span>Životy: <span id="lives">3</span></span>
+            <span>Rychlost: <span id="speed">1.0x</span></span>
+        </div>
+    </div>
+    <button id="pause-btn" class="hidden">⏸️</button>
+
+    <div id="toast"></div>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r180/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/15.1.22/Tone.js"></script>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
