@@ -1,0 +1,2127 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Fofr Pedro - Pražský Endless Runner</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+console.warn('Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation'),
+/**
+ * @license
+ * Copyright 2010-2023 Three.js Authors
+ * SPDX-License-Identifier: MIT
+ */
+function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"function"==typeof define&&define.amd?define(["exports"],e):e((t="undefined"!=typeof globalThis?globalThis:t||self).THREE={})}(this,(function(t){"use strict";const e="160",n=1,i=2,r=3,s=0,a=1,o=100,l=204,c=205,h=0,u=1,d=2,p=0,m=1,f=2,g=3,_=4,v=5,x=6,y="attached",M="detached",S=300,b=301,T=302,E=303,w=304,A=306,R=1e3,C=1001,L=1002,P=1003,I=1004,U=1005,D=1006,N=1007,O=1008,F=1009,B=1012,z=1013,G=1014,H=1015,V=1016,k=1017,W=1018,X=1020,j=1023,q=1026,Y=1027,Z=1029,J=1031,K=1033,$=33776,Q=33777,tt=33778,et=33779,nt=35840,it=35841,rt=35842,st=35843,at=36196,ot=37492,lt=37496,ct=37808,ht=37809,ut=37810,dt=37811,pt=37812,mt=37813,ft=37814,gt=37815,_t=37816,vt=37817,xt=37818,yt=37819,Mt=37820,St=37821,bt=36492,Tt=36494,Et=36495,wt=36284,At=36285,Rt=36286,Ct=2300,Lt=2301,Pt=2302,It=2400,Ut=2401,Dt=2402,Nt=2500,Ot=2501,Ft=3e3,Bt=3001,zt="",Gt="srgb",Ht="srgb-linear",Vt="display-p3",kt="display-p3-linear",Wt="linear",Xt="srgb",jt="rec709",qt="p3",Yt=7680,Zt=35044,Jt="300 es",Kt=1035,$t=2e3,Qt=2001;class te{addEventListener(t,e){void 0===this._listeners&&(this._listeners={});const n=this._listeners;void 0===n[t]&&(n[t]=[]),-1===n[t].indexOf(e)&&n[t].push(e)}hasEventListener(t,e){if(void 0===this._listeners)return!1;const n=this._listeners;return void 0!==n[t]&&-1!==n[t].indexOf(e)}removeEventListener(t,e){if(void 0===this._listeners)return;const n=this._listeners[t];if(void 0!==n){const t=n.indexOf(e);-1!==t&&n.splice(t,1)}}dispatchEvent(t){if(void 0===this._listeners)return;const e=this._listeners[t.type];if(void 0!==e){t.target=this;const n=e.slice(0);for(let e=0,i=n.length;e<i;e++)n[e].call(this,t);t.target=null}}}const ee=["00","01","02","03","04","05","06","07","08","09","0a","0b","0c","0d","0e","0f","10","11","12","13","14","15","16","17","18","19","1a","1b","1c","1d","1e","1f","20","21","22","23","24","25","26","27","28","29","2a","2b","2c","2d","2e","2f","30","31","32","33","34","35","36","37","38","39","3a","3b","3c","3d","3e","3f","40","41","42","43","44","45","46","47","48","49","4a","4b","4c","4d","4e","4f","50","51","52","53","54","55","56","57","58","59","5a","5b","5c","5d","5e","5f","60","61","62","63","64","65","66","67","68","69","6a","6b","6c","6d","6e","6f","70","71","72","73","74","75","76","77","78","79","7a","7b","7c","7d","7e","7f","80","81","82","83","84","85","86","87","88","89","8a","8b","8c","8d","8e","8f","90","91","92","93","94","95","96","97","98","99","9a","9b","9c","9d","9e","9f","a0","a1","a2","a3","a4","a5","a6","a7","a8","a9","aa","ab","ac","ad","ae","af","b0","b1","b2","b3","b4","b5","b6","b7","b8","b9","ba","bb","bc","bd","be","bf","c0","c1","c2","c3","c4","c5","c6","c7","c8","c9","ca","cb","cc","cd","ce","cf","d0","d1","d2","d3","d4","d5","d6","d7","d8","d9","da","db","dc","dd","de","df","e0","e1","e2","e3","e4","e5","e6","e7","e8","e9","ea","eb","ec","ed","ee","ef","f0","f1","f2","f3","f4","f5","f6","f7","f8","f9","fa","fb","fc","fd","fe","ff"];let ne=1234567;const ie=Math.PI/180,re=180/Math.PI;function se(){const t=4294967295*Math.random()|0,e=4294967295*Math.random()|0,n=4294967295*Math.random()|0,i=4294967295*Math.random()|0;return(ee[255&t]+ee[t>>8&255]+ee[t>>16&255]+ee[t>>24&255]+"-"+ee[255&e]+ee[e>>8&255]+"-"+ee[e>>16&15|64]+ee[e>>24&255]+"-"+ee[63&n|128]+ee[n>>8&255]+"-"+ee[n>>16&255]+ee[n>>24&255]+ee[255&i]+ee[i>>8&255]+ee[i>>16&255]+ee[i>>24&255]).toLowerCase()}function ae(t,e,n){return Math.max(e,Math.min(n,t))}function oe(t,e){return(t%e+e)%e}function le(t,e,n){return(1-n)*t+n*e}function ce(t){return 0==(t&t-1)&&0!==t}function he(t){return Math.pow(2,Math.floor(Math.log(t)/Math.LN2))}function ue(t,e){switch(e.constructor){case Float32Array:return t;case Uint32Array:return t/4294967295;case Uint16Array:return t/65535;case Uint8Array:return t/255;case Int32Array:return Math.max(t/2147483647,-1);case Int16Array:return Math.max(t/32767,-1);case Int8Array:return Math.max(t/127,-1);default:throw new Error("Invalid component type.")}}function de(t,e){switch(e.constructor){case Float32Array:return t;case Uint32Array:return Math.round(4294967295*t);case Uint16Array:return Math.round(65535*t);case Uint8Array:return Math.round(255*t);case Int32Array:return Math.round(2147483647*t);case Int16Array:return Math.round(32767*t);case Int8Array:return Math.round(127*t);default:throw new Error("Invalid component type.")}}const pe={DEG2RAD:ie,RAD2DEG:re,generateUUID:se,clamp:ae,euclideanModulo:oe,mapLinear:function(t,e,n,i,r){return i+(t-e)*(r-i)/(n-e)},inverseLerp:function(t,e,n){return t!==e?(n-t)/(e-t):0},lerp:le,damp:function(t,e,n,i){return le(t,e,1-Math.exp(-n*i))},pingpong:function(t,e=1){return e-Math.abs(oe(t,2*e)-e)},smoothstep:function(t,e,n){return t<=e?0:t>=n?1:(t=(t-e)/(n-e))*t*(3-2*t)},smootherstep:function(t,e,n){return t<=e?0:t>=n?1:(t=(t-e)/(n-e))*t*t*(t*(6*t-15)+10)},randInt:function(t,e){return t+Math.floor(Math.random()*(e-t+1))},randFloat:function(t,e){return t+Math.random()*(e-t)},randFloatSpread:function(t){return t*(.5-Math.random())},seededRandom:function(t){void 0!==t&&(ne=t);let e=ne+=1831565813;return e=Math.imul(e^e>>>15,1|e),e^=e+Math.imul(e^e>>>7,61|e),((e^e>>>14)>>>0)/4294967296},degToRad:function(t){return t*ie},radToDeg:function(t){return t*re},isPowerOfTwo:ce,ceilPowerOfTwo:function(t){return Math.pow(2,Math.ceil(Math.log(t)/Math.LN2))},floorPowerOfTwo:he,setQuaternionFromProperEuler:function(t,e,n,i,r){const s=Math.cos,a=Math.sin,o=s(n/2),l=a(n/2),c=s((e+i)/2),h=a((e+i)/2),u=s((e-i)/2),d=a((e-i)/2),p=s((i-e)/2),m=a((i-e)/2);switch(r){case"XYX":t.set(o*h,l*u,l*d,o*c);break;case"YZY":t.set(l*d,o*h,l*u,o*c);break;case"ZXZ":t.set(l*u,l*d,o*h,o*c);break;case"XZX":t.set(o*h,l*m,l*p,o*c);break;case"YXY":t.set(l*p,o*h,l*m,o*c);break;case"ZYZ":t.set(l*m,l*p,o*h,o*c);break;default:console.warn("THREE.MathUtils: .setQuaternionFromProperEuler() encountered an unknown order: "+r)}},normalize:de,denormalize:ue};class me{constructor(t=0,e=0){me.prototype.isVector2=!0,this.x=t,this.y=e}get width(){return this.x}set width(t){this.x=t}get height(){return this.y}set height(t){this.y=t}set(t,e){return this.x=t,this.y=e,this}setScalar(t){return this.x=t,this.y=t,this}setX(t){return this.x=t,this}setY(t){return this.y=t,this}setComponent(t,e){switch(t){case 0:this.x=e;break;case 1:this.y=e;break;default:throw new Error("index is out of range: "+t)}return this}getComponent(t){switch(t){case 0:return this.x;case 1:return this.y;default:throw new Error("index is out of range: "+t)}}clone(){return new this.constructor(this.x,this.y)}copy(t){return this.x=t.x,this.y=t.y,this}add(t){return this.x+=t.x,this.y+=t.y,this}addScalar(t){return this.x+=t,this.y+=t,this}addVectors(t,e){return this.x=t.x+e.x,this.y=t.y+e.y,this}addScaledVector(t,e){return this.x+=t.x*e,this.y+=t.y*e,this}sub(t){return this.x-=t.x,this.y-=t.y,this}subScalar(t){return this.x-=t,this.y-=t,this}subVectors(t,e){return this.x=t.x-e.x,this.y=t.y-e.y,this}multiply(t){return this.x*=t.x,this.y*=t.y,this}multiplyScalar(t){return this.x*=t,this.y*=t,this}divide(t){return this.x/=t.x,this.y/=t.y,this}divideScalar(t){return this.multiplyScalar(1/t)}applyMatrix3(t){const e=this.x,n=this.y,i=t.elements;return this.x=i[0]*e+i[3]*n+i[6],this.y=i[1]*e+i[4]*n+i[7],this}min(t){return this.x=Math.min(this.x,t.x),this.y=Math.min(this.y,t.y),this}max(t){return this.x=Math.max(this.x,t.x),this.y=Math.max(this.y,t.y),this}clamp(t,e){return this.x=Math.max(t.x,Math.min(e.x,this.x)),this.y=Math.max(t.y,Math.min(e.y,this.y)),this}clampScalar(t,e){return this.x=Math.max(t,Math.min(e,this.x)),this.y=Math.max(t,Math.min(e,this.y)),this}clampLength(t,e){const n=this.length();return this.divideScalar(n||1).multiplyScalar(Math.max(t,Math.min(e,n)))}floor(){return this.x=Math.floor(this.x),this.y=Math.floor(this.y),this}ceil(){return this.x=Math.ceil(this.x),this.y=Math.ceil(this.y),this}round(){return this.x=Math.round(this.x),this.y=Math.round(this.y),this}roundToZero(){return this.x=Math.trunc(this.x),this.y=Math.trunc(this.y),this}negate(){return this.x=-this.x,this.y=-this.y,this}dot(t){return this.x*t.x+this.y*t.y}cross(t){return this.x*t.y-this.y*t.x}lengthSq(){return this.x*this.x+this.y*this.y}length(){return Math.sqrt(this.x*this.x+this.y*this.y)}manhattanLength(){return Math.abs(this.x)+Math.abs(this.y)}normalize(){return this.divideScalar(this.length()||1)}angle(){return Math.atan2(-this.y,-this.x)+Math.PI}angleTo(t){const e=Math.sqrt(this.lengthSq()*t.lengthSq());if(0===e)return Math.PI/2;const n=this.dot(t)/e;return Math.acos(ae(n,-1,1))}distanceTo(t){return Math.sqrt(this.distanceToSquared(t))}distanceToSquared(t){const e=this.x-t.x,n=this.y-t.y;return e*e+n*n}manhattanDistanceTo(t){return Math.abs(this.x-t.x)+Math.abs(this.y-t.y)}setLength(t){return this.normalize().multiplyScalar(t)}lerp(t,e){return this.x+=(t.x-this.x)*e,this.y+=(t.y-this.y)*e,this}lerpVectors(t,e,n){return this.x=t.x+(e.x-t.x)*n,this.y=t.y+(e.y-t.y)*n,this}equals(t){return t.x===this.x&&t.y===this.y}fromArray(t,e=0){return this.x=t[e],this.y=t[e+1],this}toArray(t=[],e=0){return t[e]=this.x,t[e+1]=this.y,t}fromBufferAttribute(t,e){return this.x=t.getX(e),this.y=t.getY(e),this}rotateAround(t,e){const n=Math.cos(e),i=Math.sin(e),r=this.x-t.x,s=this.y-t.y;return this.x=r*n-s*i+t.x,this.y=r*i+s*n+t.y,this}random(){return this.x=Math.random(),this.y=Math.random(),this}*[Symbol.iterator](){yield this.x,yield this.y}}class fe{constructor(t,e,n,i,r,s,a,o,l){fe.prototype.isMatrix3=!0,this.elements=[1,0,0,0,1,0,0,0,1],void 0!==t&&this.set(t,e,n,i,r,s,a,o,l)}set(t,e,n,i,r,s,a,o,l){const c=this.elements;return c[0]=t,c[1]=i,c[2]=a,c[3]=e,c[4]=r,c[5]=o,c[6]=n,c[7]=s,c[8]=l,this}identity(){return this.set(1,0,0,0,1,0,0,0,1),this}copy(t){const e=this.elements,n=t.elements;return e[0]=n[0],e[1]=n[1],e[2]=n[2],e[3]=n[3],e[4]=n[4],e[5]=n[5],e[6]=n[6],e[7]=n[7],e[8]=n[8],this}extractBasis(t,e,n){return t.setFromMatrix3Column(this,0),e.setFromMatrix3Column(this,1),n.setFromMatrix3Column(this,2),this}setFromMatrix4(t){const e=t.elements;return this.set(e[0],e[4],e[8],e[1],e[5],e[9],e[2],e[6],e[10]),this}multiply(t){return this.multiplyMatrices(this,t)}premultiply(t){return this.multiplyMatrices(t,this)}multiplyMatrices(t,e){const n=t.elements,i=e.elements,r=this.elements,s=n[0],a=n[3],o=n[6],l=n[1],c=n[4],h=n[7],u=n[2],d=n[5],p=n[8],m=i[0],f=i[3],g=i[6],_=i[1],v=i[4],x=i[7],y=i[2],M=i[5],S=i[8];return r[0]=s*m+a*_+o*y,r[3]=s*f+a*v+o*M,r[6]=s*g+a*x+o*S,r[1]=l*m+c*_+h*y,r[4]=l*f+c*v+h*M,r[7]=l*g+c*x+h*S,r[2]=u*m+d*_+p*y,r[5]=u*f+d*v+p*M,r[8]=u*g+d*x+p*S,this}multiplyScalar(t){const e=this.elements;return e[0]*=t,e[3]*=t,e[6]*=t,e[1]*=t,e[4]*=t,e[7]*=t,e[2]*=t,e[5]*=t,e[8]*=t,this}determinant(){const t=this.elements,e=t[0],n=t[1],i=t[2],r=t[3],s=t[4],a=t[5],o=t[6],l=t[7],c=t[8];return e*s*c-e*a*l-n*r*c+n*a*o+i*r*l-i*s*o}invert(){const t=this.elements,e=t[0],n=t[1],i=t[2],r=t[3],s=t[4],a=t[5],o=t[6],l=t[7],c=t[8],h=c*s-a*l,u=a*o-c*r,d=l*r-s*o,p=e*h+n*u+i*d;if(0===p)return this.set(0,0,0,0,0,0,0,0,0);const m=1/p;return t[0]=h*m,t[1]=(i*l-c*n)*m,t[2]=(a*n-i*s)*m,t[3]=u*m,t[4]=(c*e-i*o)*m,t[5]=(i*r-a*e)*m,t[6]=d*m,t[7]=(n*o-l*e)*m,t[8]=(s*e-n*r)*m,this}transpose(){let t;const e=this.elements;return t=e[1],e[1]=e[3],e[3]=t,t=e[2],e[2]=e[6],e[6]=t,t=e[5],e[5]=e[7],e[7]=t,this}getNormalMatrix(t){return this.setFromMatrix4(t).invert().transpose()}transposeIntoArray(t){const e=this.elements;return t[0]=e[0],t[1]=e[3],t[2]=e[6],t[3]=e[1],t[4]=e[4],t[5]=e[7],t[6]=e[2],t[7]=e[5],t[8]=e[8],this}setUvTransform(t,e,n,i,r,s,a){const o=Math.cos(r),l=Math.sin(r);return this.set(n*o,n*l,-n*(o*s+l*a)+s+t,-i*l,i*o,-i*(-l*s+o*a)+a+e,0,0,1),this}scale(t,e){return this.premultiply(ge.makeScale(t,e)),this}rotate(t){return this.premultiply(ge.makeRotation(-t)),this}translate(t,e){return this.premultiply(ge.makeTranslation(t,e)),this}makeTranslation(t,e){return t.isVector2?this.set(1,0,t.x,0,1,t.y,0,0,1):this.set(1,0,t,0,1,e,0,0,1),this}makeRotation(t){const e=Math.cos(t),n=Math.sin(t);return this.set(e,-n,0,n,e,0,0,0,1),this}makeScale(t,e){return this.set(t,0,0,0,e,0,0,0,1),this}equals(t){const e=this.elements,n=t.elements;for(let t=0;t<9;t++)if(e[t]!==n[t])return!1;return!0}fromArray(t,e=0){for(let n=0;n<9;n++)this.elements[n]=t[n+e];return this}toArray(t=[],e=0){const n=this.elements;return t[e]=n[0],t[e+1]=n[1],t[e+2]=n[2],t[e+3]=n[3],t[e+4]=n[4],t[e+5]=n[5],t[e+6]=n[6],t[e+7]=n[7],t[e+8]=n[8],t}clone(){return(new this.constructor).fromArray(this.elements)}}const ge=new fe;function _e(t){for(let e=t.length-1;e>=0;--e)if(t[e]>=65535)return!0;return!1}const ve={Int8Array:Int8Array,Uint8Array:Uint8Array,Uint8ClampedArray:Uint8ClampedArray,Int16Array:Int16Array,Uint16Array:Uint16Array,Int32Array:Int32Array,Uint32Array:Uint32Array,Float32Array:Float32Array,Float64Array:Float64Array};function xe(t,e){return new ve[t](e)}function ye(t){return document.createElementNS("http://www.w3.org/1999/xhtml",t)}function Me(){const t=ye("canvas");return t.style.display="block",t}const Se={};function be(t){t in Se||(Se[t]=!0,console.warn(t))}const Te=(new fe).set(.8224621,.177538,0,.0331941,.9668058,0,.0170827,.0723974,.9105199),Ee=(new fe).set(1.2249401,-.2249404,0,-.0420569,1.0420571,0,-.0196376,-.0786361,1.0982735),we={[Ht]:{transfer:Wt,primaries:jt,toReference:t=>t,fromReference:t=>t},[Gt]:{transfer:Xt,primaries:jt,toReference:t=>t.convertSRGBToLinear(),fromReference:t=>t.convertLinearToSRGB()},[kt]:{transfer:Wt,primaries:qt,toReference:t=>t.applyMatrix3(Ee),fromReference:t=>t.applyMatrix3(Te)},[Vt]:{transfer:Xt,primaries:qt,toReference:t=>t.convertSRGBToLinear().applyMatrix3(Ee),fromReference:t=>t.applyMatrix3(Te).convertLinearToSRGB()}},Ae=new Set([Ht,kt]),Re={enabled:!0,_workingColorSpace:Ht,get workingColorSpace(){return this._workingColorSpace},set workingColorSpace(t){if(!Ae.has(t))throw new Error(`Unsupported working color space, "${t}".`);this._workingColorSpace=t},convert:function(t,e,n){if(!1===this.enabled||e===n||!e||!n)return t;const i=we[e].toReference;return(0,we[n].fromReference)(i(t))},fromWorkingColorSpace:function(t,e){return this.convert(t,this._workingColorSpace,e)},toWorkingColorSpace:function(t,e){return this.convert(t,e,this._workingColorSpace)},getPrimaries:function(t){return we[t].primaries},getTransfer:function(t){return t===zt?Wt:we[t].transfer}};function Ce(t){return t<.04045?.0773993808*t:Math.pow(.9478672986*t+.0521327014,2.4)}function Le(t){return t<.0031308?12.92*t:1.055*Math.pow(t,.41666)-.055}let Pe;class Ie{static getDataURL(t){if(/^data:/i.test(t.src))return t.src;if("undefined"==typeof HTMLCanvasElement)return t.src;let e;if(t instanceof HTMLCanvasElement)e=t;else{void 0===Pe&&(Pe=ye("canvas")),Pe.width=t.width,Pe.height=t.height;const n=Pe.getContext("2d");t instanceof ImageData?n.putImageData(t,0,0):n.drawImage(t,0,0,t.width,t.height),e=Pe}return e.width>2048||e.height>2048?(console.warn("THREE.ImageUtils.getDataURL: Image converted to jpg for performance reasons",t),e.toDataURL("image/jpeg",.6)):e.toDataURL("image/png")}static sRGBToLinear(t){if("undefined"!=typeof HTMLImageElement&&t instanceof HTMLImageElement||"undefined"!=typeof HTMLCanvasElement&&t instanceof HTMLCanvasElement||"undefined"!=typeof ImageBitmap&&t instanceof ImageBitmap){const e=ye("canvas");e.width=t.width,e.height=t.height;const n=e.getContext("2d");n.drawImage(t,0,0,t.width,t.height);const i=n.getImageData(0,0,t.width,t.height),r=i.data;for(let t=0;t<r.length;t++)r[t]=255*Ce(r[t]/255);return n.putImageData(i,0,0),e}if(t.data){const e=t.data.slice(0);for(let t=0;t<e.length;t++)e instanceof Uint8Array||e instanceof Uint8ClampedArray?e[t]=Math.floor(255*Ce(e[t]/255)):e[t]=Ce(e[t]);return{data:e,width:t.width,height:t.height}}return console.warn("THREE.ImageUtils.sRGBToLinear(): Unsupported image type. No color space conversion applied."),t}}let Ue=0;class De{constructor(t=null){this.isSource=!0,Object.defineProperty(this,"id",{value:Ue++}),this.uuid=se(),this.data=t,this.version=0}set needsUpdate(t){!0===t&&this.version++}toJSON(t){const e=void 0===t||"string"==typeof t;if(!e&&void 0!==t.images[this.uuid])return t.images[this.uuid];const n={uuid:this.uuid,url:""},i=this.data;if(null!==i){let t;if(Array.isArray(i)){t=[];for(let e=0,n=i.length;e<n;e++)i[e].isDataTexture?t.push(Ne(i[e].image)):t.push(Ne(i[e]))}else t=Ne(i);n.url=t}return e||(t.images[this.uuid]=n),n}}function Ne(t){return"undefined"!=typeof HTMLImageElement&&t instanceof HTMLImageElement||"undefined"!=typeof HTMLCanvasElement&&t instanceof HTMLCanvasElement||"undefined"!=typeof ImageBitmap&&t instanceof ImageBitmap?Ie.getDataURL(t):t.data?{data:Array.from(t.data),width:t.width,height:t.height,type:t.data.constructor.name}:(console.warn("THREE.Texture: Unable to serialize Texture."),{})}let Oe=0;class Fe extends te{constructor(t=Fe.DEFAULT_IMAGE,e=Fe.DEFAULT_MAPPING,n=R,i=R,r=U,s=q,a=I,o=O,l=Fe.DEFAULT_ANISOTROPY,c=zt){super(),this.isTexture=!0,Object.defineProperty(this,"id",{value:Oe++}),this.uuid=se(),this.name="",this.source=new De(t),this.mipmaps=[],this.mapping=e,this.channel=0,this.wrapS=n,this.wrapT=i,this.magFilter=r,this.minFilter=s,this.anisotropy=l,this.format=a,this.internalFormat=null,this.type=o,this.offset=new me(0,0),this.repeat=new me(1,1),this.center=new me(0,0),this.rotation=0,this.matrixAutoUpdate=!0,this.matrix=new fe,this.generateMipmaps=!0,this.premultiplyAlpha=!1,this.flipY=!0,this.unpackAlignment=4,this.colorSpace=c,this.userData={},this.version=0,this.onUpdate=null,this.isRenderTargetTexture=!1,this.needsPMREMUpdate=!1}get image(){return this.source.data}set image(t=null){this.source.data=t}updateMatrix(){this.matrix.setUvTransform(this.offset.x,this.offset.y,this.repeat.x,this.repeat.y,this.rotation,this.center.x,this.center.y)}clone(){return(new this.constructor).copy(this)}copy(t){return this.name=t.name,this.source=t.source,this.mipmaps=t.mipmaps.slice(0),this.mapping=t.mapping,this.channel=t.channel,this.wrapS=t.wrapS,this.wrapT=t.wrapT,this.magFilter=t.magFilter,this.minFilter=t.minFilter,this.anisotropy=t.anisotropy,this.format=t.format,this.internalFormat=t.internalFormat,this.type=t.type,this.offset.copy(t.offset),this.repeat.copy(t.repeat),this.center.copy(t.center),this.rotation=t.rotation,this.matrixAutoUpdate=t.matrixAutoUpdate,this.matrix.copy(t.matrix),this.generateMipmaps=t.generateMipmaps,this.premultiplyAlpha=t.premultiplyAlpha,this.flipY=t.flipY,this.unpackAlignment=t.unpackAlignment,this.colorSpace=t.colorSpace,this.userData=JSON.parse(JSON.stringify(t.userData)),this.needsUpdate=!0,this}toJSON(t){const e=void 0===t||"string"==typeof t;if(!e&&void 0!==t.textures[this.uuid])return t.textures[this.uuid];const n={metadata:{version:4.6,type:"Texture",generator:"Texture.toJSON"},uuid:this.uuid,name:this.name,image:this.source.toJSON(t).uuid,mapping:this.mapping,channel:this.channel,repeat:[this.repeat.x,this.repeat.y],offset:[this.offset.x,this.offset.y],center:[this.center.x,this.center.y],rotation:this.rotation,wrap:[this.wrapS,this.wrapT],format:this.format,internalFormat:this.internalFormat,type:this.type,colorSpace:this.colorSpace,minFilter:this.minFilter,magFilter:this.magFilter,anisotropy:this.anisotropy,flipY:this.flipY,generateMipmaps:this.generateMipmaps,premultiplyAlpha:this.premultiplyAlpha,unpackAlignment:this.unpackAlignment};return Object.keys(this.userData).length>0&&(n.userData=this.userData),e||(t.textures[this.uuid]=n),n}dispose(){this.dispatchEvent({type:"dispose"})}transformUv(t){if(this.mapping!==S)return t;if(t.applyMatrix3(this.matrix),t.x<0||t.x>1)switch(this.wrapS){case R:t.x=t.x-Math.floor(t.x);break;case C:t.x=t.x<0?0:1;break;case L:1===Math.abs(Math.floor(t.x)%2)?t.x=Math.ceil(t.x)-t.x:t.x=t.x-Math.floor(t.x)}if(t.y<0||t.y>1)switch(this.wrapT){case R:t.y=t.y-Math.floor(t.y);break;case C:t.y=t.y<0?0:1;break;case L:1===Math.abs(Math.floor(t.y)%2)?t.y=Math.ceil(t.y)-t.y:t.y=t.y-Math.floor(t.y)}return this.flipY&&(t.y=1-t.y),t}set needsUpdate(t){!0===t&&(this.version++,this.source.needsUpdate=!0)}}Fe.DEFAULT_IMAGE=null,Fe.DEFAULT_MAPPING=S,Fe.DEFAULT_ANISOTROPY=1;class Be{constructor(t=0,e=0,n=0,i=1){Be.prototype.isVector4=!0,this.x=t,this.y=e,this.z=n,this.w=i}get width(){return this.z}set width(t){this.z=t}get height(){return this.w}set height(t){this.w=t}set(t,e,n,i){return this.x=t,this.y=e,this.z=n,this.w=i,this}setScalar(t){return this.x=t,this.y=t,this.z=t,this.w=t,this}setX(t){return this.x=t,this}setY(t){return this.y=t,this}setZ(t){return this.z=t,this}setW(t){return this.w=t,this}setComponent(t,e){switch(t){case 0:this.x=e;break;case 1:this.y=e;break;case 2:this.z=e;break;case 3:this.w=e;break;default:throw new Error("index is out of range: "+t)}return this}getComponent(t){switch(t){case 0:return this.x;case 1:return this.y;case 2:return this.z;case 3:return this.w;default:throw new Error("index is out of range: "+t)}}clone(){return new this.constructor(this.x,this.y,this.z,this.w)}copy(t){return this.x=t.x,this.y=t.y,this.z=t.z,this.w=t.w,this}add(t){return this.x+=t.x,this.y+=t.y,this.z+=t.z,this.w+=t.w,this}addScalar(t){return this.x+=t,this.y+=t,this.z+=t,this.w+=t,this}addVectors(t,e){return this.x=t.x+e.x,this.y=t.y+e.y,this.z=t.z+e.z,this.w=t.w+e.w,this}addScaledVector(t,e){return this.x+=t.x*e,this.y+=t.y*e,this.z+=t.z*e,this.w+=t.w*e,this}sub(t){return this.x-=t.x,this.y-=t.y,this.z-=t.z,this.w-=t.w,this}subScalar(t){return this.x-=t,this.y-=t,this.z-=t,this.w-=t,this}subVectors(t,e){return this.x=t.x-e.x,this.y=t.y-e.y,this.z=t.z-e.z,this.w=t.w-e.w,this}multiply(t){return this.x*=t.x,this.y*=t.y,this.z*=t.z,this.w*=t.w,this}multiplyScalar(t){return this.x*=t,this.y*=t,this.z*=t,this.w*=t,this}applyMatrix4(t){const e=this.x,n=this.y,i=this.z,r=this.w,s=t.elements;return this.x=s[0]*e+s[4]*n+s[8]*i+s[12]*r,this.y=s[1]*e+s[5]*n+s[9]*i+s[13]*r,this.z=s[2]*e+s[6]*n+s[10]*i+s[14]*r,this.w=s[3]*e+s[7]*n+s[11]*i+s[15]*r,this}divideScalar(t){return this.multiplyScalar(1/t)}setAxisAngleFromQuaternion(t){this.w=2*Math.acos(t.w);const e=Math.sqrt(1-t.w*t.w);return e<1e-4?(this.x=1,this.y=0,this.z=0):(this.x=t.x/e,this.y=t.y/e,this.z=t.z/e),this}setAxisAngleFromRotationMatrix(t){let e,n,i,r;const s=.01,a=.1,o=t.elements,l=o[0],c=o[4],h=o[8],u=o[1],d=o[5],p=o[9],m=o[2],f=o[6],g=o[10];if(Math.abs(c-u)<s&&Math.abs(h-m)<s&&Math.abs(p-f)<s){if(Math.abs(c+u)<a&&Math.abs(h+m)<a&&Math.abs(p+f)<a&&Math.abs(l+d+g-3)<a)return this.set(1,0,0,0),this;e=Math.PI;const t=(l+1)/2,o=(d+1)/2,_=(g+1)/2,v=(c+u)/4,x=(h+m)/4,y=(p+f)/4;return t>o&&t>_?t<s?(n=0,i=.707106781,r=.707106781):(n=Math.sqrt(t),i=v/n,r=x/n):o>_?o<s?(n=.707106781,i=0,r=.707106781):(i=Math.sqrt(o),n=v/i,r=y/i):_<s?(n=.707106781,i=.707106781,r=0):(r=Math.sqrt(_),n=x/r,i=y/r),this.set(n,i,r,e),this}let _=Math.sqrt((f-p)*(f-p)+(h-m)*(h-m)+(u-c)*(u-c));return Math.abs(_)<.001&&(_=1),this.x=(f-p)/_,this.y=(h-m)/_,this.z=(u-c)/_,this.w=Math.acos((l+d+g-1)/2),this}min(t){return this.x=Math.min(this.x,t.x),this.y=Math.min(this.y,t.y),this.z=Math.min(this.z,t.z),this.w=Math.min(this.w,t.w),this}max(t){return this.x=Math.max(this.x,t.x),this.y=Math.max(this.y,t.y),this.z=Math.max(this.z,t.z),this.w=Math.max(this.w,t.w),this}clamp(t,e){return this.x=Math.max(t.x,Math.min(e.x,this.x)),this.y=Math.max(t.y,Math.min(e.y,this.y)),this.z=Math.max(t.z,Math.min(e.z,this.z)),this.w=Math.max(t.w,Math.min(e.w,this.w)),this}clampScalar(t,e){return this.x=Math.max(t,Math.min(e,this.x)),this.y=Math.max(t,Math.min(e,this.y)),this.z=Math.max(t,Math.min(e,this.z)),this.w=Math.max(t,Math.min(e,this.w)),this}clampLength(t,e){const n=this.length();return this.divideScalar(n||1).multiplyScalar(Math.max(t,Math.min(e,n)))}floor(){return this.x=Math.floor(this.x),this.y=Math.floor(this.y),this.z=Math.floor(this.z),this.w=Math.floor(this.w),this}ceil(){return this.x=Math.ceil(this.x),this.y=Math.ceil(this.y),this.z=Math.ceil(this.z),this.w=Math.ceil(this.w),this}round(){return this.x=Math.round(this.x),this.y=Math.round(this.y),this.z=Math.round(this.z),this.w=Math.round(this.w),this}roundToZero(){return this.x=Math.trunc(this.x),this.y=Math.trunc(this.y),this.z=Math.trunc(this.z),this.w=Math.trunc(this.w),this}negate(){return this.x=-this.x,this.y=-this.y,this.z=-this.z,this.w=-this.w,this}dot(t){return this.x*t.x+this.y*t.y+this.z*t.z+this.w*t.w}lengthSq(){return this.x*this.x+this.y*this.y+this.z*this.z+this.w*this.w}length(){return Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z+this.w*this.w)}manhattanLength(){return Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z)+Math.abs(this.w)}normalize(){return this.divideScalar(this.length()||1)}setLength(t){return this.normalize().multiplyScalar(t)}lerp(t,e){return this.x+=(t.x-this.x)*e,this.y+=(t.y-this.y)*e,this.z+=(t.z-this.z)*e,this.w+=(t.w-this.w)*e,this}lerpVectors(t,e,n){return this.x=t.x+(e.x-t.x)*n,this.y=t.y+(e.y-t.y)*n,this.z=t.z+(e.z-t.z)*n,this.w=t.w+(e.w-t.w)*n,this}equals(t){return t.x===this.x&&t.y===this.y&&t.z===this.z&&t.w===this.w}fromArray(t,e=0){return this.x=t[e],this.y=t[e+1],this.z=t[e+2],this.w=t[e+3],this}toArray(t=[],e=0){return t[e]=this.x,t[e+1]=this.y,t[e+2]=this.z,t[e+3]=this.w,t}fromBufferAttribute(t,e){return this.x=t.getX(e),this.y=t.getY(e),this.z=t.getZ(e),this.w=t.getW(e),this}random(){return this.x=Math.random(),this.y=Math.random(),this.z=Math.random(),this.w=Math.random(),this}*[Symbol.iterator](){yield this.x,yield this.y,yield this.z,yield this.w}}class ze extends te{constructor(t=1,e=1,n={}){super(),this.isRenderTarget=!0,this.width=t,this.height=e,this.depth=1,this.scissor=new Be(0,0,t,e),this.scissorTest=!1,this.viewport=new Be(0,0,t,e);const i={width:t,height:e,depth:1};n.encoding!==void 0&&(be("THREE.WebGLRenderTarget: option.encoding has been replaced by option.colorSpace."),n.colorSpace=n.encoding===Bt?Gt:zt),n=Object.assign({generateMipmaps:!1,internalFormat:null,minFilter:U,depthBuffer:!0,stencilBuffer:!1,depthTexture:null,samples:0},n),this.texture=new Fe(i,n.mapping,n.wrapS,n.wrapT,n.magFilter,n.minFilter,n.format,n.type,n.anisotropy,n.colorSpace),this.texture.isRenderTargetTexture=!0,this.texture.flipY=!1,this.texture.generateMipmaps=n.generateMipmaps,this.texture.internalFormat=n.internalFormat,this.depthBuffer=n.depthBuffer,this.stencilBuffer=n.stencilBuffer,this.depthTexture=n.depthTexture,this.samples=n.samples}setSize(t,e,n=1){this.width===t&&this.height===e&&this.depth===n||(this.width=t,this.height=e,this.depth=n,this.texture.image.width=t,this.texture.image.height=e,this.texture.image.depth=n,this.dispose()),this.viewport.set(0,0,t,e),this.scissor.set(0,0,t,e)}clone(){return(new this.constructor).copy(this)}copy(t){this.width=t.width,this.height=t.height,this.depth=t.depth,this.scissor.copy(t.scissor),this.scissorTest=t.scissorTest,this.viewport.copy(t.viewport),this.texture=t.texture.clone(),this.texture.isRenderTargetTexture=!0;const e=Object.assign({},t.texture.image);return this.texture.source=new De(e),this.depthBuffer=t.depthBuffer,this.stencilBuffer=t.stencilBuffer,null!==t.depthTexture&&(this.depthTexture=t.depthTexture.clone()),this.samples=t.samples,this}dispose(){this.dispatchEvent({type:"dispose"})}}class Ge extends ze{constructor(t=1,e=1,n={}){super(t,e,n),this.isWebGLCubeRenderTarget=!0;const i={width:t,height:e,depth:1},r=[i,i,i,i,i,i];n.encoding!==void 0&&(be("THREE.WebGLCubeRenderTarget: option.encoding has been replaced by option.colorSpace."),n.colorSpace=n.encoding===Bt?Gt:zt),this.texture=new Fe(r,n.mapping,n.wrapS,n.wrapT,n.magFilter,n.minFilter,n.format,n.type,n.anisotropy,n.colorSpace),this.texture.isRenderTargetTexture=!0,this.texture.generateMipmaps=void 0!==n.generateMipmaps&&n.generateMipmaps,this.texture.minFilter=void 0!==n.minFilter?n.minFilter:U}fromEquirectangularTexture(t,e){this.texture.type=e.type,this.texture.colorSpace=e.colorSpace,this.texture.generateMipmaps=e.generateMipmaps,this.texture.minFilter=e.minFilter,this.texture.magFilter=e.magFilter;const n={uniforms:{tEquirect:{value:null}},vertexShader:"\n\n\t\t\t\tvarying vec3 vWorldDirection;\n\n\t\t\t\tvec3 transformDirection( in vec3 dir, in mat4 matrix ) {\n\n\t\t\t\t\treturn normalize( ( matrix * vec4( dir, 0.0 ) ).xyz );\n\n\t\t\t\t}\n\n\t\t\t\tvoid main() {\n\n\t\t\t\t\tvWorldDirection = transformDirection( position, modelMatrix );\n\n\t\t\t\t\t#include <begin_vertex>\n\t\t\t\t\t#include <project_vertex>\n\n\t\t\t\t}\n\t\t\t",fragmentShader:"\n\n\t\t\t\tuniform sampler2D tEquirect;\n\n\t\t\t\tvarying vec3 vWorldDirection;\n\n\t\t\t\t#include <common>\n\n\t\t\t\tvoid main() {\n\n\t\t\t\t\tvec3 direction = normalize( vWorldDirection );\n\n\t\t\t\t\tvec2 sampleUV = equirectUv( direction );\n\n\t\t\t\t\tgl_FragColor = texture2D( tEquirect, sampleUV );\n\n\t\t\t\t}\n\t\t\t"},i=new Qe(5,5,5),r=new tn({name:"CubemapFromEquirect",uniforms:Ke(n.uniforms),vertexShader:n.vertexShader,fragmentShader:n.fragmentShader,side:m,blending:p});r.uniforms.tEquirect.value=e;const s=new Je(i,r),a=e.minFilter;return e.minFilter===q&&(e.minFilter=U),new He(1,10,this).update(t,s),e.minFilter=a,s.geometry.dispose(),s.material.dispose(),this}clear(t,e,n,i){const r=t.getRenderTarget();for(let r=0;r<6;r++)t.setRenderTarget(this,r),t.clear(e,n,i);t.setRenderTarget(r)}}const He=function(){let t=new Xe,e=new Xe,n=new fe;return class{constructor(i=1,r=0,s=2e3){this.radius=i,this.phi=r,this.theta=s,this.set=function(i,r,s){return this.radius=i,this.phi=r,this.theta=s,this},this.clone=function(){return(new this.constructor).copy(this)},this.copy=function(t){return this.radius=t.radius,this.phi=t.phi,this.theta=t.theta,this},this.makeSafe=function(){return this.phi=Math.max(1e-6,Math.min(Math.PI-1e-6,this.phi)),this},this.setFromVector3=function(n){return this.setFromCartesianCoords(n.x,n.y,n.z)},this.setFromCartesianCoords=function(t,e,n){return this.radius=Math.sqrt(t*t+e*e+n*n),0===this.radius?(this.theta=0,this.phi=0):(this.theta=Math.atan2(t,n),this.phi=Math.acos(ae(e/this.radius,-1,1))),this}}}}(),Ve=function(){let t=new Xe,e=new Xe;return class{constructor(n=new Xe(1/0,1/0,1/0),i=new Xe(-1/0,-1/0,-1/0)){this.isBox3=!0,this.min=n,this.max=i}set(t,e){return this.min.copy(t),this.max.copy(e),this}setFromArray(t){this.makeEmpty();for(let e=0,n=t.length;e<n;e+=3)this.expandByPoint(ke.fromArray(t,e));return this}setFromBufferAttribute(t){this.makeEmpty();for(let e=0,n=t.count;e<n;e++)this.expandByPoint(ke.fromBufferAttribute(t,e));return this}setFromPoints(t){this.makeEmpty();for(let e=0,n=t.length;e<n;e++)this.expandByPoint(t[e]);return this}setFromCenterAndSize(t,e){const n=ke.copy(e).multiplyScalar(.5);return this.min.copy(t).sub(n),this.max.copy(t).add(n),this}setFromObject(n,i=!1){return this.makeEmpty(),this.expandByObject(n,i)}clone(){return(new this.constructor).copy(this)}copy(t){return this.min.copy(t.min),this.max.copy(t.max),this}makeEmpty(){return this.min.x=this.min.y=this.min.z=1/0,this.max.x=this.max.y=this.max.z=-1/0,this}isEmpty(){return this.max.x<this.min.x||this.max.y<this.min.y||this.max.z<this.min.z}getCenter(t){return this.isEmpty()?t.set(0,0,0):t.addVectors(this.min,this.max).multiplyScalar(.5)}getSize(t){return this.isEmpty()?t.set(0,0,0):t.subVectors(this.max,this.min)}expandByPoint(t){return this.min.min(t),this.max.max(t),this}expandByVector(t){return this.min.sub(t),this.max.add(t),this}expandByScalar(t){return this.min.addScalar(-t),this.max.addScalar(t),this}expandByObject(n,i=!1){n.updateWorldMatrix(!1,!1);const r=n.geometry;if(void 0!==r){const s=r.getAttribute("position");if(!0===i&&void 0!==s&&!0!==n.isInstancedMesh)for(let i=0,r=s.count;i<r;i++)!0===n.isMesh?n.getVertexPosition(i,ke):ke.fromBufferAttribute(s,i),ke.applyMatrix4(n.matrixWorld),this.expandByPoint(ke);else void 0!==n.boundingBox?(null===n.boundingBox&&n.computeBoundingBox(),t.copy(n.boundingBox)):(null===r.boundingBox&&r.computeBoundingBox(),t.copy(r.boundingBox)),t.applyMatrix4(n.matrixWorld),this.union(t)}const s=n.children;for(let t=0,e=s.length;t<e;t++)this.expandByObject(s[t],i);return this}containsPoint(t){return!(t.x<this.min.x||t.x>this.max.x||t.y<this.min.y||t.y>this.max.y||t.z<this.min.z||t.z>this.max.z)}containsBox(t){return this.min.x<=t.min.x&&t.max.x<=this.max.x&&this.min.y<=t.min.y&&t.max.y<=this.max.y&&this.min.z<=t.min.z&&t.max.z<=this.max.z}getParameter(t,e){return e.set((t.x-this.min.x)/(this.max.x-this.min.x),(t.y-this.min.y)/(this.max.y-this.min.y),(t.z-this.min.z)/(this.max.z-this.min.z))}intersectsBox(t){return!(t.max.x<this.min.x||t.min.x>this.max.x||t.max.y<this.min.y||t.min.y>this.max.y||t.max.z<this.min.z||t.min.z>this.max.z)}intersectsSphere(t){return this.clampPoint(t.center,ke),ke.distanceToSquared(t.center)<=t.radius*t.radius}intersectsPlane(t){let e,n;return t.normal.x>0?(e=t.normal.x*this.min.x,n=t.normal.x*this.max.x):(e=t.normal.x*this.max.x,n=t.normal.x*this.min.x),t.normal.y>0?(e+=t.normal.y*this.min.y,n+=t.normal.y*this.max.y):(e+=t.normal.y*this.max.y,n+=t.normal.y*this.min.y),t.normal.z>0?(e+=t.normal.z*this.min.z,n+=t.normal.z*this.max.z):(e+=t.normal.z*this.max.z,n+=t.normal.z*this.min.z),e<=-t.constant&&n>=-t.constant}intersectsTriangle(n){if(this.isEmpty())return!1;this.getCenter(We),Xe.subVectors(this.max,We),Ye.subVectors(n.a,We),Ze.subVectors(n.b,We),Je.subVectors(n.c,We),Ke.subVectors(Ze,Ye),$e.subVectors(Je,Ze),Qe.subVectors(Ye,Je);let i=[0,-Ke.z,Ke.y,0,-$e.z,$e.y,0,-Qe.z,Qe.y,Ke.z,0,-Ke.x,$e.z,0,-$e.x,Qe.z,0,-Qe.x,-Ke.y,Ke.x,0,-$e.y,$e.x,0,-Qe.y,Qe.x,0];return!!nn(i,Ye,Ze,Je,Xe)&&(i=[1,0,0,0,1,0,0,0,1],!!nn(i,Ye,Ze,Je,Xe)&&(je.crossVectors(Ke,$e),i=[je.x,je.y,je.z],nn(i,Ye,Ze,Je,Xe)))}clampPoint(t,e){return e.copy(t).clamp(this.min,this.max)}distanceToPoint(t){return this.clampPoint(t,ke).distanceTo(t)}getBoundingSphere(t){return this.isEmpty()?t.makeEmpty():(this.getCenter(t.center),t.radius=.5*this.getSize(ke).length()),t}intersect(t){return this.min.max(t.min),this.max.min(t.max),this.isEmpty()&&this.makeEmpty(),this}union(t){return this.min.min(t.min),this.max.max(t.max),this}applyMatrix4(t){return this.isEmpty()?this:(We[0].set(this.min.x,this.min.y,this.min.z).applyMatrix4(t),We[1].set(this.min.x,this.min.y,this.max.z).applyMatrix4(t),We[2].set(this.min.x,this.max.y,this.min.z).applyMatrix4(t),We[3].set(this.min.x,this.max.y,this.max.z).applyMatrix4(t),We[4].set(this.max.x,this.min.y,this.min.z).applyMatrix4(t),We[5].set(this.max.x,this.min.y,this.max.z).applyMatrix4(t),We[6].set(this.max.x,this.max.y,this.min.z).applyMatrix4(t),We[7].set(this.max.x,this.max.y,this.max.z).applyMatrix4(t),this.setFromPoints(We),this)}translate(t){return this.min.add(t),this.max.add(t),this}equals(t){return t.min.equals(this.min)&&t.max.equals(this.max)}}}(),ke=new Xe,We=[new Xe,new Xe,new Xe,new Xe,new Xe,new Xe,new Xe,new Xe],Xe=new Xe,je=new Xe,Ye=new Xe,Ze=new Xe,Je=new Xe,Ke=new Xe,$e=new Xe,Qe=new Xe;function nn(t,e,n,i,r){for(let s=0,a=t.length-3;s<=a;s+=3){je.fromArray(t,s);const a=r.x*Math.abs(je.x)+r.y*Math.abs(je.y)+r.z*Math.abs(je.z),o=e.dot(je),l=n.dot(je),c=i.dot(je);if(Math.max(-Math.max(o,l,c),Math.min(o,l,c))>a)return!1}return!0}const tn=function(){let t=new Xe,e=new Xe,n=new Xe,i=new Xe,r=new Xe,s=new Xe,a=new Xe,o=new Xe,l=new Xe,c=new Xe;return class{constructor(t=new Xe,e=new Xe(0,0,-1)){this.origin=t,this.direction=e}set(t,e){return this.origin.copy(t),this.direction.copy(e),this}copy(t){return this.origin.copy(t.origin),this.direction.copy(t.direction),this}at(t,e){return e.copy(this.origin).addScaledVector(this.direction,t)}lookAt(t){return this.direction.copy(t).sub(this.origin).normalize(),this}recast(t){return this.origin.copy(this.at(t,Xe)),this}closestPointToPoint(t,e){e.subVectors(t,this.origin);const n=e.dot(this.direction);return n<0?e.copy(this.origin):e.copy(this.origin).addScaledVector(this.direction,n)}distanceToPoint(t){return Math.sqrt(this.distanceSqToPoint(t))}distanceSqToPoint(t){const e=Xe.subVectors(t,this.origin).dot(this.direction);return e<0?this.origin.distanceToSquared(t):(Xe.copy(this.origin).addScaledVector(this.direction,e),Xe.distanceToSquared(t))}distanceSqToSegment(t,e,n,i){je.copy(t).add(e).multiplyScalar(.5),Ye.copy(e).sub(t).normalize(),Ze.copy(this.origin).sub(je);const r=.5*t.distanceTo(e),s=-this.direction.dot(Ye),a=Ze.dot(this.direction),o=-Ze.dot(Ye),l=Ze.lengthSq(),c=Math.abs(1-s*s);let h,u,d,p;if(c>0)if(h=s*o-a,u=s*a-o,p=r*c,h>=0)if(u>=-p)if(u<=p){const t=1/c;h*=t,u*=t,d=h*(h+s*u+2*a)+u*(s*h+u+2*o)+l}else u=r,h=Math.max(0,-(s*u+a)),d=-h*h+u*(u+2*o)+l;else u=-r,h=Math.max(0,-(s*u+a)),d=-h*h+u*(u+2*o)+l;else u<=-p?(h=Math.max(0,-(-s*r+a)),u=h>0?-r:Math.min(Math.max(-r,-o),r),d=-h*h+u*(u+2*o)+l):u<=p?(h=0,u=Math.min(Math.max(-r,-o),r),d=u*(u+2*o)+l):(h=Math.max(0,-(s*r+a)),u=h>0?r:Math.min(Math.max(-r,-o),r),d=-h*h+u*(u+2*o)+l);else u=s>0?-r:r,h=Math.max(0,-(s*u+a)),d=-h*h+u*(u+2*o)+l;return n&&n.copy(this.origin).addScaledVector(this.direction,h),i&&i.copy(je).addScaledVector(Ye,u),d}intersectSphere(t,e){Xe.subVectors(t.center,this.origin);const n=Xe.dot(this.direction),i=Xe.dot(Xe)-n*n,r=t.radius*t.radius;if(i>r)return null;const s=Math.sqrt(r-i),a=n-s,o=n+s;return o<0?null:a<0?this.at(o,e):this.at(a,e)}intersectsSphere(t){return this.distanceSqToPoint(t.center)<=t.radius*t.radius}distanceToPlane(t){const e=t.normal.dot(this.direction);if(0===e)return 0===t.distanceToPoint(this.origin)?0:null;const n=-(this.origin.dot(t.normal)+t.constant)/e;return n>=0?n:null}intersectPlane(t,e){const n=this.distanceToPlane(t);return null===n?null:this.at(n,e)}intersectsPlane(t){const e=t.distanceToPoint(this.origin);return 0===e||t.normal.dot(this.direction)*e<0}intersectBox(t,e){let n,i,r,s,a,o;const l=1/this.direction.x,c=1/this.direction.y,h=1/this.direction.z,u=this.origin;return l>=0?(n=(t.min.x-u.x)*l,i=(t.max.x-u.x)*l):(n=(t.max.x-u.x)*l,i=(t.min.x-u.x)*l),c>=0?(r=(t.min.y-u.y)*c,s=(t.max.y-u.y)*c):(r=(t.max.y-u.y)*c,s=(t.min.y-u.y)*c),n>s||r>i?null:((r>n||isNaN(n))&&(n=r),(s<i||isNaN(i))&&(i=s),h>=0?(a=(t.min.z-u.z)*h,o=(t.max.z-u.z)*h):(a=(t.max.z-u.z)*h,o=(t.min.z-u.z)*h),n>o||a>i?null:((a>n||n!=n)&&(n=a),(o<i||i!=i)&&(i=o),i<0?null:this.at(n>=0?n:i,e)))}intersectsBox(t){return null!==this.intersectBox(t,Xe)}intersectTriangle(t,e,n,i,r){Je.subVectors(e,t),Ke.subVectors(n,t),$e.crossVectors(Je,Ke);let s,a=this.direction.dot($e);if(a>0){if(i)return null;s=1}else{if(!(a<0))return null;s=-1,a=-a}Qe.subVectors(this.origin,t);const o=s*this.direction.dot(Ke.crossVectors(Qe,Ke));if(o<0)return null;const l=s*this.direction.dot(Je.cross(Qe));if(l<0)return null;if(o+l>a)return null;const c=-s*Qe.dot($e);return c<0?null:this.at(c/a,r)}applyMatrix4(t){return this.origin.applyMatrix4(t),this.direction.transformDirection(t),this}equals(t){return t.origin.equals(this.origin)&&t.direction.equals(this.direction)}clone(){return(new this.constructor).copy(this)}}}();class en{constructor(t,e,n,i,r,s,a,o,l,c,h,u,d,p,m,f){en.prototype.isMatrix4=!0,this.elements=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],void 0!==t&&this.set(t,e,n,i,r,s,a,o,l,c,h,u,d,p,m,f)}set(t,e,n,i,r,s,a,o,l,c,h,u,d,p,m,f){const g=this.elements;return g[0]=t,g[4]=e,g[8]=n,g[12]=i,g[1]=r,g[5]=s,g[9]=a,g[13]=o,g[2]=l,g[6]=c,g[10]=h,g[14]=u,g[3]=d,g[7]=p,g[11]=m,g[15]=f,this}identity(){return this.set(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1),this}clone(){return(new en).fromArray(this.elements)}copy(t){const e=this.elements,n=t.elements;return e[0]=n[0],e[1]=n[1],e[2]=n[2],e[3]=n[3],e[4]=n[4],e[5]=n[5],e[6]=n[6],e[7]=n[7],e[8]=n[8],e[9]=n[9],e[10]=n[10],e[11]=n[11],e[12]=n[12],e[13]=n[13],e[14]=n[14],e[15]=n[15],this}copyPosition(t){const e=this.elements,n=t.elements;return e[12]=n[12],e[13]=n[13],e[14]=n[14],this}setFromMatrix3(t){const e=t.elements;return this.set(e[0],e[3],e[6],0,e[1],e[4],e[7],0,e[2],e[5],e[8],0,0,0,0,1),this}extractBasis(t,e,n){return t.setFromMatrixColumn(this,0),e.setFromMatrixColumn(this,1),n.setFromMatrixColumn(this,2),this}makeBasis(t,e,n){return this.set(t.x,e.x,n.x,0,t.y,e.y,n.y,0,t.z,e.z,n.z,0,0,0,0,1),this}extractRotation(t){const e=this.elements,n=t.elements,i=1/rn.setFromMatrixColumn(t,0).length(),r=1/rn.setFromMatrixColumn(t,1).length(),s=1/rn.setFromMatrixColumn(t,2).length();return e[0]=n[0]*i,e[1]=n[1]*i,e[2]=n[2]*i,e[3]=0,e[4]=n[4]*r,e[5]=n[5]*r,e[6]=n[6]*r,e[7]=0,e[8]=n[8]*s,e[9]=n[9]*s,e[10]=n[10]*s,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,this}makeRotationFromEuler(t){const e=this.elements,n=t.x,i=t.y,r=t.z,s=Math.cos(n),a=Math.sin(n),o=Math.cos(i),l=Math.sin(i),c=Math.cos(r),h=Math.sin(r);if("XYZ"===t.order){const t=s*c,n=s*h,i=a*c,r=a*h;e[0]=o*c,e[4]=-o*h,e[8]=l,e[1]=n+i*l,e[5]=t-r*l,e[9]=-a*o,e[2]=r-t*l,e[6]=i+n*l,e[10]=s*o}else if("YXZ"===t.order){const t=o*c,n=o*h,i=l*c,r=l*h;e[0]=t+r*a,e[4]=i*a-n,e[8]=s*l,e[1]=s*h,e[5]=s*c,e[9]=-a,e[2]=n*a-i,e[6]=r+t*a,e[10]=s*o}else if("ZXY"===t.order){const t=o*c,n=o*h,i=l*c,r=l*h;e[0]=t-r*a,e[4]=-s*h,e[8]=i+n*a,e[1]=n+i*a,e[5]=s*c,e[9]=r-t*a,e[2]=-s*l,e[6]=a,e[10]=s*o}else if("ZYX"===t.order){const t=s*c,n=s*h,i=a*c,r=a*h;e[0]=o*c,e[4]=i*l-n,e[8]=t*l+r,e[1]=o*h,e[5]=r*l+t,e[9]=n*l-i,e[2]=-l,e[6]=a*o,e[10]=s*o}else if("YZX"===t.order){const t=s*o,n=s*l,i=a*o,r=a*l;e[0]=o*c,e[4]=r-t*h,e[8]=i*h+n,e[1]=h,e[5]=s*c,e[9]=-a*c,e[2]=-l*c,e[6]=n*h+i,e[10]=t-r*h}else if("XZY"===t.order){const t=s*o,n=s*l,i=a*o,r=a*l;e[0]=o*c,e[4]=-h,e[8]=l*c,e[1]=t*h+r,e[5]=s*c,e[9]=n*h-i,e[2]=i*h-n,e[6]=a*c,e[10]=r*h+t}return e[3]=0,e[7]=0,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,this}makeRotationFromQuaternion(t){return this.compose(an,t,on)}lookAt(t,e,n){const i=this.elements;return cn.subVectors(t,e),0===cn.lengthSq()&&(cn.z=1),cn.normalize(),ln.crossVectors(n,cn),0===ln.lengthSq()&&(1===Math.abs(n.z)?cn.x+=1e-4:cn.z+=1e-4,cn.normalize(),ln.crossVectors(n,cn)),ln.normalize(),hn.crossVectors(cn,ln),i[0]=ln.x,i[4]=hn.x,i[8]=cn.x,i[1]=ln.y,i[5]=hn.y,i[9]=cn.y,i[2]=ln.z,i[6]=hn.z,i[10]=cn.z,this}multiply(t){return this.multiplyMatrices(this,t)}premultiply(t){return this.multiplyMatrices(t,this)}multiplyMatrices(t,e){const n=t.elements,i=e.elements,r=this.elements,s=n[0],a=n[4],o=n[8],l=n[12],c=n[1],h=n[5],u=n[9],d=n[13],p=n[2],m=n[6],f=n[10],g=n[14],_=n[3],v=n[7],x=n[11],y=n[15],M=i[0],S=i[4],b=i[8],T=i[12],E=i[1],w=i[5],A=i[9],R=i[13],C=i[2],L=i[6],P=i[10],I=i[14],U=i[3],D=i[7],N=i[11],O=i[15];return r[0]=s*M+a*E+o*C+l*U,r[4]=s*S+a*w+o*L+l*D,r[8]=s*b+a*A+o*P+l*N,r[12]=s*T+a*R+o*I+l*O,r[1]=c*M+h*E+u*C+d*U,r[5]=c*S+h*w+u*L+d*D,r[9]=c*b+h*A+u*P+d*N,r[13]=c*T+h*R+u*I+d*O,r[2]=p*M+m*E+f*C+g*U,r[6]=p*S+m*w+f*L+g*D,r[10]=p*b+m*A+f*P+g*N,r[14]=p*T+m*R+f*I+g*O,r[3]=_*M+v*E+x*C+y*U,r[7]=_*S+v*w+x*L+y*D,r[11]=_*b+v*A+x*P+y*N,r[15]=_*T+v*R+x*I+y*O,this}multiplyScalar(t){const e=this.elements;return e[0]*=t,e[4]*=t,e[8]*=t,e[12]*=t,e[1]*=t,e[5]*=t,e[9]*=t,e[13]*=t,e[2]*=t,e[6]*=t,e[10]*=t,e[14]*=t,e[3]*=t,e[7]*=t,e[11]*=t,e[15]*=t,this}determinant(){const t=this.elements,e=t[0],n=t[4],i=t[8],r=t[12],s=t[1],a=t[5],o=t[9],l=t[13],c=t[2],h=t[6],u=t[10],d=t[14];return t[3]*(+r*o*h-i*l*h-r*a*u+n*l*u+i*a*d-n*o*d)+t[7]*(+e*o*d-e*l*u+r*s*u-i*s*d+i*l*c-r*o*c)+t[11]*(+e*l*h-e*a*d-r*s*h+n*s*d+r*a*c-n*l*c)+t[15]*(-i*a*c-e*o*h+e*a*u+i*s*h-n*s*u+n*o*c)}transpose(){const t=this.elements;let e;return e=t[1],t[1]=t[4],t[4]=e,e=t[2],t[2]=t[8],t[8]=e,e=t[6],t[6]=t[9],t[9]=e,e=t[3],t[3]=t[12],t[12]=e,e=t[7],t[7]=t[13],t[13]=e,e=t[11],t[11]=t[14],t[14]=e,this}setPosition(t,e,n){const i=this.elements;return t.isVector3?(i[12]=t.x,i[13]=t.y,i[14]=t.z):(i[12]=t,i[13]=e,i[14]=n),this}invert(){const t=this.elements,e=t[0],n=t[1],i=t[2],r=t[3],s=t[4],a=t[5],o=t[6],l=t[7],c=t[8],h=t[9],u=t[10],d=t[11],p=t[12],m=t[13],f=t[14],g=t[15],_=h*f*l-m*u*l+m*o*d-a*f*d-h*o*g+a*u*g,v=p*u*l-c*f*l-p*o*d+s*f*d+c*o*g-s*u*g,x=c*m*l-p*h*l+p*a*d-s*m*d-c*a*g+s*h*g,y=p*h*o-c*m*o-p*a*u+s*m*u+c*a*f-s*h*f,M=e*_+n*v+i*x+r*y;if(0===M)return this.set(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);const S=1/M;return t[0]=_*S,t[1]=(m*u*r-h*f*r-m*i*d+n*f*d+h*i*g-n*u*g)*S,t[2]=(a*f*r-m*o*r+m*i*l-n*f*l-a*i*g+n*o*g)*S,t[3]=(h*o*r-a*u*r-h*i*l+n*u*l+a*i*d-n*o*d)*S,t[4]=v*S,t[5]=(c*f*r-p*u*r+p*i*d-e*f*d-c*i*g+e*u*g)*S,t[6]=(p*o*r-s*f*r-p*i*l+e*f*l+s*i*g-e*o*g)*S,t[7]=(s*u*r-c*o*r+c*i*l-e*u*l-s*i*d+e*o*d)*S,t[8]=x*S,t[9]=(p*h*r-c*m*r-p*n*d+e*m*d+c*n*g-e*h*g)*S,t[10]=(s*m*r-p*a*r+p*n*l-e*m*l-s*n*g+e*a*g)*S,t[11]=(c*a*r-s*h*r-c*n*l+e*h*l+s*n*d-e*a*d)*S,t[12]=y*S,t[13]=(c*m*i-p*h*i+p*n*u-e*m*u-c*n*f+e*h*f)*S,t[14]=(p*a*i-s*m*i-p*n*o+e*m*o+s*n*f-e*a*f)*S,t[15]=(s*h*i-c*a*i+c*n*o-e*h*o-s*n*u+e*a*u)*S,this}scale(t){const e=this.elements,n=t.x,i=t.y,r=t.z;return e[0]*=n,e[4]*=i,e[8]*=r,e[1]*=n,e[5]*=i,e[9]*=r,e[2]*=n,e[6]*=i,e[10]*=r,e[3]*=n,e[7]*=i,e[11]*=r,this}getMaxScaleOnAxis(){const t=this.elements,e=t[0]*t[0]+t[1]*t[1]+t[2]*t[2],n=t[4]*t[4]+t[5]*t[5]+t[6]*t[6],i=t[8]*t[8]+t[9]*t[9]+t[10]*t[10];return Math.sqrt(Math.max(e,n,i))}makeTranslation(t,e,n){return t.isVector3?this.set(1,0,0,t.x,0,1,0,t.y,0,0,1,t.z,0,0,0,1):this.set(1,0,0,t,0,1,0,e,0,0,1,n,0,0,0,1),this}makeRotationX(t){const e=Math.cos(t),n=Math.sin(t);return this.set(1,0,0,0,0,e,-n,0,0,n,e,0,0,0,0,1),this}makeRotationY(t){const e=Math.cos(t),n=Math.sin(t);return this.set(e,0,n,0,0,1,0,0,-n,0,e,0,0,0,0,1),this}makeRotationZ(t){const e=Math.cos(t),n=Math.sin(t);return this.set(e,-n,0,0,n,e,0,0,0,0,1,0,0,0,0,1),this}makeRotationAxis(t,e){const n=Math.cos(e),i=Math.sin(e),r=1-n,s=t.x,a=t.y,o=t.z,l=r*s,c=r*a;return this.set(l*s+n,l*a-i*o,l*o+i*a,0,l*a+i*o,c*a+n,c*o-i*s,0,l*o-i*a,c*o+i*s,r*o*o+n,0,0,0,0,1),this}makeScale(t,e,n){return this.set(t,0,0,0,0,e,0,0,0,0,n,0,0,0,0,1),this}makeShear(t,e,n,i,r,s){return this.set(1,n,r,0,t,1,s,0,e,i,1,0,0,0,0,1),this}compose(t,e,n){const i=this.elements,r=e.x,s=e.y,a=e.z,o=e.w,l=r+r,c=s+s,h=a+a,u=r*l,d=r*c,p=r*h,m=s*c,f=s*h,g=a*h,_=o*l,v=o*c,x=o*h,y=n.x,M=n.y,S=n.z;return i[0]=(1-(m+g))*y,i[1]=(d+x)*y,i[2]=(p-v)*y,i[3]=0,i[4]=(d-x)*M,i[5]=(1-(u+g))*M,i[6]=(f+_)*M,i[7]=0,i[8]=(p+v)*S,i[9]=(f-_)*S,i[10]=(1-(u+m))*S,i[11]=0,i[12]=t.x,i[13]=t.y,i[14]=t.z,i[15]=1,this}decompose(t,e,n){const i=this.elements;let r=rn.set(i[0],i[1],i[2]).length();const s=rn.set(i[4],i[5],i[6]).length(),a=rn.set(i[8],i[9],i[10]).length();this.determinant()<0&&(r=-r),t.x=i[12],t.y=i[13],t.z=i[14],sn.copy(this);const o=1/r,l=1/s,c=1/a;return sn.elements[0]*=o,sn.elements[1]*=o,sn.elements[2]*=o,sn.elements[4]*=l,sn.elements[5]*=l,sn.elements[6]*=l,sn.elements[8]*=c,sn.elements[9]*=c,sn.elements[10]*=c,e.setFromRotationMatrix(sn),n.x=r,n.y=s,n.z=a,this}makePerspective(t,e,n,i,r,s,a=$t){const o=this.elements,l=2*r/(e-t),c=2*r/(n-i),h=(e+t)/(e-t),u=(n+i)/(n-i);let d,p;if(a===$t)d=-(s+r)/(s-r),p=-2*s*r/(s-r);else{if(a!==Qt)throw new Error("THREE.Matrix4.makePerspective(): Invalid coordinate system: "+a);d=-s/(s-r),p=-s*r/(s-r)}return o[0]=l,o[4]=0,o[8]=h,o[12]=0,o[1]=0,o[5]=c,o[9]=u,o[13]=0,o[2]=0,o[6]=0,o[10]=d,o[14]=p,o[3]=0,o[7]=0,o[11]=-1,o[15]=0,this}makeOrthographic(t,e,n,i,r,s,a=$t){const o=this.elements,l=1/(e-t),c=1/(n-i),h=1/(s-r),u=(e+t)*l,d=(n+i)*c;let p,m;if(a===$t)p=(s+r)*h,m=-2*h;else{if(a!==Qt)throw new Error("THREE.Matrix4.makeOrthographic(): Invalid coordinate system: "+a);p=r*h,m=-1*h}return o[0]=2*l,o[4]=0,o[8]=0,o[12]=-u,o[1]=0,o[5]=2*c,o[9]=0,o[13]=-d,o[2]=0,o[6]=0,o[10]=m,o[14]=-p,o[3]=0,o[7]=0,o[11]=0,o[15]=1,this}equals(t){const e=this.elements,n=t.elements;for(let t=0;t<16;t++)if(e[t]!==n[t])return!1;return!0}fromArray(t,e=0){for(let n=0;n<16;n++)this.elements[n]=t[n+e];return this}toArray(t=[],e=0){const n=this.elements;return t[e]=n[0],t[e+1]=n[1],t[e+2]=n[2],t[e+3]=n[3],t[e+4]=n[4],t[e+5]=n[5],t[e+6]=n[6],t[e+7]=n[7],t[e+8]=n[8],t[e+9]=n[9],t[e+10]=n[10],t[e+11]=n[11],t[e+12]=n[12],t[e+13]=n[13],t[e+14]=n[14],t[e+15]=n[15],t}}const nn=new Xe,rn=new Xe,sn=new en,an=new Xe(0,0,0),on=new Xe(1,1,1),ln=new Xe,cn=new Xe,hn=new Xe,un=new en,dn=new pn;class pn{constructor(t=0,e=0,n=0,i=pn.DEFAULT_ORDER){this.isEuler=!0,this._x=t,this._y=e,this._z=n,this._order=i}get x(){return this._x}set x(t){this._x=t,this._onChangeCallback()}get y(){return this._y}set y(t){this._y=t,this._onChangeCallback()}get z(){return this._z}set z(t){this._z=t,this._onChangeCallback()}get order(){return this._order}set order(t){this._order=t,this._onChangeCallback()}set(t,e,n,i=this._order){return this._x=t,this._y=e,this._z=n,this._order=i,this._onChangeCallback(),this}clone(){return new this.constructor(this._x,this._y,this._z,this._order)}copy(t){return this._x=t._x,this._y=t._y,this._z=t._z,this._order=t._order,this._onChangeCallback(),this}setFromRotationMatrix(t,e=this._order,n=!0){const i=t.elements,r=i[0],s=i[4],a=i[8],o=i[1],l=i[5],c=i[9],h=i[2],u=i[6],d=i[10];switch(e){case"XYZ":this._y=Math.asin(ae(a,-1,1)),Math.abs(a)<.9999999?(this._x=Math.atan2(-c,d),this._z=Math.atan2(-s,r)):(this._x=Math.atan2(u,l),this._z=0);break;case"YXZ":this._x=Math.asin(-ae(c,-1,1)),Math.abs(c)<.9999999?(this._y=Math.atan2(a,d),this._z=Math.atan2(o,l)):(this._y=Math.atan2(-h,r),this._z=0);break;case"ZXY":this._x=Math.asin(ae(u,-1,1)),Math.abs(u)<.9999999?(this._y=Math.atan2(-h,d),this._z=Math.atan2(-s,l)):(this._y=0,this._z=Math.atan2(o,r));break;case"ZYX":this._y=Math.asin(-ae(h,-1,1)),Math.abs(h)<.9999999?(this._x=Math.atan2(u,d),this._z=Math.atan2(o,r)):(this._x=0,this._z=Math.atan2(-s,l));break;case"YZX":this._z=Math.asin(ae(o,-1,1)),Math.abs(o)<.9999999?(this._x=Math.atan2(-c,l),this._y=Math.atan2(-h,r)):(this._x=0,this._y=Math.atan2(a,d));break;case"XZY":this._z=Math.asin(-ae(s,-1,1)),Math.abs(s)<.9999999?(this._x=Math.atan2(u,l),this._y=Math.atan2(a,r)):(this._x=Math.atan2(-c,d),this._y=0);break;default:console.warn("THREE.Euler: .setFromRotationMatrix() encountered an unknown order: "+e)}return this._order=e,!0===n&&this._onChangeCallback(),this}setFromQuaternion(t,e,n){return un.makeRotationFromQuaternion(t),this.setFromRotationMatrix(un,e,n)}setFromVector3(t,e=this._order){return this.set(t.x,t.y,t.z,e)}reorder(t){return dn.setFromEuler(this),this.setFromQuaternion(dn,t)}equals(t){return t._x===this._x&&t._y===this._y&&t._z===this._z&&t._order===this._order}fromArray(t){return this._x=t[0],this._y=t[1],this._z=t[2],void 0!==t[3]&&(this._order=t[3]),this._onChangeCallback(),this}toArray(t=[],e=0){return t[e]=this._x,t[e+1]=this._y,t[e+2]=this._z,t[e+3]=this._order,t}_onChange(t){return this._onChangeCallback=t,this}_onChangeCallback(){}*[Symbol.iterator](){yield this._x,yield this._y,yield this._z,yield this._order}}pn.DEFAULT_ORDER="XYZ";class mn{constructor(){mn.prototype.isMatrix3=!0,this.elements=[1,0,0,0,1,0,0,0,1]}set(t,e,n,i,r,s,a,o,l){const c=this.elements;return c[0]=t,c[1]=i,c[2]=a,c[3]=e,c[4]=r,c[5]=o,c[6]=n,c[7]=s,c[8]=l,this}identity(){return this.set(1,0,0,0,1,0,0,0,1),this}copy(t){const e=this.elements,n=t.elements;return e[0]=n[0],e[1]=n[1],e[2]=n[2],e[3]=n[3],e[4]=n[4],e[5]=n[5],e[6]=n[6],e[7]=n[7],e[8]=n[8],this}extractBasis(t,e,n){return t.setFromMatrix3Column(this,0),e.setFromMatrix3Column(this,1),n.setFromMatrix3Column(this,2),this}setFromMatrix4(t){const e=t.elements;return this.set(e[0],e[4],e[8],e[1],e[5],e[9],e[2],e[6],e[10]),this}multiply(t){return this.multiplyMatrices(this,t)}premultiply(t){return this.multiplyMatrices(t,this)}multiplyMatrices(t,e){const n=t.elements,i=e.elements,r=this.elements,s=n[0],a=n[3],o=n[6],l=n[1],c=n[4],h=n[7],u=n[2],d=n[5],p=n[8],m=i[0],f=i[3],g=i[6],_=i[1],v=i[4],x=i[7],y=i[2],M=i[5],S=i[8];return r[0]=s*m+a*_+o*y,r[3]=s*f+a*v+o*M,r[6]=s*g+a*x+o*S,r[1]=l*m+c*_+h*y,r[4]=l*f+c*v+h*M,r[7]=l*g+c*x+h*S,r[2]=u*m+d*_+p*y,r[5]=u*f+d*v+p*M,r[8]=u*g+d*x+p*S,this}multiplyScalar(t){const e=this.elements;return e[0]*=t,e[3]*=t,e[6]*=t,e[1]*=t,e[4]*=t,e[7]*=t,e[2]*=t,e[5]*=t,e[8]*=t,this}determinant(){const t=this.elements,e=t[0],n=t[1],i=t[2],r=t[3],s=t[4],a=t[5],o=t[6],l=t[7],c=t[8];return e*s*c-e*a*l-n*r*c+n*a*o+i*r*l-i*s*o}invert(){const t=this.elements,e=t[0],n=t[1],i=t[2],r=t[3],s=t[4],a=t[5],o=t[6],l=t[7],c=t[8],h=c*s-a*l,u=a*o-c*r,d=l*r-s*o,p=e*h+n*u+i*d;if(0===p)return this.set(0,0,0,0,0,0,0,0,0);const m=1/p;return t[0]=h*m,t[1]=(i*l-c*n)*m,t[2]=(a*n-i*s)*m,t[3]=u*m,t[4]=(c*e-i*o)*m,t[5]=(i*r-a*e)*m,t[6]=d*m,t[7]=(n*o-l*e)*m,t[8]=(s*e-n*r)*m,this}transpose(){let t;const e=this.elements;return t=e[1],e[1]=e[3],e[3]=t,t=e[2],e[2]=e[6],e[6]=t,t=e[5],e[5]=e[7],e[7]=t,this}getNormalMatrix(t){return this.setFromMatrix4(t).invert().transpose()}transposeIntoArray(t){const e=this.elements;return t[0]=e[0],t[1]=e[3],t[2]=e[6],t[3]=e[1],t[4]=e[4],t[5]=e[7],t[6]=e[2],t[7]=e[5],t[8]=e[8],this}setUvTransform(t,e,n,i,r,s,a){const o=Math.cos(r),l=Math.sin(r);return this.set(n*o,n*l,-n*(o*s+l*a)+s+t,-i*l,i*o,-i*(-l*s+o*a)+a+e,0,0,1),this}scale(t,e){return this.premultiply(fn.makeScale(t,e)),this}rotate(t){return this.premultiply(fn.makeRotation(-t)),this}translate(t,e){return this.premultiply(fn.makeTranslation(t,e)),this}makeTranslation(t,e){return t.isVector2?this.set(1,0,t.x,0,1,t.y,0,0,1):this.set(1,0,t,0,1,e,0,0,1),this}makeRotation(t){const e=Math.cos(t),n=Math.sin(t);return this.set(e,-n,0,n,e,0,0,0,1),this}makeScale(t,e){return this.set(t,0,0,0,e,0,0,0,1),this}equals(t){const e=this.elements,n=t.elements;for(let t=0;t<9;t++)if(e[t]!==n[t])return!1;return!0}fromArray(t,e=0){for(let n=0;n<9;n++)this.elements[n]=t[n+e];return this}toArray(t=[],e=0){const n=this.elements;return t[e]=n[0],t[e+1]=n[1],t[e+2]=n[2],t[e+3]=n[3],t[e+4]=n[4],t[e+5]=n[5],t[e+6]=n[6],t[e+7]=n[7],t[e+8]=n[8],t}clone(){return(new this.constructor).fromArray(this.elements)}}const fn=new mn;function gn(t){for(let e=t.length-1;e>=0;--e)if(t[e]>=65535)return!0;return!1}function _n(t){return document.createElementNS("http://www.w3.org/1999/xhtml",t)}function vn(){const t=_n("canvas");return t.style.display="block",t}const xn={};function yn(t){t in xn||(xn[t]=!0,console.warn(t))}const Mn=(new mn).set(.8224621,.177538,0,.0331941,.9668058,0,.0170827,.0723974,.9105199),Sn=(new mn).set(1.2249401,-.2249404,0,-.0420569,1.0420571,0,-.0196376,-.0786361,1.0982735),bn={[Ht]:{transfer:Wt,primaries:jt,toReference:t=>t,fromReference:t=>t},[Gt]:{transfer:Xt,primaries:jt,toReference:t=>t.convertSRGBToLinear(),fromReference:t=>t.convertLinearToSRGB()},[kt]:{transfer:Wt,primaries:qt,toReference:t=>t.applyMatrix3(Sn),fromReference:t=>t.applyMatrix3(Mn)},[Vt]:{transfer:Xt,primaries:qt,toReference:t=>t.convertSRGBToLinear().applyMatrix3(Sn),fromReference:t=>t.applyMatrix3(Mn).convertLinearToSRGB()}},Tn=new Set([Ht,kt]),En={enabled:!0,_workingColorSpace:Ht,get workingColorSpace(){return this._workingColorSpace},set workingColorSpace(t){if(!Tn.has(t))throw new Error(`Unsupported working color space, "${t}".`);this._workingColorSpace=t},convert:function(t,e,n){if(!1===this.enabled||e===n||!e||!n)return t;const i=bn[e].toReference;return(0,bn[n].fromReference)(i(t))},fromWorkingColorSpace:function(t,e){return this.convert(t,this._workingColorSpace,e)},toWorkingColorSpace:function(t,e){return this.convert(t,e,this._workingColorSpace)},getPrimaries:function(t){return bn[t].primaries},getTransfer:function(t){return t===zt?Wt:bn[t].transfer}};function wn(t){return t<.04045?.0773993808*t:Math.pow(.9478672986*t+.0521327014,2.4)}function An(t){return t<.0031308?12.92*t:1.055*Math.pow(t,.41666)-.055}let Rn;class Cn{static getDataURL(t){if(/^data:/i.test(t.src))return t.src;if("undefined"==typeof HTMLCanvasElement)return t.src;let e;if(t instanceof HTMLCanvasElement)e=t;else{void 0===Rn&&(Rn=_n("canvas")),Rn.width=t.width,Rn.height=t.height;const n=Rn.getContext("2d");t instanceof ImageData?n.putImageData(t,0,0):n.drawImage(t,0,0,t.width,t.height),e=Rn}return e.width>2048||e.height>2048?(console.warn("THREE.ImageUtils.getDataURL: Image converted to jpg for performance reasons",t),e.toDataURL("image/jpeg",.6)):e.toDataURL("image/png")}static sRGBToLinear(t){if("undefined"!=typeof HTMLImageElement&&t instanceof HTMLImageElement||"undefined"!=typeof HTMLCanvasElement&&t instanceof HTMLCanvasElement||"undefined"!=typeof ImageBitmap&&t instanceof ImageBitmap){const e=_n("canvas");e.width=t.width,e.height=t.height;const n=e.getContext("2d");n.drawImage(t,0,0,t.width,t.height);const i=n.getImageData(0,0,t.width,t.height),r=i.data;for(let t=0;t<r.length;t++)r[t]=255*wn(r[t]/255);return n.putImageData(i,0,0),e}if(t.data){const e=t.data.slice(0);for(let t=0;t<e.length;t++)e instanceof Uint8Array||e instanceof Uint8ClampedArray?e[t]=Math.floor(255*wn(e[t]/255)):e[t]=wn(e[t]);return{data:e,width:t.width,height:t.height}}return console.warn("THREE.ImageUtils.sRGBToLinear(): Unsupported image type. No color space conversion applied."),t}}let Ln=0;class Pn{constructor(t=null){this.isSource=!0,Object.defineProperty(this,"id",{value:Ln++}),this.uuid=se(),this.data=t,this.version=0}set needsUpdate(t){!0===t&&this.version++}toJSON(t){const e=void 0===t||"string"==typeof t;if(!e&&void 0!==t.images[this.uuid])return t.images[this.uuid];const n={uuid:this.uuid,url:""},i=this.data;if(null!==i){let t;if(Array.isArray(i)){t=[];for(let e=0,n=i.length;e<n;e++)i[e].isDataTexture?t.push(In(i[e].image)):t.push(In(i[e]))}else t=In(i);n.url=t}return e||(t.images[this.uuid]=n),n}}function In(t){return"undefined"!=typeof HTMLImageElement&&t instanceof HTMLImageElement||"undefined"!=typeof HTMLCanvasElement&&t instanceof HTMLCanvasElement||"undefined"!=typeof ImageBitmap&&t instanceof ImageBitmap?Cn.getDataURL(t):t.data?{data:Array.from(t.data),width:t.width,height:t.height,type:t.data.constructor.name}:(console.warn("THREE.Texture: Unable to serialize Texture."),{})}let Un=0;class Dn extends te{constructor(t=Dn.DEFAULT_IMAGE,e=Dn.DEFAULT_MAPPING,n=R,i=R,r=U,s=q,a=I,o=O,l=Dn.DEFAULT_ANISOTROPY,c=zt){super(),this.isTexture=!0,Object.defineProperty(this,"id",{value:Un++}),this.uuid=se(),this.name="",this.source=new Pn(t),this.mipmaps=[],this.mapping=e,this.channel=0,this.wrapS=n,this.wrapT=i,this.magFilter=r,this.minFilter=s,this.anisotropy=l,this.format=a,this.internalFormat=null,this.type=o,this.offset=new me(0,0),this.repeat=new me(1,1),this.center=new me(0,0),this.rotation=0,this.matrixAutoUpdate=!0,this.matrix=new mn,this.generateMipmaps=!0,this.premultiplyAlpha=!1,this.flipY=!0,this.unpackAlignment=4,this.colorSpace=c,this.userData={},this.version=0,this.onUpdate=null,this.isRenderTargetTexture=!1,this.needsPMREMUpdate=!1}get image(){return this.source.data}set image(t=null){this.source.data=t}updateMatrix(){this.matrix.setUvTransform(this.offset.x,this.offset.y,this.repeat.x,this.repeat.y,this.rotation,this.center.x,this.center.y)}clone(){return(new this.constructor).copy(this)}copy(t){return this.name=t.name,this.source=t.source,this.mipmaps=t.mipmaps.slice(0),this.mapping=t.mapping,this.channel=t.channel,this.wrapS=t.wrapS,this.wrapT=t.wrapT,this.magFilter=t.magFilter,this.minFilter=t.minFilter,this.anisotropy=t.anisotropy,this.format=t.format,this.internalFormat=t.internalFormat,this.type=t.type,this.offset.copy(t.offset),this.repeat.copy(t.repeat),this.center.copy(t.center),this.rotation=t.rotation,this.matrixAutoUpdate=t.matrixAutoUpdate,this.matrix.copy(t.matrix),this.generateMipmaps=t.generateMipmaps,this.premultiplyAlpha=t.premultiplyAlpha,this.flipY=t.flipY,this.unpackAlignment=t.unpackAlignment,this.colorSpace=t.colorSpace,this.userData=JSON.parse(JSON.stringify(t.userData)),this.needsUpdate=!0,this}toJSON(t){const e=void 0===t||"string"==typeof t;if(!e&&void 0!==t.textures[this.uuid])return t.textures[this.uuid];const n={metadata:{version:4.6,type:"Texture",generator:"Texture.toJSON"},uuid:this.uuid,name:this.name,image:this.source.toJSON(t).uuid,mapping:this.mapping,channel:this.channel,repeat:[this.repeat.x,this.repeat.y],offset:[this.offset.x,this.offset.y],center:[this.center.x,this.center.y],rotation:this.rotation,wrap:[this.wrapS,this.wrapT],format:this.format,internalFormat:this.internalFormat,type:this.type,colorSpace:this.colorSpace,minFilter:this.minFilter,magFilter:this.magFilter,anisotropy:this.anisotropy,flipY:this.flipY,generateMipmaps:this.generateMipmaps,premultiplyAlpha:this.premultiplyAlpha,unpackAlignment:this.unpackAlignment};return Object.keys(this.userData).length>0&&(n.userData=this.userData),e||(t.textures[this.uuid]=n),n}dispose(){this.dispatchEvent({type:"dispose"})}transformUv(t){if(this.mapping!==S)return t;if(t.applyMatrix3(this.matrix),t.x<0||t.x>1)switch(this.wrapS){case R:t.x=t.x-Math.floor(t.x);break;case C:t.x=t.x<0?0:1;break;case L:1===Math.abs(Math.floor(t.x)%2)?t.x=Math.ceil(t.x)-t.x:t.x=t.x-Math.floor(t.x)}if(t.y<0||t.y>1)switch(this.wrapT){case R:t.y=t.y-Math.floor(t.y);break;case C:t.y=t.y<0?0:1;break;case L:1===Math.abs(Math.floor(t.y)%2)?t.y=Math.ceil(t.y)-t.y:t.y=t.y-Math.floor(t.y)}return this.flipY&&(t.y=1-t.y),t}set needsUpdate(t){!0===t&&(this.version++,this.source.needsUpdate=!0)}}Dn.DEFAULT_IMAGE=null,Dn.DEFAULT_MAPPING=S,Dn.DEFAULT_ANISOTROPY=1;class Nn{constructor(t=0,e=0,n=0,i=1){Nn.prototype.isVector4=!0,this.x=t,this.y=e,this.z=n,this.w=i}get width(){return this.z}set width(t){this.z=t}get height(){return this.w}set height(t){this.w=t}set(t,e,n,i){return this.x=t,this.y=e,this.z=n,this.w=i,this}setScalar(t){return this.x=t,this.y=t,this.z=t,this.w=t,this}setX(t){return this.x=t,this}setY(t){return this.y=t,this}setZ(t){return this.z=t,this}setW(t){return this.w=t,this}setComponent(t,e){switch(t){case 0:this.x=e;break;case 1:this.y=e;break;case 2:this.z=e;break;case 3:this.w=e;break;default:throw new Error("index is out of range: "+t)}return this}getComponent(t){switch(t){case 0:return this.x;case 1:return this.y;case 2:return this.z;case 3:return this.w;default:throw new Error("index is out of range: "+t)}}clone(){return new this.constructor(this.x,this.y,this.z,this.w)}copy(t){return this.x=t.x,this.y=t.y,this.z=t.z,this.w=t.w,this}add(t){return this.x+=t.x,this.y+=t.y,this.z+=t.z,this.w+=t.w,this}addScalar(t){return this.x+=t,this.y+=t,this.z+=t,this.w+=t,this}addVectors(t,e){return this.x=t.x+e.x,this.y=t.y+e.y,this.z=t.z+e.z,this.w=t.w+e.w,this}addScaledVector(t,e){return this.x+=t.x*e,this.y+=t.y*e,this.z+=t.z*e,this.w+=t.w*e,this}sub(t){return this.x-=t.x,this.y-=t.y,this.z-=t.z,this.w-=t.w,this}subScalar(t){return this.x-=t,this.y-=t,this.z-=t,this.w-=t,this}subVectors(t,e){return this.x=t.x-e.x,this.y=t.y-e.y,this.z=t.z-e.z,this.w=t.w-e.w,this}multiply(t){return this.x*=t.x,this.y*=t.y,this.z*=t.z,this.w*=t.w,this}multiplyScalar(t){return this.x*=t,this.y*=t,this.z*=t,this.w*=t,this}applyMatrix4(t){const e=this.x,n=this.y,i=this.z,r=this.w,s=t.elements;return this.x=s[0]*e+s[4]*n+s[8]*i+s[12]*r,this.y=s[1]*e+s[5]*n+s[9]*i+s[13]*r,this.z=s[2]*e+s[6]*n+s[10]*i+s[14]*r,this.w=s[3]*e+s[7]*n+s[11]*i+s[15]*r,this}divideScalar(t){return this.multiplyScalar(1/t)}setAxisAngleFromQuaternion(t){this.w=2*Math.acos(t.w);const e=Math.sqrt(1-t.w*t.w);return e<1e-4?(this.x=1,this.y=0,this.z=0):(this.x=t.x/e,this.y=t.y/e,this.z=t.z/e),this}setAxisAngleFromRotationMatrix(t){let e,n,i,r;const s=.01,a=.1,o=t.elements,l=o[0],c=o[4],h=o[8],u=o[1],d=o[5],p=o[9],m=o[2],f=o[6],g=o[10];if(Math.abs(c-u)<s&&Math.abs(h-m)<s&&Math.abs(p-f)<s){if(Math.abs(c+u)<a&&Math.abs(h+m)<a&&Math.abs(p+f)<a&&Math.abs(l+d+g-3)<a)return this.set(1,0,0,0),this;e=Math.PI;const t=(l+1)/2,o=(d+1)/2,_=(g+1)/2,v=(c+u)/4,x=(h+m)/4,y=(p+f)/4;return t>o&&t>_?t<s?(n=0,i=.707106781,r=.707106781):(n=Math.sqrt(t),i=v/n,r=x/n):o>_?o<s?(n=.707106781,i=0,r=.707106
+    
+    <script>
+        // Tailwind config
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'glass': 'rgba(255, 255, 255, 0.1)',
+                        'glass-border': 'rgba(255, 255, 255, 0.2)',
+                        'primary': '#64ffda',
+                        'secondary': '#7c4dff',
+                        'accent': '#ff6b9d',
+                    },
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'Courier New', 'monospace'],
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px rgba(100, 255, 218, 0.3)' },
+                            '100%': { boxShadow: '0 0 40px rgba(100, 255, 218, 0.6)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Safe area utilities */
+        .pt-safe { padding-top: max(1rem, env(safe-area-inset-top)); }
+        .pb-safe { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+        .pl-safe { padding-left: max(1rem, env(safe-area-inset-left)); }
+        .pr-safe { padding-right: max(1rem, env(safe-area-inset-right)); }
+        
+        /* Glassmorphism */
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        /* Prague gradient background */
+        .bg-prague {
+            background: linear-gradient(135deg, 
+                #0f1419 0%, 
+                #1a1f26 25%, 
+                #2d1b69 50%, 
+                #1a1f26 75%, 
+                #0f1419 100%);
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Touch-friendly interactions */
+        .btn-touch {
+            min-width: 44px;
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+        
+        /* Hide scrollbars but keep functionality */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-prague text-white font-sans overflow-hidden fixed inset-0 select-none">
+    <div id="age-warning" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl p-4">
+        <div class="glass-strong rounded-3xl p-8 text-center max-w-sm mx-auto shadow-2xl">
+            <h2 class="text-2xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                16+ satirický obsah
+            </h2>
+            <p class="text-gray-300 mb-6 leading-relaxed">
+                Tato hra obsahuje satirický černý humor bez glorifikace nelegálních aktivit.
+            </p>
+            <button id="age-confirm-btn" 
+                    class="w-full bg-gradient-to-r from-primary to-secondary text-black font-semibold py-3 px-6 rounded-xl 
+                           shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 animate-glow btn-touch">
+                Rozumím a chci pokračovat
+            </button>
+        </div>
+    </div>
+
+    <div id="main-menu" class="fixed inset-0 z-40 flex items-center justify-center pt-safe pb-safe pl-safe pr-safe">
+        <div class="w-full max-w-sm px-4">
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-black mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent 
+                           drop-shadow-lg animate-float">
+                    Fofr Pedro
+                </h1>
+                <p class="text-gray-400 text-lg font-medium">Pražský Endless Runner</p>
+            </div>
+            
+            <div class="space-y-4 mb-8">
+                <button id="start-game" 
+                        class="w-full bg-gradient-to-r from-primary to-secondary text-black font-bold py-4 px-6 rounded-2xl 
+                               shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 
+                               text-lg btn-touch">
+                    Začít hru
+                </button>
+                
+                <button id="show-settings" 
+                        class="w-full glass-strong text-white font-semibold py-4 px-6 rounded-2xl 
+                               hover:bg-white/20 transform hover:-translate-y-1 transition-all duration-300 btn-touch">
+                    Nastavení
+                </button>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="show-leaderboard" 
+                            class="glass-strong text-white font-semibold py-3 px-4 rounded-xl 
+                                   hover:bg-white/20 transition-all duration-300 btn-touch">
+                        Žebříček
+                    </button>
+                    
+                    <button id="show-achievements" 
+                            class="glass-strong text-white font-semibold py-3 px-4 rounded-xl 
+                                   hover:bg-white/20 transition-all duration-300 btn-touch">
+                        Úspěchy
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button id="daily-challenge" 
+                        class="flex-1 glass-strong text-white font-medium py-3 px-4 rounded-xl 
+                               hover:bg-white/20 transition-all duration-300 text-sm btn-touch">
+                    Denní výzva
+                </button>
+                <button id="export-data" 
+                        class="flex-1 glass-strong text-white font-medium py-3 px-4 rounded-xl 
+                               hover:bg-white/20 transition-all duration-300 text-sm btn-touch">
+                    Export dat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="game-canvas" class="fixed inset-0 z-10"></canvas>
+
+    <div id="hud" class="fixed top-0 left-0 right-0 z-30 pt-safe pl-safe pr-safe p-4 pointer-events-none hidden">
+        <div class="flex justify-between items-start mb-4">
+            <div class="glass-strong rounded-xl px-4 py-3 shadow-lg">
+                <div class="text-xs text-gray-300 font-mono">VZDÁLENOST</div>
+                <div id="hud-score" class="text-xl font-bold text-primary font-mono tabular-nums">0 m</div>
+            </div>
+            
+            <div class="glass-strong rounded-xl px-4 py-3 shadow-lg">
+                <div class="text-xs text-gray-300 font-mono">RYCHLOST</div>
+                <div id="hud-speed" class="text-xl font-bold text-secondary font-mono tabular-nums">0</div>
+            </div>
+        </div>
+        
+        <div id="hud-powerup" class="glass-strong rounded-xl px-3 py-2 hidden items-center gap-2 shadow-lg max-w-fit">
+            <div id="powerup-icon" class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">⚡</div>
+            <div class="flex-1 min-w-20">
+                <div class="text-xs text-gray-300 font-mono mb-1">POWER-UP</div>
+                <div class="h-1 bg-white/20 rounded-full overflow-hidden">
+                    <div id="powerup-progress" class="h-full bg-primary rounded-full transition-all duration-100 ease-linear" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="touch-controls" class="fixed bottom-0 left-0 right-0 z-30 pb-safe pl-safe pr-safe p-4 pointer-events-none">
+        <div class="flex justify-between items-end">
+            <div class="flex flex-col gap-3">
+                <button id="btn-left" data-action="left"
+                        class="w-14 h-14 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
+                               hover:bg-white/20 active:scale-95 transition-all duration-200 shadow-lg pointer-events-auto btn-touch">
+                    ←
+                </button>
+            </div>
+            
+            <div class="flex gap-3">
+                <button id="btn-up" data-action="jump"
+                        class="w-16 h-16 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
+                               hover:bg-white/20 active:scale-95 transition-all duration-200 shadow-lg pointer-events-auto btn-touch">
+                    ↑
+                </button>
+                <button id="btn-down" data-action="slide"
+                        class="w-16 h-16 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
+                               hover:bg-white/20 active:scale-95 transition-all duration-200 shadow-lg pointer-events-auto btn-touch">
+                    ↓
+                </button>
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <button id="btn-right" data-action="right"
+                        class="w-14 h-14 glass-strong rounded-full flex items-center justify-center text-2xl font-bold
+                               hover:bg-white/20 active:scale-95 transition-all duration-200 shadow-lg pointer-events-auto btn-touch">
+                    →
+                </button>
+            </div>
+        </div>
+        
+        <div class="flex justify-center mt-4">
+            <button id="btn-pause"
+                    class="glass-strong rounded-xl px-6 py-2 text-sm font-medium
+                           hover:bg-white/20 transition-all duration-200 shadow-lg pointer-events-auto btn-touch">
+                ⏸ Pauza
+            </button>
+        </div>
+    </div>
+
+    <div id="settings-panel" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-xl pt-safe pb-safe pl-safe pr-safe">
+        <div class="glass-strong rounded-3xl p-8 w-full max-w-sm mx-4 max-h-screen overflow-y-auto scrollbar-hide shadow-2xl">
+            <h2 class="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Nastavení
+            </h2>
+            
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <label class="block font-semibold text-gray-200">Téma</label>
+                    <select id="setting-theme" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white 
+                                   focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+                        <option value="auto">Automatické</option>
+                        <option value="day">Den</option>
+                        <option value="night">Noc</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block font-semibold text-gray-200">Ostrost humoru</label>
+                    <select id="setting-spice" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white 
+                                   focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+                        <option value="mild">Mírná</option>
+                        <option value="spicy">Ostrá</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block font-semibold text-gray-200">Zvuk</label>
+                    <select id="setting-sound" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white 
+                                   focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+                        <option value="true">Zapnuto</option>
+                        <option value="false">Vypnuto</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block font-semibold text-gray-200">Haptika</label>
+                    <select id="setting-haptics" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white 
+                                   focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+                        <option value="true">Zapnuto</option>
+                        <option value="false">Vypnuto</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block font-semibold text-gray-200">Ovládání</label>
+                    <select id="setting-controls" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white 
+                                   focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+                        <option value="touch">Pouze dotyky</option>
+                        <option value="buttons">Zobrazit tlačítka</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mt-8 space-y-3">
+                <button id="save-settings" 
+                        class="w-full bg-gradient-to-r from-primary to-secondary text-black font-bold py-3 px-6 rounded-xl 
+                               shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 btn-touch">
+                    Uložit nastavení
+                </button>
+                <button id="close-settings" 
+                        class="w-full glass-strong text-white font-semibold py-3 px-6 rounded-xl 
+                               hover:bg-white/20 transition-all duration-300 btn-touch">
+                    Zavřít
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-over" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-xl pt-safe pb-safe pl-safe pr-safe">
+        <div class="glass-strong rounded-3xl p-8 w-full max-w-sm mx-4 text-center shadow-2xl">
+            <h2 class="text-3xl font-bold mb-4 bg-gradient-to-r from-red-400 to-accent bg-clip-text text-transparent">
+                Konec hry!
+            </h2>
+            <div id="game-over-message" class="text-gray-300 mb-6 text-lg"></div>
+            
+            <div class="bg-white/5 rounded-2xl p-6 mb-6 space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300">Vzdálenost:</span>
+                    <span id="final-distance" class="font-bold text-primary text-xl">0 m</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300">Skóre:</span>
+                    <span id="final-score" class="font-bold text-secondary text-xl">0</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300">Nejlepší:</span>
+                    <span id="best-score" class="font-bold text-accent text-xl">0</span>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <input id="player-name" 
+                       type="text" 
+                       placeholder="Tvoje jméno pro žebříček" 
+                       maxlength="20"
+                       class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white text-center
+                              focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50">
+            </div>
+            
+            <div class="space-y-3">
+                <button id="restart-game" 
+                        class="w-full bg-gradient-to-r from-primary to-secondary text-black font-bold py-3 px-6 rounded-xl 
+                               shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 btn-touch">
+                    Hrát znovu
+                </button>
+                <button id="back-to-menu" 
+                        class="w-full glass-strong text-white font-semibold py-3 px-6 rounded-xl 
+                               hover:bg-white/20 transition-all duration-300 btn-touch">
+                    Hlavní menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notifications -->
+    <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[70] 
+                           glass-strong rounded-xl px-6 py-3 text-center font-medium 
+                           opacity-0 transition-all duration-300 pointer-events-none max-w-xs">
+    </div>
+
+    <!-- Flip indicator -->
+    <div id="flip-indicator" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[70]
+                                   text-6xl opacity-0 transition-all duration-500 pointer-events-none">
+        🤸‍♂️
+    </div>
+
+    <!-- Debug panel (hidden by default) -->
+    <div id="debug-panel" class="fixed top-4 right-4 z-[60] glass-strong rounded-xl p-4 text-xs font-mono hidden">
+        <div>FPS: <span id="debug-fps">0</span></div>
+        <div>Speed: <span id="debug-speed">0</span></div>
+        <div>Lane: <span id="debug-lane">0</span></div>
+        <div>State: <span id="debug-state">menu</span></div>
+        <div>Obstacles: <span id="debug-obstacles">0</span></div>
+        <div>PowerUps: <span id="debug-powerups">0</span></div>
+    </div>
+
+    <script>
+        // Global game instance
+        window.FOFR_PEDRO = {
+            debug: false,
+            version: '1.0.0'
+        };
+
+        class FofrPedroGame {
+            constructor() {
+                this.gameState = 'menu'; // menu, playing, paused, gameover
+                this.isPlaying = false;
+                this.isPaused = false;
+                this.gameStartTime = 0;
+                
+                // Game configuration
+                this.config = {
+                    startSpeed: 8,
+                    maxSpeed: 20,
+                    acceleration: 0.002,
+                    jumpHeight: 0.4,
+                    flipHeight: 0.6,
+                    flipCooldown: 1000,
+                    slideTime: 800,
+                    coyoteTime: 150,
+                    doubleSwipeWindow: 300,
+                    laneWidth: 3,
+                    obstacleSpacing: 15,
+                    powerUpSpacing: 25
+                };
+                
+                // Game state
+                this.currentLane = 1; // 0, 1, 2 (left, center, right)
+                this.targetLane = 1;
+                this.currentSpeed = this.config.startSpeed;
+                this.score = 0;
+                this.distance = 0;
+                this.lives = 3;
+                
+                // Player physics
+                this.isJumping = false;
+                this.isSliding = false;
+                this.isFlipping = false;
+                this.flipCooldownTime = 0;
+                this.playerY = 0;
+                this.playerVelocityY = 0;
+                this.playerRotationX = 0;
+                this.flipCount = 0;
+                this.consecutiveFlips = 0;
+                this.lastGroundTime = 0;
+                this.lastFlipTime = 0;
+                
+                // Game objects
+                this.obstacles = [];
+                this.powerUps = [];
+                this.activePowerUps = [];
+                this.particles = [];
+                
+                // World generation
+                this.lastObstacleZ = -20;
+                this.lastPowerUpZ = -30;
+                
+                // Input handling
+                this.swipeBuffer = [];
+                
+                // 3D rendering
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.player = null;
+                this.ground = [];
+                this.buildings = [];
+                
+                // Performance
+                this.lowPowerMode = false;
+                this.fps = 60;
+                this.frameCount = 0;
+                this.lastFpsUpdate = Date.now();
+                
+                // Audio
+                this.audioContext = null;
+                this.soundEnabled = false;
+                
+                // Settings
+                this.settings = {
+                    theme: 'auto',
+                    spice: 'mild',
+                    sound: true,
+                    haptics: true,
+                    controls: 'touch'
+                };
+                
+                // Game data persistence
+                this.gameData = {
+                    highScore: 0,
+                    bestDistance: 0,
+                    bestSpeed: 0,
+                    totalRuns: 0,
+                    totalDistance: 0,
+                    achievements: [],
+                    leaderboard: [],
+                    dailyChallenge: null,
+                    stats: {
+                        totalFlips: 0,
+                        totalPowerUps: 0,
+                        totalObstacles: 0
+                    }
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.loadGameData();
+                this.applyTheme();
+                this.setupEventListeners();
+                this.showAgeWarning();
+                
+                // Enable debug mode with URL parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('debug') === '1') {
+                    window.FOFR_PEDRO.debug = true;
+                    document.getElementById('debug-panel').classList.remove('hidden');
+                }
+            }
+            
+            loadGameData() {
+                try {
+                    const saved = localStorage.getItem('fofr-pedro-game-data');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        this.gameData = { ...this.gameData, ...data };
+                    }
+                    
+                    const savedSettings = localStorage.getItem('fofr-pedro-settings');
+                    if (savedSettings) {
+                        const settings = JSON.parse(savedSettings);
+                        this.settings = { ...this.settings, ...settings };
+                    }
+                } catch (e) {
+                    console.warn('Failed to load game data:', e);
+                }
+            }
+            
+            saveGameData() {
+                try {
+                    localStorage.setItem('fofr-pedro-game-data', JSON.stringify(this.gameData));
+                    localStorage.setItem('fofr-pedro-settings', JSON.stringify(this.settings));
+                } catch (e) {
+                    console.warn('Failed to save game data:', e);
+                }
+            }
+            
+            showAgeWarning() {
+                document.getElementById('age-warning').style.display = 'flex';
+            }
+            
+            setupEventListeners() {
+                // Age confirmation
+                document.getElementById('age-confirm-btn').addEventListener('click', () => {
+                    document.getElementById('age-warning').style.display = 'none';
+                    document.getElementById('main-menu').style.display = 'flex';
+                    this.initAudio();
+                });
+                
+                // Menu buttons
+                document.getElementById('start-game').addEventListener('click', () => this.startGame());
+                document.getElementById('show-settings').addEventListener('click', () => this.showSettings());
+                document.getElementById('close-settings').addEventListener('click', () => this.hideSettings());
+                document.getElementById('save-settings').addEventListener('click', () => this.saveSettings());
+                document.getElementById('show-leaderboard').addEventListener('click', () => this.showLeaderboard());
+                document.getElementById('show-achievements').addEventListener('click', () => this.showAchievements());
+                document.getElementById('daily-challenge').addEventListener('click', () => this.showDailyChallenge());
+                document.getElementById('export-data').addEventListener('click', () => this.exportGameData());
+                
+                // Game over buttons
+                document.getElementById('restart-game').addEventListener('click', () => this.restartGame());
+                document.getElementById('back-to-menu').addEventListener('click', () => this.backToMenu());
+                
+                // Control buttons
+                document.getElementById('btn-pause').addEventListener('click', () => this.pauseGame());
+                
+                // Touch controls
+                this.setupTouchControls();
+                
+                // Keyboard controls
+                document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+                
+                // Visibility changes
+                document.addEventListener('visibilitychange', () => this.handleVisibilityChange());
+                
+                // Window resize
+                window.addEventListener('resize', () => this.handleResize());
+            }
+            
+            setupTouchControls() {
+                // Touch gesture detection on canvas
+                let touchStartX = 0;
+                let touchStartY = 0;
+                let touchStartTime = 0;
+                
+                const canvas = document.getElementById('game-canvas');
+                
+                canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    if (!this.isPlaying || this.isPaused) return;
+                    
+                    const touch = e.touches[0];
+                    touchStartX = touch.clientX;
+                    touchStartY = touch.clientY;
+                    touchStartTime = Date.now();
+                }, { passive: false });
+                
+                canvas.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    if (!this.isPlaying || this.isPaused) return;
+                    
+                    const touch = e.changedTouches[0];
+                    const deltaX = touch.clientX - touchStartX;
+                    const deltaY = touch.clientY - touchStartY;
+                    const deltaTime = Date.now() - touchStartTime;
+                    
+                    // Minimum distance and maximum time for swipe
+                    const minDistance = 48;
+                    const maxTime = 500;
+                    
+                    if (deltaTime > maxTime) return;
+                    
+                    const absX = Math.abs(deltaX);
+                    const absY = Math.abs(deltaY);
+                    
+                    if (absX > minDistance || absY > minDistance) {
+                        if (absX > absY) {
+                            // Horizontal swipe
+                            if (deltaX > 0) {
+                                this.handleAction('right');
+                            } else {
+                                this.handleAction('left');
+                            }
+                        } else {
+                            // Vertical swipe
+                            if (deltaY < 0) {
+                                // Swipe up - check for double swipe
+                                this.handleSwipeUp(absY, absX);
+                            } else {
+                                // Swipe down
+                                this.handleAction('slide');
+                            }
+                        }
+                    }
+                }, { passive: false });
+                
+                // Button controls
+                document.querySelectorAll('[data-action]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const action = btn.dataset.action;
+                        if (action === 'jump') {
+                            this.handleSwipeUp(64, 0); // Simulate perfect swipe
+                        } else {
+                            this.handleAction(action);
+                        }
+                    });
+                });
+            }
+            
+            handleSwipeUp(verticalDelta, horizontalDelta) {
+                const now = Date.now();
+                
+                // Check double swipe conditions
+                if (verticalDelta >= 48 && verticalDelta <= 200 && horizontalDelta < 24) {
+                    // Add to swipe buffer
+                    this.swipeBuffer = this.swipeBuffer.filter(time => now - time < this.config.doubleSwipeWindow);
+                    this.swipeBuffer.push(now);
+                    
+                    // Check for double swipe (front flip)
+                    if (this.swipeBuffer.length >= 2 && 
+                        this.flipCooldownTime <= 0 &&
+                        !this.isSliding &&
+                        (this.playerY <= 0.1 || now - this.lastGroundTime < this.config.coyoteTime)) {
+                        
+                        this.handleAction('flip');
+                        this.swipeBuffer = []; // Clear buffer after flip
+                    } else {
+                        this.handleAction('jump');
+                    }
+                } else {
+                    this.handleAction('jump');
+                }
+            }
+            
+            handleAction(action) {
+                if (!this.isPlaying || this.isPaused) return;
+                
+                const now = Date.now();
+                
+                switch (action) {
+                    case 'left':
+                        if (this.currentLane > 0) {
+                            this.targetLane = this.currentLane - 1;
+                            this.playSound('swipe');
+                            this.vibrate([10]);
+                        }
+                        break;
+                        
+                    case 'right':
+                        if (this.currentLane < 2) {
+                            this.targetLane = this.currentLane + 1;
+                            this.playSound('swipe');
+                            this.vibrate([10]);
+                        }
+                        break;
+                        
+                    case 'jump':
+                        if (this.playerY <= 0.1 && !this.isSliding) {
+                            this.isJumping = true;
+                            this.playerVelocityY = this.config.jumpHeight;
+                            this.lastGroundTime = now;
+                            this.playSound('jump');
+                            this.vibrate([15]);
+                        }
+                        break;
+                        
+                    case 'flip':
+                        if (this.flipCooldownTime <= 0 && !this.isSliding) {
+                            this.isFlipping = true;
+                            this.isJumping = true;
+                            this.playerVelocityY = this.config.flipHeight;
+                            this.flipCooldownTime = this.config.flipCooldown;
+                            this.flipCount++;
+                            this.consecutiveFlips++;
+                            this.lastFlipTime = now;
+                            
+                            // Show flip indicator
+                            this.showFlipIndicator();
+                            
+                            this.playSound('flip');
+                            this.vibrate([20, 50, 20]);
+                            
+                            // Score bonus
+                            const bonus = this.isOverObstacle() ? 25 : 10;
+                            this.score += bonus;
+                            this.showToast(`Front flip! +${bonus} bodů`);
+                            
+                            // Check for achievements
+                            if (this.flipCount >= 3) this.unlockAchievement('acrobat');
+                            if (this.flipCount >= 10) this.unlockAchievement('flip_master');
+                            if (this.isOverObstacle()) this.unlockAchievement('showtime');
+                        }
+                        break;
+                        
+                    case 'slide':
+                        if (!this.isSliding && this.playerY <= 0.1) {
+                            this.isSliding = true;
+                            setTimeout(() => {
+                                this.isSliding = false;
+                            }, this.config.slideTime);
+                            this.playSound('slide');
+                            this.vibrate([25]);
+                        }
+                        break;
+                }
+            }
+            
+            handleKeyboard(e) {
+                if (!this.isPlaying || this.isPaused) return;
+                
+                switch (e.key) {
+                    case 'ArrowLeft':
+                    case 'a':
+                    case 'A':
+                        e.preventDefault();
+                        this.handleAction('left');
+                        break;
+                        
+                    case 'ArrowRight':
+                    case 'd':
+                    case 'D':
+                        e.preventDefault();
+                        this.handleAction('right');
+                        break;
+                        
+                    case 'ArrowUp':
+                    case 'w':
+                    case 'W':
+                    case ' ':
+                        e.preventDefault();
+                        this.handleSwipeUp(64, 0);
+                        break;
+                        
+                    case 'ArrowDown':
+                    case 's':
+                    case 'S':
+                        e.preventDefault();
+                        this.handleAction('slide');
+                        break;
+                        
+                    case 'Escape':
+                    case 'p':
+                    case 'P':
+                        e.preventDefault();
+                        this.pauseGame();
+                        break;
+                }
+            }
+            
+            async initAudio() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.soundEnabled = true;
+                    console.log('Audio initialized');
+                } catch (e) {
+                    console.warn('Audio not supported');
+                    this.soundEnabled = false;
+                }
+            }
+            
+            playSound(type, pitch = 1) {
+                if (!this.soundEnabled || !this.settings.sound || !this.audioContext) return;
+                
+                const frequencies = {
+                    jump: 440,
+                    flip: 880,
+                    slide: 220,
+                    swipe: 330,
+                    powerup: 550,
+                    collision: 150,
+                    whoosh: 660
+                };
+                
+                const freq = frequencies[type] || 440;
+                const oscillator = this.audioContext.createOscillator();
+                const gain = this.audioContext.createGain();
+                
+                oscillator.connect(gain);
+                gain.connect(this.audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(freq * pitch, this.audioContext.currentTime);
+                gain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+                
+                oscillator.start();
+                oscillator.stop(this.audioContext.currentTime + 0.2);
+            }
+            
+            vibrate(pattern) {
+                if ('vibrate' in navigator && this.settings.haptics) {
+                    navigator.vibrate(pattern);
+                }
+            }
+            
+            showToast(message, duration = 3000) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.remove('opacity-0');
+                toast.classList.add('opacity-100');
+                setTimeout(() => {
+                    toast.classList.add('opacity-0');
+                    toast.classList.remove('opacity-100');
+                }, duration);
+            }
+            
+            showFlipIndicator() {
+                const indicator = document.getElementById('flip-indicator');
+                indicator.classList.remove('opacity-0');
+                indicator.classList.add('opacity-100', 'scale-110');
+                setTimeout(() => {
+                    indicator.classList.add('opacity-0', 'scale-100');
+                    indicator.classList.remove('opacity-100', 'scale-110');
+                }, 500);
+            }
+            
+            startGame() {
+                if (!window.THREE) {
+                    this.showToast('Načítání 3D enginu...');
+                    setTimeout(() => this.startGame(), 1000);
+                    return;
+                }
+                
+                this.gameState = 'playing';
+                this.isPlaying = true;
+                this.isPaused = false;
+                this.gameStartTime = Date.now();
+                
+                // Hide menus and show game UI
+                document.getElementById('main-menu').style.display = 'none';
+                document.getElementById('hud').style.display = 'block';
+                
+                // Show touch controls if enabled
+                if (this.settings.controls === 'buttons') {
+                    document.getElementById('touch-controls').classList.remove('pointer-events-none');
+                } else {
+                    document.getElementById('touch-controls').classList.add('pointer-events-none');
+                }
+                
+                this.resetGameState();
+                this.init3D();
+                this.gameLoop();
+                
+                this.showToast('Začínáš utíkat! Pozor na fízly!');
+            }
+            
+            resetGameState() {
+                this.currentLane = 1;
+                this.targetLane = 1;
+                this.currentSpeed = this.config.startSpeed;
+                this.score = 0;
+                this.distance = 0;
+                this.lives = 3;
+                this.isJumping = false;
+                this.isSliding = false;
+                this.isFlipping = false;
+                this.flipCooldownTime = 0;
+                this.playerY = 0;
+                this.playerVelocityY = 0;
+                this.playerRotationX = 0;
+                this.flipCount = 0;
+                this.consecutiveFlips = 0;
+                this.obstacles = [];
+                this.powerUps = [];
+                this.activePowerUps = [];
+                this.particles = [];
+                this.lastObstacleZ = -20;
+                this.lastPowerUpZ = -30;
+                this.swipeBuffer = [];
+            }
+
+            init3D() {
+                if (this.renderer) {
+                    this.disposeThreeObjects();
+                }
+                
+                // Scene setup
+                this.scene = new THREE.Scene();
+                this.scene.fog = new THREE.Fog(0x1a1a2e, 50, 200);
+                
+                // Camera setup
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.camera.position.set(0, 4, 8);
+                this.camera.lookAt(0, 0, -10);
+                
+                // Renderer setup
+                const canvas = document.getElementById('game-canvas');
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: canvas, 
+                    antialias: !this.lowPowerMode,
+                    alpha: false,
+                    powerPreference: "high-performance"
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.lowPowerMode ? 1 : 2));
+                this.renderer.setClearColor(0x1a1a2e);
+                this.renderer.shadowMap.enabled = !this.lowPowerMode;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                // Lighting
+                const ambientLight = new THREE.AmbientLight(0x404080, 0.4);
+                this.scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0x64ffda, 0.8);
+                directionalLight.position.set(10, 20, 10);
+                directionalLight.castShadow = !this.lowPowerMode;
+                if (!this.lowPowerMode) {
+                    directionalLight.shadow.mapSize.width = 2048;
+                    directionalLight.shadow.mapSize.height = 2048;
+                    directionalLight.shadow.camera.near = 0.5;
+                    directionalLight.shadow.camera.far = 50;
+                }
+                this.scene.add(directionalLight);
+                
+                // Create game world
+                this.createPlayer();
+                this.createGround();
+                this.createBackground();
+            }
+            
+            createPlayer() {
+                const playerGroup = new THREE.Group();
+                
+                // Body (torso)
+                const bodyGeometry = new THREE.CapsuleGeometry(0.25, 1.0, 4, 8);
+                const bodyMaterial = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+                const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+                body.position.y = 0.5;
+                body.castShadow = !this.lowPowerMode;
+                playerGroup.add(body);
+                
+                // Head
+                const headGeometry = new THREE.SphereGeometry(0.2, 8, 8);
+                const headMaterial = new THREE.MeshLambertMaterial({ color: 0xffdbac });
+                const head = new THREE.Mesh(headGeometry, headMaterial);
+                head.position.y = 1.2;
+                head.castShadow = !this.lowPowerMode;
+                playerGroup.add(head);
+                
+                // Snapback cap
+                const capGeometry = new THREE.CylinderGeometry(0.22, 0.22, 0.08, 8);
+                const capMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+                const cap = new THREE.Mesh(capGeometry, capMaterial);
+                cap.position.y = 1.28;
+                cap.rotation.x = Math.PI * 0.1; // Tilted back
+                cap.castShadow = !this.lowPowerMode;
+                playerGroup.add(cap);
+                
+                // Cap visor
+                const visorGeometry = new THREE.CylinderGeometry(0.3, 0.25, 0.02, 8);
+                const visor = new THREE.Mesh(visorGeometry, capMaterial);
+                visor.position.set(0, 1.25, 0.15);
+                visor.rotation.x = Math.PI * 0.2;
+                visor.castShadow = !this.lowPowerMode;
+                playerGroup.add(visor);
+                
+                // Arms
+                const armGeometry = new THREE.CapsuleGeometry(0.08, 0.6, 4, 8);
+                const armMaterial = new THREE.MeshLambertMaterial({ color: 0xffdbac });
+                
+                const leftArm = new THREE.Mesh(armGeometry, armMaterial);
+                leftArm.position.set(-0.4, 0.7, 0);
+                leftArm.rotation.z = Math.PI * 0.1;
+                leftArm.castShadow = !this.lowPowerMode;
+                playerGroup.add(leftArm);
+                
+                const rightArm = new THREE.Mesh(armGeometry, armMaterial);
+                rightArm.position.set(0.4, 0.7, 0);
+                rightArm.rotation.z = -Math.PI * 0.1;
+                rightArm.castShadow = !this.lowPowerMode;
+                playerGroup.add(rightArm);
+                
+                // Legs
+                const legGeometry = new THREE.CapsuleGeometry(0.12, 0.8, 4, 8);
+                const legMaterial = new THREE.MeshLambertMaterial({ color: 0x2c5aa0 }); // Jeans
+                
+                const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+                leftLeg.position.set(-0.15, -0.4, 0);
+                leftLeg.castShadow = !this.lowPowerMode;
+                playerGroup.add(leftLeg);
+                
+                const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
+                rightLeg.position.set(0.15, -0.4, 0);
+                rightLeg.castShadow = !this.lowPowerMode;
+                playerGroup.add(rightLeg);
+                
+                // Shoes
+                const shoeGeometry = new THREE.BoxGeometry(0.2, 0.1, 0.4);
+                const shoeMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 });
+                
+                const leftShoe = new THREE.Mesh(shoeGeometry, shoeMaterial);
+                leftShoe.position.set(-0.15, -0.85, 0.1);
+                leftShoe.castShadow = !this.lowPowerMode;
+                playerGroup.add(leftShoe);
+                
+                const rightShoe = new THREE.Mesh(shoeGeometry, shoeMaterial);
+                rightShoe.position.set(0.15, -0.85, 0.1);
+                rightShoe.castShadow = !this.lowPowerMode;
+                playerGroup.add(rightShoe);
+                
+                playerGroup.position.set(0, 1, 0);
+                this.player = playerGroup;
+                this.scene.add(playerGroup);
+            }
+            
+            createGround() {
+                this.ground = [];
+                
+                // Create road segments
+                for (let i = 0; i < 20; i++) {
+                    const roadGeometry = new THREE.PlaneGeometry(10, 10);
+                    const roadMaterial = new THREE.MeshLambertMaterial({ 
+                        color: 0x333333,
+                        transparent: true,
+                        opacity: 0.8
+                    });
+                    
+                    const road = new THREE.Mesh(roadGeometry, roadMaterial);
+                    road.rotation.x = -Math.PI / 2;
+                    road.position.set(0, 0, -i * 10);
+                    road.receiveShadow = !this.lowPowerMode;
+                    
+                    this.ground.push(road);
+                    this.scene.add(road);
+                    
+                    // Lane markers
+                    if (i % 2 === 0) {
+                        const markerGeometry = new THREE.PlaneGeometry(0.2, 2);
+                        const markerMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+                        
+                        // Left lane marker
+                        const leftMarker = new THREE.Mesh(markerGeometry, markerMaterial);
+                        leftMarker.rotation.x = -Math.PI / 2;
+                        leftMarker.position.set(-1.5, 0.01, -i * 10);
+                        this.scene.add(leftMarker);
+                        
+                        // Right lane marker
+                        const rightMarker = new THREE.Mesh(markerGeometry, markerMaterial);
+                        rightMarker.rotation.x = -Math.PI / 2;
+                        rightMarker.position.set(1.5, 0.01, -i * 10);
+                        this.scene.add(rightMarker);
+                    }
+                }
+            }
+            
+            createBackground() {
+                this.buildings = [];
+                
+                // Create Prague-style buildings
+                for (let side = -1; side <= 1; side += 2) {
+                    for (let i = 0; i < 10; i++) {
+                        const buildingGroup = new THREE.Group();
+                        
+                        // Main building
+                        const width = 2 + Math.random() * 3;
+                        const height = 8 + Math.random() * 12;
+                        const depth = 3 + Math.random() * 2;
+                        
+                        const buildingGeometry = new THREE.BoxGeometry(width, height, depth);
+                        const buildingMaterial = new THREE.MeshLambertMaterial({ 
+                            color: new THREE.Color().setHSL(0.1, 0.3, 0.3 + Math.random() * 0.3)
+                        });
+                        
+                        const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+                        building.position.y = height / 2;
+                        building.castShadow = !this.lowPowerMode;
+                        buildingGroup.add(building);
+                        
+                        // Windows
+                        for (let floor = 1; floor < height / 3; floor++) {
+                            for (let window = 0; window < Math.floor(width / 1.5); window++) {
+                                const windowGeometry = new THREE.PlaneGeometry(0.4, 0.6);
+                                const windowMaterial = new THREE.MeshLambertMaterial({ 
+                                    color: Math.random() > 0.7 ? 0xffff88 : 0x444444,
+                                    transparent: true,
+                                    opacity: 0.8
+                                });
+                                
+                                const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
+                                windowMesh.position.set(
+                                    -width/2 + 0.5 + window * 1.2,
+                                    floor * 2.5,
+                                    depth/2 + 0.01
+                                );
+                                buildingGroup.add(windowMesh);
+                            }
+                        }
+                        
+                        buildingGroup.position.set(
+                            side * (8 + Math.random() * 5),
+                            0,
+                            -i * 20 - Math.random() * 10
+                        );
+                        
+                        this.buildings.push(buildingGroup);
+                        this.scene.add(buildingGroup);
+                    }
+                }
+            }
+            
+            gameLoop() {
+                if (!this.isPlaying) return;
+                
+                requestAnimationFrame(() => this.gameLoop());
+                
+                if (this.isPaused) return;
+                
+                const deltaTime = 16; // Assume 60fps
+                
+                this.updateGame(deltaTime);
+                this.updatePhysics(deltaTime);
+                this.updateWorld(deltaTime);
+                this.updateUI();
+                this.updateDebug();
+                this.updateFPS();
+                
+                if (this.renderer && this.scene && this.camera) {
+                    this.renderer.render(this.scene, this.camera);
+                }
+            }
+            
+            updateGame(deltaTime) {
+                // Update speed
+                this.currentSpeed = Math.min(
+                    this.config.maxSpeed,
+                    this.config.startSpeed + (Date.now() - this.gameStartTime) * this.config.acceleration
+                );
+                
+                // Update distance and score
+                this.distance += this.currentSpeed * deltaTime / 1000;
+                this.score += this.currentSpeed * deltaTime / 100;
+                
+                // Update cooldowns
+                this.flipCooldownTime = Math.max(0, this.flipCooldownTime - deltaTime);
+                
+                // Update power-ups
+                this.updatePowerUps(deltaTime);
+                
+                // Generate world content
+                this.generateObstacles();
+                this.generatePowerUps();
+                
+                // Check collisions
+                this.checkCollisions();
+                
+                // Update daily challenge progress
+                this.updateDailyChallengeProgress();
+            }
+            
+            updatePhysics(deltaTime) {
+                // Lane switching
+                const laneX = (this.targetLane - 1) * this.config.laneWidth;
+                const currentX = this.player.position.x;
+                const lerpSpeed = 0.15;
+                this.player.position.x = THREE.MathUtils.lerp(currentX, laneX, lerpSpeed);
+                
+                if (Math.abs(currentX - laneX) < 0.1) {
+                    this.currentLane = this.targetLane;
+                }
+                
+                // Jumping physics
+                if (this.isJumping || this.playerY > 0) {
+                    this.playerVelocityY -= 0.025; // Gravity
+                    this.playerY += this.playerVelocityY;
+                    
+                    if (this.playerY <= 0) {
+                        this.playerY = 0;
+                        this.playerVelocityY = 0;
+                        this.isJumping = false;
+                        this.isFlipping = false;
+                        this.playerRotationX = 0;
+                        this.consecutiveFlips = 0;
+                    }
+                }
+                
+                // Flip rotation
+                if (this.isFlipping) {
+                    this.playerRotationX += 0.3;
+                }
+                
+                // Update player position
+                this.player.position.y = 1 + this.playerY;
+                this.player.rotation.x = this.playerRotationX;
+                
+                // Sliding animation
+                if (this.isSliding) {
+                    this.player.scale.y = 0.5;
+                    this.player.position.y = 0.5;
+                } else {
+                    this.player.scale.y = 1;
+                }
+            }
+            
+            updateWorld(deltaTime) {
+                // Move world towards player
+                const moveSpeed = this.currentSpeed * deltaTime / 1000;
+                
+                // Move obstacles
+                this.obstacles.forEach((obstacle, index) => {
+                    obstacle.position.z += moveSpeed;
+                    
+                    // Remove obstacles that are behind the player
+                    if (obstacle.position.z > 10) {
+                        this.scene.remove(obstacle);
+                        this.obstacles.splice(index, 1);
+                    }
+                });
+                
+                // Move power-ups
+                this.powerUps.forEach((powerUp, index) => {
+                    powerUp.position.z += moveSpeed;
+                    
+                    // Rotate power-ups
+                    powerUp.rotation.y += 0.05;
+                    
+                    // Remove power-ups that are behind the player
+                    if (powerUp.position.z > 10) {
+                        this.scene.remove(powerUp);
+                        this.powerUps.splice(index, 1);
+                    }
+                });
+                
+                // Move ground
+                this.ground.forEach((segment, index) => {
+                    segment.position.z += moveSpeed;
+                    
+                    // Recycle ground segments
+                    if (segment.position.z > 20) {
+                        segment.position.z -= 200;
+                    }
+                });
+                
+                // Move buildings
+                this.buildings.forEach(building => {
+                    building.position.z += moveSpeed * 0.5; // Parallax effect
+                    
+                    // Recycle buildings
+                    if (building.position.z > 50) {
+                        building.position.z -= 400;
+                    }
+                });
+            }
+            
+            generateObstacles() {
+                if (this.lastObstacleZ + this.config.obstacleSpacing < this.distance) {
+                    this.createObstacle();
+                    this.lastObstacleZ = this.distance;
+                }
+            }
+            
+            createObstacle() {
+                const obstacleTypes = ['barrier', 'car', 'police'];
+                const type = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
+                const lane = Math.floor(Math.random() * 3);
+                const laneX = (lane - 1) * this.config.laneWidth;
+                
+                let obstacle;
+                
+                switch (type) {
+                    case 'barrier':
+                        obstacle = this.createBarrier();
+                        break;
+                    case 'car':
+                        obstacle = this.createCar();
+                        break;
+                    case 'police':
+                        obstacle = this.createPolice();
+                        break;
+                }
+                
+                obstacle.position.set(laneX, 0, -50);
+                obstacle.userData = { type, lane, canJumpOver: type === 'barrier' };
+                
+                this.obstacles.push(obstacle);
+                this.scene.add(obstacle);
+            }
+            
+            createBarrier() {
+                const barrierGroup = new THREE.Group();
+                
+                const barrierGeometry = new THREE.BoxGeometry(2, 1, 0.2);
+                const barrierMaterial = new THREE.MeshLambertMaterial({ color: 0xff4444 });
+                const barrier = new THREE.Mesh(barrierGeometry, barrierMaterial);
+                barrier.position.y = 0.5;
+                barrier.castShadow = !this.lowPowerMode;
+                
+                barrierGroup.add(barrier);
+                return barrierGroup;
+            }
+            
+            createCar() {
+                const carGroup = new THREE.Group();
+                
+                // Car body
+                const bodyGeometry = new THREE.BoxGeometry(1.8, 0.8, 4);
+                const bodyMaterial = new THREE.MeshLambertMaterial({ 
+                    color: new THREE.Color().setHSL(Math.random(), 0.7, 0.5)
+                });
+                const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+                body.position.y = 0.4;
+                body.castShadow = !this.lowPowerMode;
+                carGroup.add(body);
+                
+                // Car roof
+                const roofGeometry = new THREE.BoxGeometry(1.6, 0.6, 2.5);
+                const roof = new THREE.Mesh(roofGeometry, bodyMaterial);
+                roof.position.set(0, 1.1, -0.3);
+                roof.castShadow = !this.lowPowerMode;
+                carGroup.add(roof);
+                
+                // Wheels
+                const wheelGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 8);
+                const wheelMaterial = new THREE.MeshLambertMaterial({ color: 0x222222 });
+                
+                const positions = [
+                    [-1, 0.3, 1.2],
+                    [1, 0.3, 1.2],
+                    [-1, 0.3, -1.2],
+                    [1, 0.3, -1.2]
+                ];
+                
+                positions.forEach(pos => {
+                    const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
+                    wheel.position.set(...pos);
+                    wheel.rotation.z = Math.PI / 2;
+                    wheel.castShadow = !this.lowPowerMode;
+                    carGroup.add(wheel);
+                });
+                
+                return carGroup;
+            }
+            
+            createPolice() {
+                const policeGroup = new THREE.Group();
+                
+                // Police car (similar to regular car but with police colors)
+                const car = this.createCar();
+                car.children[0].material = new THREE.MeshLambertMaterial({ color: 0x0066cc });
+                car.children[1].material = new THREE.MeshLambertMaterial({ color: 0x0066cc });
+                
+                // Police lights
+                const lightGeometry = new THREE.BoxGeometry(0.3, 0.1, 0.3);
+                const redLight = new THREE.Mesh(lightGeometry, new THREE.MeshLambertMaterial({ color: 0xff0000 }));
+                const blueLight = new THREE.Mesh(lightGeometry, new THREE.MeshLambertMaterial({ color: 0x0000ff }));
+                
+                redLight.position.set(-0.3, 1.5, -0.3);
+                blueLight.position.set(0.3, 1.5, -0.3);
+                
+                car.add(redLight);
+                car.add(blueLight);
+                
+                policeGroup.add(car);
+                return policeGroup;
+            }
+            
+            generatePowerUps() {
+                if (this.lastPowerUpZ + this.config.powerUpSpacing < this.distance) {
+                    this.createPowerUp();
+                    this.lastPowerUpZ = this.distance;
+                }
+            }
+            
+            createPowerUp() {
+                const powerUpTypes = ['speed', 'shield', 'magnet', 'jump'];
+                const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+                const lane = Math.floor(Math.random() * 3);
+                const laneX = (lane - 1) * this.config.laneWidth;
+                
+                const powerUpGroup = new THREE.Group();
+                
+                // Power-up base
+                const baseGeometry = new THREE.SphereGeometry(0.3, 8, 8);
+                const baseMaterial = new THREE.MeshLambertMaterial({ 
+                    color: this.getPowerUpColor(type),
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const base = new THREE.Mesh(baseGeometry, baseMaterial);
+                base.position.y = 1;
+                powerUpGroup.add(base);
+                
+                // Power-up icon (simplified)
+                const iconGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+                const iconMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+                const icon = new THREE.Mesh(iconGeometry, iconMaterial);
+                icon.position.y = 1;
+                powerUpGroup.add(icon);
+                
+                powerUpGroup.position.set(laneX, 0, -50);
+                powerUpGroup.userData = { type, lane };
+                
+                this.powerUps.push(powerUpGroup);
+                this.scene.add(powerUpGroup);
+            }
+            
+            getPowerUpColor(type) {
+                const colors = {
+                    speed: 0x00ff00,
+                    shield: 0x0088ff,
+                    magnet: 0xffaa00,
+                    jump: 0xff00ff
+                };
+                return colors[type] || 0xffffff;
+            }
+            
+            updatePowerUps(deltaTime) {
+                this.activePowerUps.forEach((powerUp, index) => {
+                    powerUp.duration -= deltaTime;
+                    
+                    if (powerUp.duration <= 0) {
+                        this.deactivatePowerUp(powerUp.type);
+                        this.activePowerUps.splice(index, 1);
+                    }
+                });
+                
+                // Update power-up UI
+                const powerUpHUD = document.getElementById('hud-powerup');
+                if (this.activePowerUps.length > 0) {
+                    const activePowerUp = this.activePowerUps[0];
+                    const progress = activePowerUp.duration / activePowerUp.maxDuration * 100;
+                    
+                    document.getElementById('powerup-progress').style.width = `${progress}%`;
+                    document.getElementById('powerup-icon').textContent = this.getPowerUpIcon(activePowerUp.type);
+                    powerUpHUD.classList.remove('hidden');
+                    powerUpHUD.classList.add('flex');
+                } else {
+                    powerUpHUD.classList.add('hidden');
+                    powerUpHUD.classList.remove('flex');
+                }
+            }
+            
+            getPowerUpIcon(type) {
+                const icons = {
+                    speed: '⚡',
+                    shield: '🛡️',
+                    magnet: '🧲',
+                    jump: '🦘'
+                };
+                return icons[type] || '⭐';
+            }
+            
+            activatePowerUp(type) {
+                const duration = 5000; // 5 seconds
+                
+                this.activePowerUps.push({
+                    type,
+                    duration,
+                    maxDuration: duration
+                });
+                
+                switch (type) {
+                    case 'speed':
+                        this.currentSpeed *= 1.5;
+                        this.showToast('Rychlost boost! ⚡');
+                        break;
+                    case 'shield':
+                        this.showToast('Štít aktivován! 🛡️');
+                        break;
+                    case 'magnet':
+                        this.showToast('Magnet na mince! 🧲');
+                        break;
+                    case 'jump':
+                        this.showToast('Super skok! 🦘');
+                        break;
+                }
+                
+                this.playSound('powerup');
+                this.vibrate([50, 100, 50]);
+            }
+            
+            deactivatePowerUp(type) {
+                switch (type) {
+                    case 'speed':
+                        this.currentSpeed = Math.min(
+                            this.config.maxSpeed,
+                            this.config.startSpeed + (Date.now() - this.gameStartTime) * this.config.acceleration
+                        );
+                        break;
+                }
+            }
+            
+            checkCollisions() {
+                const playerBounds = {
+                    x: this.player.position.x,
+                    y: this.player.position.y,
+                    z: this.player.position.z,
+                    width: 0.8,
+                    height: this.isSliding ? 1 : 2,
+                    depth: 0.8
+                };
+                
+                // Check obstacle collisions
+                this.obstacles.forEach((obstacle, index) => {
+                    if (this.isColliding(playerBounds, obstacle)) {
+                        if (obstacle.userData.canJumpOver && this.playerY > 0.5) {
+                            // Successfully jumped over
+                            this.score += 15;
+                            this.showToast('Skvělý skok! +15 bodů');
+                        } else if (!this.hasShield()) {
+                            this.handleCollision(obstacle);
+                        }
+                        
+                        // Remove obstacle after collision check
+                        this.scene.remove(obstacle);
+                        this.obstacles.splice(index, 1);
+                    }
+                });
+                
+                // Check power-up collisions
+                this.powerUps.forEach((powerUp, index) => {
+                    if (this.isColliding(playerBounds, powerUp)) {
+                        this.collectPowerUp(powerUp.userData.type);
+                        this.scene.remove(powerUp);
+                        this.powerUps.splice(index, 1);
+                    }
+                });
+            }
+            
+            isColliding(playerBounds, object) {
+                const objectBounds = {
+                    x: object.position.x,
+                    y: object.position.y,
+                    z: object.position.z,
+                    width: 2,
+                    height: 2,
+                    depth: 2
+                };
+                
+                return (
+                    Math.abs(playerBounds.x - objectBounds.x) < (playerBounds.width + objectBounds.width) / 2 &&
+                    Math.abs(playerBounds.y - objectBounds.y) < (playerBounds.height + objectBounds.height) / 2 &&
+                    Math.abs(playerBounds.z - objectBounds.z) < (playerBounds.depth + objectBounds.depth) / 2
+                );
+            }
+            
+            hasShield() {
+                return this.activePowerUps.some(powerUp => powerUp.type === 'shield');
+            }
+            
+            isOverObstacle() {
+                return this.obstacles.some(obstacle => 
+                    Math.abs(obstacle.position.x - this.player.position.x) < 1 &&
+                    Math.abs(obstacle.position.z - this.player.position.z) < 2
+                );
+            }
+            
+            handleCollision(obstacle) {
+                this.lives--;
+                this.playSound('collision');
+                this.vibrate([100, 50, 100]);
+                
+                if (obstacle.userData.type === 'police') {
+                    this.showToast('Chytili tě fízlové! 🚔');
+                    this.gameOver('Chytili tě policajti!');
+                } else {
+                    this.showToast('Kolize! 💥');
+                    if (this.lives <= 0) {
+                        this.gameOver('Příliš mnoho kolizí!');
+                    }
+                }
+            }
+            
+            collectPowerUp(type) {
+                this.activatePowerUp(type);
+                this.gameData.stats.totalPowerUps++;
+                
+                // Check for achievements
+                if (this.gameData.stats.totalPowerUps >= 10) {
+                    this.unlockAchievement('collector');
+                }
+            }
+            
+            updateDailyChallengeProgress() {
+                const challenge = this.checkDailyChallenge();
+                if (challenge.completed) return;
+                
+                switch (challenge.type) {
+                    case 'distance':
+                        challenge.progress = Math.max(challenge.progress, Math.floor(this.distance));
+                        break;
+                    case 'speed_time':
+                        if (this.currentSpeed >= challenge.target && Date.now() - this.gameStartTime <= 30000) {
+                            challenge.progress = challenge.target;
+                        }
+                        break;
+                    case 'consecutive_flips':
+                        challenge.progress = Math.max(challenge.progress, this.consecutiveFlips);
+                        break;
+                }
+                
+                if (challenge.progress >= challenge.target && !challenge.completed) {
+                    challenge.completed = true;
+                    this.showToast(`🎉 Denní výzva dokončena: ${challenge.name}!`);
+                    this.unlockAchievement('daily_champion');
+                    this.saveGameData();
+                }
+            }
+            
+            unlockAchievement(id) {
+                const achievements = {
+                    first_run: { name: 'První běh', desc: 'Dokončil jsi svůj první běh', icon: '🏃‍♂️' },
+                    acrobat: { name: 'Akrobat', desc: 'Udělal jsi 3 flipy v jednom běhu', icon: '🤸‍♂️' },
+                    flip_master: { name: 'Mistr flipů', desc: 'Udělal jsi 10 flipů v jednom běhu', icon: '🥇' },
+                    showtime: { name: 'Showtime', desc: 'Udělal jsi flip přes překážku', icon: '⭐' },
+                    collector: { name: 'Sběratel', desc: 'Sebral jsi 10 power-upů celkem', icon: '🎁' },
+                    daily_champion: { name: 'Denní šampion', desc: 'Dokončil jsi denní výzvu', icon: '🏆' },
+                    speed_demon: { name: 'Rychlý démon', desc: 'Dosáhl jsi maximální rychlosti', icon: '💨' },
+                    survivor: { name: 'Přeživší', desc: 'Uběhl jsi 1000 metrů', icon: '🛡️' }
+                };
+                
+                const achievement = achievements[id];
+                if (!achievement) return;
+                
+                // Check if already unlocked
+                if (this.gameData.achievements.some(a => a.id === id)) return;
+                
+                // Unlock achievement
+                this.gameData.achievements.push({
+                    id,
+                    name: achievement.name,
+                    desc: achievement.desc,
+                    icon: achievement.icon,
+                    unlockedAt: new Date().toISOString()
+                });
+                
+                this.showToast(`🏆 Úspěch odemčen: ${achievement.name}!`);
+                this.saveGameData();
+            }
+            
+            updateUI() {
+                document.getElementById('hud-score').textContent = `${Math.floor(this.distance)} m`;
+                document.getElementById('hud-speed').textContent = Math.floor(this.currentSpeed);
+            }
+            
+            updateDebug() {
+                if (window.FOFR_PEDRO.debug) {
+                    document.getElementById('debug-fps').textContent = this.fps;
+                    document.getElementById('debug-speed').textContent = this.currentSpeed.toFixed(1);
+                    document.getElementById('debug-lane').textContent = this.currentLane;
+                    document.getElementById('debug-state').textContent = this.gameState;
+                    document.getElementById('debug-obstacles').textContent = this.obstacles.length;
+                    document.getElementById('debug-powerups').textContent = this.powerUps.length;
+                }
+            }
+            
+            updateFPS() {
+                this.frameCount++;
+                const now = Date.now();
+                
+                if (now - this.lastFpsUpdate >= 1000) {
+                    this.fps = Math.round((this.frameCount * 1000) / (now - this.lastFpsUpdate));
+                    this.frameCount = 0;
+                    this.lastFpsUpdate = now;
+                    
+                    // Enable low power mode if FPS drops
+                    if (this.fps < 45 && !this.lowPowerMode) {
+                        this.lowPowerMode = true;
+                        this.showToast('Low power mód aktivován');
+                        
+                        if (this.renderer) {
+                            this.renderer.shadowMap.enabled = false;
+                            this.renderer.setPixelRatio(1);
+                        }
+                    }
+                }
+            }
+            
+            gameOver(message = 'Konec hry!') {
+                this.isPlaying = false;
+                this.gameState = 'gameover';
+                
+                // Update statistics
+                this.gameData.totalRuns++;
+                this.gameData.totalDistance += this.distance;
+                this.gameData.stats.totalFlips += this.flipCount;
+                
+                // Update records
+                if (this.score > this.gameData.highScore) {
+                    this.gameData.highScore = this.score;
+                    this.gameData.bestDistance = Math.max(this.gameData.bestDistance, this.distance);
+                    this.showToast('🏆 Nový rekord!');
+                }
+                this.gameData.bestSpeed = Math.max(this.gameData.bestSpeed, this.currentSpeed);
+                
+                // Unlock achievements
+                this.unlockAchievement('first_run');
+                if (this.distance >= 1000) this.unlockAchievement('survivor');
+                if (this.currentSpeed >= this.config.maxSpeed) this.unlockAchievement('speed_demon');
+                
+                // Show game over screen
+                this.displayGameOverScreen(message);
+                this.saveGameData();
+            }
+            
+            displayGameOverScreen(message) {
+                document.getElementById('game-over-message').textContent = message;
+                document.getElementById('final-score').textContent = Math.floor(this.score);
+                document.getElementById('final-distance').textContent = `${Math.floor(this.distance)} m`;
+                document.getElementById('best-score').textContent = this.gameData.highScore;
+                
+                // Hide game UI
+                document.getElementById('hud').style.display = 'none';
+                document.getElementById('touch-controls').classList.add('pointer-events-none');
+                
+                // Show game over screen
+                document.getElementById('game-over').classList.remove('hidden');
+                document.getElementById('game-over').classList.add('flex');
+                
+                // Setup name input for leaderboard
+                const nameInput = document.getElementById('player-name');
+                nameInput.value = localStorage.getItem('fofr-pedro-player-name') || '';
+                nameInput.addEventListener('input', (e) => {
+                    localStorage.setItem('fofr-pedro-player-name', e.target.value);
+                });
+            }
+            
+            restartGame() {
+                // Add to leaderboard if name is provided
+                const playerName = document.getElementById('player-name').value.trim();
+                if (playerName && this.score > 0) {
+                    this.addToLeaderboard(playerName, Math.floor(this.score), Math.floor(this.distance));
+                }
+                
+                document.getElementById('game-over').classList.add('hidden');
+                document.getElementById('game-over').classList.remove('flex');
+                this.startGame();
+            }
+            
+            backToMenu() {
+                // Add to leaderboard if name is provided
+                const playerName = document.getElementById('player-name').value.trim();
+                if (playerName && this.score > 0) {
+                    this.addToLeaderboard(playerName, Math.floor(this.score), Math.floor(this.distance));
+                }
+                
+                this.isPlaying = false;
+                this.gameState = 'menu';
+                
+                // Hide all game screens
+                document.getElementById('game-over').classList.add('hidden');
+                document.getElementById('game-over').classList.remove('flex');
+                document.getElementById('hud').style.display = 'none';
+                document.getElementById('touch-controls').classList.add('pointer-events-none');
+                
+                // Show main menu
+                document.getElementById('main-menu').style.display = 'flex';
+                
+                // Cleanup 3D objects
+                this.disposeThreeObjects();
+            }
+            
+            pauseGame() {
+                if (!this.isPlaying) return;
+                
+                this.isPaused = !this.isPaused;
+                const pauseBtn = document.getElementById('btn-pause');
+                
+                if (this.isPaused) {
+                    pauseBtn.textContent = '▶️ Pokračovat';
+                    this.showToast('Hra pozastavena');
+                } else {
+                    pauseBtn.textContent = '⏸️ Pauza';
+                    this.showToast('Pokračování...');
+                }
+            }
+            
+            showSettings() {
+                document.getElementById('settings-panel').classList.remove('hidden');
+                document.getElementById('settings-panel').classList.add('flex');
+                this.loadSettingsUI();
+            }
+            
+            hideSettings() {
+                document.getElementById('settings-panel').classList.add('hidden');
+                document.getElementById('settings-panel').classList.remove('flex');
+            }
+            
+            loadSettingsUI() {
+                document.getElementById('setting-theme').value = this.settings.theme;
+                document.getElementById('setting-spice').value = this.settings.spice;
+                document.getElementById('setting-sound').value = this.settings.sound.toString();
+                document.getElementById('setting-haptics').value = this.settings.haptics.toString();
+                document.getElementById('setting-controls').value = this.settings.controls;
+            }
+            
+            saveSettings() {
+                this.settings.theme = document.getElementById('setting-theme').value;
+                this.settings.spice = document.getElementById('setting-spice').value;
+                this.settings.sound = document.getElementById('setting-sound').value === 'true';
+                this.settings.haptics = document.getElementById('setting-haptics').value === 'true';
+                this.settings.controls = document.getElementById('setting-controls').value;
+                
+                this.applyTheme();
+                this.saveGameData();
+                this.hideSettings();
+                this.showToast('Nastavení uloženo ✅');
+            }
+            
+            applyTheme() {
+                const body = document.body;
+                
+                if (this.settings.theme === 'day') {
+                    body.className = body.className.replace(/bg-prague/g, 'bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200');
+                } else if (this.settings.theme === 'night') {
+                    body.className = body.className.replace(/bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200/g, 'bg-prague');
+                } else {
+                    // Auto - use system preference
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    if (prefersDark) {
+                        body.className = body.className.replace(/bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200/g, 'bg-prague');
+                    } else {
+                        body.className = body.className.replace(/bg-prague/g, 'bg-gradient-to-br from-sky-50 via-blue-100 to-indigo-200');
+                    }
+                }
+            }
+            
+            // Leaderboard system
+            addToLeaderboard(playerName, score, distance) {
+                if (!playerName || score <= 0) return;
+                
+                const entry = {
+                    name: playerName.substring(0, 20),
+                    score: score,
+                    distance: distance,
+                    date: new Date().toISOString()
+                };
+                
+                this.gameData.leaderboard.push(entry);
+                this.gameData.leaderboard.sort((a, b) => b.score - a.score);
+                this.gameData.leaderboard = this.gameData.leaderboard.slice(0, 5);
+                
+                this.saveGameData();
+            }
+            
+            showLeaderboard() {
+                const leaderboard = this.gameData.leaderboard;
+                if (leaderboard.length === 0) {
+                    this.showToast('Žebříček je prázdný! 📊');
+                    return;
+                }
+                
+                let content = `
+                    <div class="glass-strong rounded-3xl p-6 w-full max-w-sm mx-4 max-h-[80vh] overflow-y-auto">
+                        <h2 class="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                            🏆 TOP 5 Žebříček
+                        </h2>
+                        <div class="space-y-3">
+                `;
+                
+                leaderboard.forEach((entry, index) => {
+                    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
+                    const date = new Date(entry.date).toLocaleDateString('cs-CZ');
+                    
+                    content += `
+                        <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">${medal}</span>
+                                <div>
+                                    <div class="font-semibold text-white">${entry.name}</div>
+                                    <div class="text-xs text-gray-400">${date}</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-lg font-bold text-primary">${entry.score}</div>
+                                <div class="text-xs text-gray-400">${entry.distance}m vzdálenost</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                content += `
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" 
+                                class="w-full mt-6 bg-gradient-to-r from-primary to-secondary text-black font-bold py-3 px-6 rounded-xl btn-touch">
+                            Zavřít
+                        </button>
+                    </div>
+                `;
+                
+                this.showModal(content);
+            }
+            
+            showAchievements() {
+                const achievements = this.gameData.achievements;
+                if (achievements.length === 0) {
+                    this.showToast('Zatím žádné úspěchy! 🎯');
+                    return;
+                }
+                
+                let content = `
+                    <div class="glass-strong rounded-3xl p-6 w-full max-w-sm mx-4 max-h-[80vh] overflow-y-auto scrollbar-hide">
+                        <h2 class="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                            🏆 Tvoje úspěchy
+                        </h2>
+                        <div class="space-y-3">
+                `;
+                
+                achievements.forEach(achievement => {
+                    const date = new Date(achievement.unlockedAt).toLocaleDateString('cs-CZ');
+                    content += `
+                        <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-2xl">${achievement.icon}</span>
+                                <span class="font-bold text-primary">${achievement.name}</span>
+                            </div>
+                            <p class="text-sm text-gray-300 mb-1">${achievement.desc}</p>
+                            <p class="text-xs text-gray-500">Odemčeno: ${date}</p>
+                        </div>
+                    `;
+                });
+                
+                content += `
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" 
+                                class="w-full mt-6 bg-gradient-to-r from-primary to-secondary text-black font-bold py-3 px-6 rounded-xl btn-touch">
+                            Zavřít
+                        </button>
+                    </div>
+                `;
+                
+                this.showModal(content);
+            }
+            
+            showModal(content) {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center z-[60] p-4';
+                modal.innerHTML = content;
+                document.body.appendChild(modal);
+                
+                // Auto-remove on background click
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
+            }
+            
+            // Daily challenge system
+            generateDailyChallenge() {
+                const challenges = [
+                    { id: 'no_powerup', name: 'Purista', desc: 'Přežij 400m bez power-upu', target: 400, type: 'distance_no_powerup' },
+                    { id: 'slide_master', name: 'Mistr skluzu', desc: 'Projdi 5 překážek skluzem', target: 5, type: 'slide_obstacles' },
+                    { id: 'flip_combo', name: 'Kombo akrobat', desc: '3 flipy za sebou', target: 3, type: 'consecutive_flips' },
+                    { id: 'speed_run', name: 'Rychlý běh', desc: 'Dosáhni rychlosti 18 do 30s', target: 18, type: 'speed_time' },
+                    { id: 'survivor', name: 'Přeživší', desc: 'Uběhni 800m v jednom běhu', target: 800, type: 'distance' },
+                    { id: 'collector', name: 'Sběratel', desc: 'Sebej 10 power-upů', target: 10, type: 'collect_powerups' }
+                ];
+                
+                const today = new Date().toDateString();
+                const seed = this.stringToSeed(today);
+                const challengeIndex = seed % challenges.length;
+                
+                return {
+                    ...challenges[challengeIndex],
+                    date: today,
+                    progress: 0,
+                    completed: false
+                };
+            }
+            
+            stringToSeed(str) {
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return Math.abs(hash);
+            }
+            
+            checkDailyChallenge() {
+                const today = new Date().toDateString();
+                
+                if (!this.gameData.dailyChallenge || this.gameData.dailyChallenge.date !== today) {
+                    this.gameData.dailyChallenge = this.generateDailyChallenge();
+                    this.saveGameData();
+                }
+                
+                return this.gameData.dailyChallenge;
+            }
+            
+            showDailyChallenge() {
+                const challenge = this.checkDailyChallenge();
+                const progress = challenge.completed ? '✅ Dokončeno' : `${challenge.progress}/${challenge.target}`;
+                
+                const content = `
+                    <div class="glass-strong rounded-3xl p-6 w-full max-w-sm mx-4 text-center">
+                        <h2 class="text-2xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                            📅 Denní výzva
+                        </h2>
+                        <div class="mb-6">
+                            <h3 class="text-xl font-bold text-white mb-2">${challenge.name}</h3>
+                            <p class="text-gray-300 mb-4">${challenge.desc}</p>
+                            <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
+                                <div class="text-lg font-bold text-primary">${progress}</div>
+                            </div>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" 
+                                class="w-full bg-gradient-to-r from-primary to-secondary text-black font-bold py-3 px-6 rounded-xl btn-touch">
+                            Zavřít
+                        </button>
+                    </div>
+                `;
+                
+                this.showModal(content);
+            }
+            
+            // Data export/import system
+            exportGameData() {
+                try {
+                    const data = JSON.stringify(this.gameData, null, 2);
+                    const blob = new Blob([data], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `fofr-pedro-data-${new Date().toISOString().split('T')[0]}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    this.showToast('Data exportována! 📁');
+                } catch (e) {
+                    this.showToast('Chyba při exportu! ❌');
+                }
+            }
+            
+            handleVisibilityChange() {
+                if (document.hidden && this.isPlaying && !this.isPaused) {
+                    this.pauseGame();
+                }
+            }
+            
+            handleResize() {
+                if (this.camera && this.renderer) {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                }
+            }
+            
+            disposeThreeObjects() {
+                if (this.scene) {
+                    // Dispose of all geometries and materials
+                    this.scene.traverse((object) => {
+                        if (object.geometry) {
+                            object.geometry.dispose();
+                        }
+                        if (object.material) {
+                            if (Array.isArray(object.material)) {
+                                object.material.forEach(material => material.dispose());
+                            } else {
+                                object.material.dispose();
+                            }
+                        }
+                    });
+                    
+                    // Clear the scene
+                    while (this.scene.children.length > 0) {
+                        this.scene.remove(this.scene.children[0]);
+                    }
+                }
+                
+                if (this.renderer) {
+                    this.renderer.dispose();
+                }
+                
+                // Clear arrays
+                this.obstacles = [];
+                this.powerUps = [];
+                this.ground = [];
+                this.buildings = [];
+            }
+        }
+
+        // Initialize game when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.fofrPedroGame = new FofrPedroGame();
+        });
+    </script>
+</body>
+</html>
+
